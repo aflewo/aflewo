@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   :root {
@@ -37,7 +39,8 @@
     --input: 20 15% 90%;
     --ring: var(--aflewo-gold);
 
-    --radius: 1.25rem; /* iOS inspired larger radius */
+    --radius: 1.25rem;
+    /* iOS inspired larger radius */
 
     /* Glassmorphism */
     --glass-bg: 40 25% 98% / 0.85;
@@ -80,32 +83,6 @@
   }
 }
 
-@theme inline {
-  --color-gold: hsl(var(--aflewo-gold));
-  --color-brown: hsl(var(--aflewo-brown));
-  --color-emerald: hsl(var(--aflewo-emerald));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-primary: hsl(var(--primary));
-  --color-secondary: hsl(var(--secondary));
-  --color-accent: hsl(var(--accent));
-  --color-border: hsl(var(--border));
-  
-  --radius-ios: 1.25rem;
-  
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-breathe: breathe 3s ease-in-out infinite;
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  @keyframes breathe {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.02); opacity: 0.95; }
-  }
-}
 
 body {
   background-color: hsl(var(--background));
@@ -131,6 +108,7 @@ body {
 .press-scale {
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .press-scale:active {
   transform: scale(0.96);
 }
@@ -141,6 +119,7 @@ body {
   transform: translateY(20px);
   transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 .reveal-up.active {
   opacity: 1;
   transform: translateY(0);
@@ -150,6 +129,7 @@ body {
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom);
 }
+
 .safe-area-top {
   padding-top: env(safe-area-inset-top);
 }
@@ -159,6 +139,7 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
