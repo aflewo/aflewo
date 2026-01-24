@@ -3,7 +3,22 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import AppIcon from "@/components/ui/AppIcon";
+import {
+    Calendar as CalendarIcon,
+    Clock,
+    Bell,
+    Plus,
+    ExternalLink,
+    Sparkles,
+    MapPin,
+    ChevronLeft,
+    ChevronRight,
+    Download,
+    Filter,
+    Check,
+    Apple,
+    X
+} from "lucide-react";
 import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -73,7 +88,7 @@ const events: Event[] = [
     {
         id: "5",
         title: "Tanzania Worship Night",
-        date: "Mar 21, 1026",
+        date: "Mar 21, 2026",
         start: "20260321T190000",
         end: "20260321T230000",
         time: "07:00 PM",
@@ -184,13 +199,13 @@ function FlipDigit({ value, label }: FlipDigitProps) {
             <div className="relative perspective-1000">
                 <div
                     ref={digitRef}
-                    className="countdown-digit relative glass-card-elevated w-16 h-20 md:w-24 md:h-28 flex items-center justify-center rounded-xl border-white/10 overflow-hidden shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] bg-gradient-to-b from-white/10 to-transparent"
+                    className="countdown-digit relative glass-card-elevated w-16 h-20 md:w-24 md:h-28 flex items-center justify-center rounded-xl border-white/10 overflow-hidden"
                 >
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40 opacity-20" />
-                    <span className="text-3xl md:text-5xl font-black text-white relative z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent" />
+                    <span className="text-3xl md:text-5xl font-black text-white">
                         {value.toString().padStart(2, '0')}
                     </span>
-                    <div className="absolute top-1/2 left-0 right-0 h-px bg-black/40 shadow-[0_1px_0_rgba(255,255,255,0.05)]" />
+                    <div className="absolute top-1/2 left-0 right-0 h-px bg-black/30" />
                 </div>
             </div>
             <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-white/30">{label}</span>
@@ -368,21 +383,24 @@ END:VCALENDAR`;
                 <button
                     key={day}
                     onClick={() => setSelectedDate(isSelected ? null : date)}
-                    className={`relative h-10 md:h-14 w-full flex items-center justify-center text-sm font-black transition-all group overflow-hidden ${isSelected ? "text-brown" : hasEvents ? "text-white" : "text-white/30"
+                    className={`relative h-10 md:h-14 rounded-lg text-sm font-bold transition-all ${isSelected
+                        ? "bg-gold text-brown"
+                        : hasEvents
+                            ? "bg-white/5 hover:bg-white/10 text-white"
+                            : "text-white/40 hover:bg-white/5"
                         }`}
                 >
-                    {isSelected && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="absolute w-full h-full bg-gold rounded-full scale-90 md:scale-75 animate-scale-in" />
+                    {day}
+                    {hasEvents && !isSelected && (
+                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5">
+                            {dayEvents.slice(0, 3).map((e, i) => (
+                                <span
+                                    key={i}
+                                    className={`w-1 h-1 rounded-full ${chapterColors[e.chapter]?.bg || "bg-gold"}`}
+                                />
+                            ))}
                         </div>
                     )}
-
-                    {!isSelected && hasEvents && (
-                        <div className="absolute bottom-1.5 w-1 h-1 bg-gold rounded-full" />
-                    )}
-
-                    <span className="relative z-10">{day}</span>
-                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
                 </button>
             );
         }
@@ -400,20 +418,20 @@ END:VCALENDAR`;
 
             <div className="max-container relative z-10">
                 <div className="hub-panel mb-16">
-                    <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-8 mb-12 text-center md:text-left">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-12">
                         <div className="space-y-4">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em] mx-auto md:mx-0">
-                                <AppIcon name="calendar_month" size={12} /> Events & Calendar
+                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
+                                <CalendarIcon size={12} /> Events & Calendar
                             </div>
-                            <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9]">
+                            <h2 className="text-5xl md:text-7xl font-black tracking-tighter">
                                 THE <span className="text-gold">CALENDAR</span>
                             </h2>
                         </div>
                         <button
                             onClick={downloadAllICS}
-                            className="press-scale px-10 py-5 bg-gold text-brown rounded-lg font-black text-[11px] uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-4 shadow-glow"
+                            className="press-scale px-8 py-4 bg-gold text-brown rounded-lg font-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-3"
                         >
-                            <AppIcon name="download" size={18} /> Sync 2026 Roadmap
+                            <Download size={16} /> Sync All 2026 Events
                         </button>
                     </div>
                 </div>
@@ -426,7 +444,7 @@ END:VCALENDAR`;
                                     onClick={() => navigateMonth(-1)}
                                     className="p-3 rounded-lg glass-card hover:bg-white/10 transition-colors"
                                 >
-                                    <AppIcon name="chevron_left" size={20} />
+                                    <ChevronLeft size={20} />
                                 </button>
                                 <h3 className="text-xl font-black tracking-tight">
                                     {months[currentMonth.getMonth()]} {currentMonth.getFullYear()}
@@ -435,7 +453,7 @@ END:VCALENDAR`;
                                     onClick={() => navigateMonth(1)}
                                     className="p-3 rounded-lg glass-card hover:bg-white/10 transition-colors"
                                 >
-                                    <AppIcon name="chevron_right" size={20} />
+                                    <ChevronRight size={20} />
                                 </button>
                             </div>
 
@@ -456,7 +474,7 @@ END:VCALENDAR`;
                                     onClick={() => setSelectedDate(null)}
                                     className="mt-4 w-full py-3 glass-card rounded-lg text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white transition-colors flex items-center justify-center gap-2"
                                 >
-                                    <AppIcon name="close" size={14} /> Clear Selection
+                                    <X size={14} /> Clear Selection
                                 </button>
                             )}
                         </div>
@@ -468,7 +486,7 @@ END:VCALENDAR`;
                                     onClick={() => setShowFilters(!showFilters)}
                                     className={`p-2 rounded-lg transition-colors ${showFilters ? "bg-gold text-brown" : "glass-card"}`}
                                 >
-                                    <AppIcon name="filter_list" size={16} />
+                                    <Filter size={16} />
                                 </button>
                             </div>
 
@@ -486,7 +504,7 @@ END:VCALENDAR`;
                                                     : "glass-card text-white/50 hover:text-white"
                                                     }`}
                                             >
-                                                {isActive && <AppIcon name="check" size={12} />}
+                                                {isActive && <Check size={12} />}
                                                 {chapter}
                                             </button>
                                         );
@@ -527,7 +545,7 @@ END:VCALENDAR`;
                             <div className="space-y-3 max-h-[500px] overflow-y-auto hide-scrollbar">
                                 {filteredEvents.length === 0 ? (
                                     <div className="text-center py-12 text-white/30">
-                                        <AppIcon name="calendar_month" size={48} className="mx-auto mb-4 opacity-50" />
+                                        <CalendarIcon size={48} className="mx-auto mb-4 opacity-50" />
                                         <p className="text-sm font-bold">No events found</p>
                                         <p className="text-[10px] uppercase tracking-widest mt-2">Try adjusting your filters</p>
                                     </div>
@@ -555,14 +573,14 @@ END:VCALENDAR`;
                                                         </h4>
                                                         <div className="flex flex-wrap items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/40">
                                                             <span className="flex items-center gap-1">
-                                                                <AppIcon name="schedule" size={12} /> {event.time} EAT
+                                                                <Clock size={12} /> {event.time} EAT
                                                             </span>
                                                             <span className={`px-2 py-0.5 rounded-full ${colors.bg} ${colors.text}`}>
                                                                 {event.chapter}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center gap-1 text-[10px] text-white/30">
-                                                            <AppIcon name="location_on" size={10} />
+                                                            <MapPin size={10} />
                                                             <Link
                                                                 href={`https://maps.google.com/?q=${encodeURIComponent(event.location)}`}
                                                                 target="_blank"
@@ -580,14 +598,14 @@ END:VCALENDAR`;
                                                         className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-[8px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors"
                                                         title="Add to Apple Calendar"
                                                     >
-                                                        <AppIcon name="apple" size={14} /> iCloud
+                                                        <Apple size={14} /> iCloud
                                                     </button>
                                                     <button
                                                         onClick={() => addToGoogleCalendar(event)}
                                                         className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gold text-brown text-[8px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
                                                         title="Add to Google Calendar"
                                                     >
-                                                        <AppIcon name="calendar_month" size={14} /> Google
+                                                        <CalendarIcon size={14} /> Google
                                                     </button>
                                                 </div>
                                             </div>
@@ -599,7 +617,7 @@ END:VCALENDAR`;
 
                         <div className="glass-card-elevated p-8 md:p-10 rounded-lg border-white/5 relative overflow-hidden">
                             <div className="absolute top-0 right-0 p-6">
-                                <AppIcon name="auto_awesome" className="text-gold animate-pulse" />
+                                <Sparkles className="text-gold animate-pulse" />
                             </div>
 
                             <div className="space-y-8 relative z-10">
@@ -634,7 +652,7 @@ END:VCALENDAR`;
                         <div className="glass-card p-6 rounded-2xl border-white/5 flex items-center justify-between group cursor-pointer hover:border-gold/30 transition-all">
                             <div className="flex items-center gap-6">
                                 <div className="p-4 rounded-2xl bg-gold/10 text-gold group-hover:scale-110 transition-transform">
-                                    <AppIcon name="notifications" size={24} />
+                                    <Bell size={24} />
                                 </div>
                                 <div>
                                     <h4 className="font-black text-xs uppercase tracking-widest text-white">Event Alerts</h4>
@@ -653,7 +671,7 @@ END:VCALENDAR`;
                         href="#"
                         className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-gold/60 hover:text-gold transition-colors"
                     >
-                        View Full 2026 Roadmap <AppIcon name="open_in_new" size={14} />
+                        View Full 2026 Roadmap <ExternalLink size={14} />
                     </Link>
                 </div>
             </div>
