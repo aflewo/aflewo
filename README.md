@@ -1,4 +1,4 @@
- # AFLEWO Connect
+# AFLEWO Connect
 
 Africa Let's Worship (AFLEWO) is a non-denominational, all-night worship movement that seeks to unite the body of Christ in Africa. AFLEWO Connect is the digital gateway to this continental transformation through worship.
 
