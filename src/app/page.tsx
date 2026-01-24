@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import ChaptersSection from "@/components/sections/ChaptersSection";
@@ -8,7 +7,6 @@ import EventHub from "@/components/sections/EventHub";
 import MediaPreview from "@/components/sections/MediaPreview";
 import StoriesTeaser from "@/components/sections/StoriesTeaser";
 import JoinCTA from "@/components/sections/JoinCTA";
-import Footer from "@/components/Footer";
 import PartnersSection from "@/components/sections/PartnersSection";
 import LeadershipSection from "@/components/sections/LeadershipSection";
 import { useEffect } from "react";
@@ -22,8 +20,6 @@ export default function Home() {
 
   return (
     <main className="relative bg-background opacity-0">
-      <Navbar />
-
       <HeroSection />
 
       <div className="relative z-10 bg-background">
@@ -36,8 +32,6 @@ export default function Home() {
         <LeadershipSection />
         <JoinCTA />
       </div>
-
-      <Footer />
     </main>
   );
 }

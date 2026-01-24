@@ -138,55 +138,6 @@ function TypewriterText({ text, delay = 0, speed = 50 }: { text: string; delay?:
     );
 }
 
-function SVGPathAnimation({ isActive }: { isActive: boolean }) {
-    const pathRef = useRef<SVGPathElement>(null);
-
-    useEffect(() => {
-        if (!isActive || !pathRef.current) return;
-
-        const path = pathRef.current;
-        const length = path.getTotalLength();
-
-        gsap.set(path, {
-            strokeDasharray: length,
-            strokeDashoffset: length,
-            opacity: 1
-        });
-
-        gsap.to(path, {
-            strokeDashoffset: 0,
-            duration: 2,
-            ease: "power2.inOut",
-            delay: 0.5
-        });
-    }, [isActive]);
-
-    return (
-        <svg
-            viewBox="0 0 200 200"
-            className="w-full h-full"
-            style={{ filter: "drop-shadow(0 0 20px hsla(45, 100%, 50%, 0.3))" }}
-        >
-            <path
-                ref={pathRef}
-                d="M100,20 L120,80 L180,100 L120,120 L100,180 L80,120 L20,100 L80,80 Z"
-                fill="none"
-                stroke="url(#goldGradient)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity="0"
-            />
-            <defs>
-                <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="hsl(45, 100%, 50%)" />
-                    <stop offset="100%" stopColor="hsl(45, 100%, 70%)" />
-                </linearGradient>
-            </defs>
-        </svg>
-    );
-}
-
 export default function Preloader({ onComplete }: { onComplete: () => void }) {
     const loaderRef = useRef<HTMLDivElement>(null);
     const logoRef = useRef<HTMLDivElement>(null);
@@ -305,20 +256,15 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] bg-gold/10 blur-[120px] rounded-full"
             />
 
-            <div ref={logoRef} className="relative w-32 h-32 md:w-48 md:h-48 mb-12" style={{ perspective: "1000px" }}>
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <SVGPathAnimation isActive={true} />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <Image
-                        src="/brand/AFLEWO LOGO 1-Photoroom.png"
-                        alt="AFLEWO Logo"
-                        width={120}
-                        height={120}
-                        className="object-contain md:w-[160px] md:h-[160px]"
-                        priority
-                    />
-                </div>
+            <div ref={logoRef} className="relative w-32 h-32 md:w-48 md:h-48 mb-12 flex items-center justify-center" style={{ perspective: "1000px" }}>
+                <Image
+                    src="/brand/AFLEWO LOGO 1-Photoroom.png"
+                    alt="AFLEWO Logo"
+                    width={160}
+                    height={160}
+                    className="object-contain md:w-[160px] md:h-[160px] relative z-10"
+                    priority
+                />
             </div>
 
             <div ref={textRef} className="space-y-6 text-center relative z-10">
@@ -358,7 +304,7 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
 
             <div className="absolute bottom-12 left-1/2 -translate-x-1/2 text-center space-y-4">
                 <div className="text-[8px] font-black uppercase tracking-[0.3em] text-white/20">
-                    Africa Let's Worship
+                    Africa Let{"'"}s Worship
                 </div>
                 <div className="text-[8px] font-medium text-white/10 uppercase tracking-widest">
                     Since 2004

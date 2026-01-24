@@ -1,31 +1,44 @@
-"use client";
-
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { useEffect, useState } from "react";
 import "./globals.css";
-import Preloader from "@/components/Preloader";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import PreloaderContainer from "@/components/PreloaderContainer";
+import { ThemeProvider } from "@/components/theme-provider";
+import ElasticNavigator from "@/components/ElasticNavigator";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "AFLEWO Connect | Africa Let's Worship",
+  description: "One God. One People. One Africa. Stirring up hope in Jesus through a united voice since 2004.",
+  icons: {
+    icon: "/brand/AFLEWO LOGO 1-Photoroom.png",
+  }
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [loading, setLoading] = useState(true);
-
   return (
-    <html lang="en" className="dark scroll-smooth">
-      <body
-        className={`${inter.variable} font-sans bg-background text-foreground antialiased selection:bg-gold/30 selection:text-white overflow-x-hidden`}
-      >
-        {loading && <Preloader onComplete={() => setLoading(false)} />}
-        <div className={loading ? "opacity-0 invisible h-0" : "opacity-100 visible transition-all duration-1000 ease-out"}>
-          {children}
-        </div>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <PreloaderContainer />
+          <Navbar />
+          <main className="relative min-h-screen">
+            {children}
+          </main>
+          <ElasticNavigator />
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

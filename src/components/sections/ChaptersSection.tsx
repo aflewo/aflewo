@@ -3,20 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-    MapPin,
-    Users,
-    Calendar,
-    QrCode,
-    ArrowRight,
-    Globe,
-    Phone,
-    Mail,
-    X,
-    MessageCircle,
-    Music,
-    Radio
-} from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 import Link from "next/link";
 import Image from "next/image";
 import { chapters as chapterData } from "@/lib/chapters";
@@ -26,8 +13,6 @@ gsap.registerPlugin(ScrollTrigger);
 export default function ChaptersSection() {
     const containerRef = useRef<HTMLDivElement>(null);
     const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-    const [selectedChapter, setSelectedChapter] = useState<any>(null);
-    const [qrChapter, setQrChapter] = useState<any>(null);
 
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>, index: number) => {
         const card = cardsRef.current[index];
@@ -37,14 +22,17 @@ export default function ChaptersSection() {
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
 
-        const moveX = (e.clientX - centerX) * 0.05;
-        const moveY = (e.clientY - centerY) * 0.05;
+        const moveX = (e.clientX - centerX) * 0.1; // Increased intensity for better feel
+        const moveY = (e.clientY - centerY) * 0.1;
 
+        // Hardware-accelerated GSAP transform
         gsap.to(card, {
             x: moveX,
             y: moveY,
-            duration: 0.3,
-            ease: "power2.out"
+            scale: 1.02, // Subtle scale instead of rising
+            duration: 0.4,
+            ease: "power2.out",
+            overwrite: "auto"
         });
     }, []);
 
@@ -55,8 +43,10 @@ export default function ChaptersSection() {
         gsap.to(card, {
             x: 0,
             y: 0,
-            duration: 0.5,
-            ease: "elastic.out(1, 0.3)"
+            scale: 1,
+            duration: 0.8,
+            ease: "elastic.out(1, 0.5)",
+            overwrite: "auto"
         });
     }, []);
 
@@ -107,7 +97,7 @@ export default function ChaptersSection() {
                 <div className="chapter-header flex flex-col md:flex-row justify-between items-center md:items-end gap-12 mb-20 text-center md:text-left">
                     <div className="max-w-2xl space-y-6">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em] mx-auto md:mx-0">
-                            <MapPin size={12} /> The Prophetic House
+                            <AppIcon name="location_on" size={12} /> The Prophetic House
                         </div>
                         <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9]">
                             CHAPTERS OF <br /><span className="text-gold">IDENTITY</span>
@@ -118,7 +108,7 @@ export default function ChaptersSection() {
                             A continental network of worship, uniting 10+ major hubs across Africa
                         </p>
                         <Link href="https://whatsapp.com/channel/AFLEWO" className="press-scale inline-flex items-center gap-2 text-gold font-black uppercase tracking-widest text-[10px] hover:gap-4 transition-all">
-                            Join our WhatsApp Channel <MessageCircle size={14} />
+                            Join our WhatsApp Channel <AppIcon name="forum" size={14} />
                         </Link>
                     </div>
                 </div>
@@ -128,7 +118,7 @@ export default function ChaptersSection() {
                         <div
                             key={chapter.slug}
                             ref={(el) => { cardsRef.current[i] = el; }}
-                            className={`chapter-card glass-card-elevated p-8 md:p-10 flex flex-col justify-between group cursor-pointer transition-all duration-700 relative overflow-hidden rounded-lg ${getGridClasses(chapter.name)}`}
+                            className={`chapter-card glass-card-elevated p-8 md:p-10 flex flex-col justify-between group cursor-pointer relative overflow-hidden rounded-lg ${getGridClasses(chapter.name)}`}
                             onMouseMove={(e) => handleMouseMove(e, i)}
                             onMouseLeave={() => handleMouseLeave(i)}
                         >
@@ -143,7 +133,7 @@ export default function ChaptersSection() {
                                             </span>
                                             {chapter.slug === "mombasa" && (
                                                 <span className="flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-red-400 bg-red-500/20 px-2 py-0.5 rounded-full">
-                                                    <Radio size={8} className="animate-pulse" /> Live
+                                                    <AppIcon name="radio" size={10} className="animate-pulse" /> Live
                                                 </span>
                                             )}
                                         </div>
@@ -152,13 +142,10 @@ export default function ChaptersSection() {
                                         </h3>
                                     </div>
                                     <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setQrChapter(chapter);
-                                        }}
+                                        onClick={(e) => e.stopPropagation()}
                                         className="p-3 glass-card bg-gold/10 border-gold/30 rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"
                                     >
-                                        <QrCode size={18} />
+                                        <AppIcon name="qr_code_2" size={18} />
                                     </button>
                                 </div>
                                 <p className="text-foreground/40 text-sm font-medium leading-relaxed max-w-[300px]">
@@ -169,16 +156,16 @@ export default function ChaptersSection() {
                             <div className="pt-6 border-t border-white/5 relative z-10 space-y-4">
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
-                                        <Calendar size={14} className="text-gold" />
+                                        <AppIcon name="calendar_month" size={14} className="text-gold" />
                                         <span>EST. {chapter.established}</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
-                                        <MapPin size={14} className="text-gold" />
+                                        <AppIcon name="location_on" size={14} className="text-gold" />
                                         <span className="truncate">{chapter.venue.split(",")[0]}</span>
                                     </div>
                                     {chapter.capacity && (
                                         <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
-                                            <Users size={14} className="text-gold" />
+                                            <AppIcon name="groups" size={14} className="text-gold" />
                                             <span>{chapter.capacity} Worshippers</span>
                                         </div>
                                     )}
@@ -189,7 +176,7 @@ export default function ChaptersSection() {
                                         href={`/chapters/${chapter.slug}`}
                                         className="press-scale flex-1 inline-flex items-center justify-between px-5 py-3 bg-gold text-brown rounded-lg font-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all"
                                     >
-                                        Explore Chapter <ArrowRight size={14} />
+                                        Explore Chapter <AppIcon name="arrow_forward" size={14} />
                                     </Link>
                                 </div>
                             </div>
@@ -199,12 +186,11 @@ export default function ChaptersSection() {
                     ))}
                 </div>
 
-                {/* HQ Section */}
                 <div className="mt-16 glass-card-elevated p-8 md:p-12 rounded-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 blur-[100px] -z-10" />
                     <div className="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
                         <div className="p-6 rounded-lg bg-gold/10 text-gold border border-gold/20 shadow-glow">
-                            <Globe size={40} />
+                            <AppIcon name="public" size={40} />
                         </div>
                         <div className="space-y-2">
                             <h4 className="text-3xl font-black tracking-tighter">Central Administration</h4>
@@ -223,8 +209,6 @@ export default function ChaptersSection() {
                     </div>
                 </div>
             </div>
-
-            {/* Modals or additional content can go here */}
         </section>
     );
 }

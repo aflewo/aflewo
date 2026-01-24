@@ -4,49 +4,44 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import { Play } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroSection() {
     const sectionRef = useRef<HTMLDivElement>(null);
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Hero Entrance
-            gsap.fromTo(
-                ".hero-title",
-                { opacity: 0, y: 100, rotateX: 45 },
-                { opacity: 1, y: 0, rotateX: 0, duration: 1.5, ease: "power4.out", delay: 0.5 }
-            );
+            const tl = gsap.timeline();
 
-            gsap.fromTo(
-                ".hero-sub",
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 1.2 }
-            );
+            tl.from(".hero-content > *", {
+                y: 50,
+                opacity: 0,
+                duration: 1.2,
+                stagger: 0.15,
+                ease: "expo.out"
+            });
 
-            gsap.fromTo(
-                ".hero-btn",
-                { opacity: 0, scale: 0.9 },
-                { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.7)", delay: 1.5, stagger: 0.2 }
-            );
+            tl.from(".hero-btn", {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "back.out(1.7)"
+            }, "-=0.6");
 
-            // Scroll Video Zoom
-            if (videoRef.current) {
-                gsap.to(videoRef.current, {
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: "top top",
-                        end: "bottom top",
-                        scrub: true,
-                    },
-                    scale: 1.2,
-                    opacity: 0.6
-                });
-            }
+            gsap.to(".hero-video", {
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                },
+                y: 100,
+                opacity: 0.3,
+                scale: 1.1
+            });
         }, sectionRef);
 
         return () => ctx.revert();
@@ -55,59 +50,54 @@ export default function HeroSection() {
     return (
         <section
             ref={sectionRef}
+            id="hero"
             className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-background"
         >
             {/* Immersive Video Layer */}
-            <div className="absolute inset-0 z-0">
+            <div className="hero-video absolute inset-0 z-0">
+                <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background z-10" />
                 <video
-                    ref={videoRef}
                     autoPlay
-                    muted
                     loop
+                    muted
                     playsInline
-                    className="w-full h-full object-cover opacity-80 media-mask"
+                    className="w-full h-full object-cover scale-105"
                 >
                     <source src="/hero-bg.mp4" type="video/mp4" />
                 </video>
-                <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
             </div>
 
-            {/* Premium Typography Layer */}
-            <div ref={contentRef} className="relative z-10 text-center px-6 max-w-6xl">
-                <div className="inline-flex items-center gap-3 px-4 py-2 glass-card rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-gold mb-8 animate-breathe">
-                    <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
+            <div className="max-container relative z-20 text-center hero-content">
+                <div className="space-y-4 mb-10">
+                    <span className="block text-gold font-black uppercase tracking-[0.6em] text-[10px] md:text-xs">
+                        EST. 2004 — The Prophetic House
                     </span>
-                    Live from Winners' Chapel
+                    <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.85]">
+                        AFRICA <br />
+                        LET{"'"}S <span className="text-gold">WORSHIP</span>
+                    </h1>
+                    <p className="text-white/60 text-lg md:text-2xl font-medium tracking-tight max-w-2xl mx-auto italic leading-relaxed">
+                        "One God. One People. One Africa. Stirring up hope in Jesus through a united voice."
+                    </p>
                 </div>
-
-                <h1 className="hero-title text-7xl md:text-9xl font-black tracking-tighter text-white leading-[0.85] perspective-1000 mb-8">
-                    AFRICA <br />
-                    <span className="text-gradient-gold">LET'S WORSHIP</span>
-                </h1>
-
-                <p className="hero-sub text-xl md:text-2xl text-white/70 font-medium max-w-2xl mx-auto mb-12 leading-relaxed">
-                    One God • One People • One Africa <br />
-                    Stirring up hope in Jesus through a united voice since 2004
-                </p>
 
                 <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
                     <Link href="/media" className="hero-btn press-scale bg-white text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter flex items-center gap-3 group hover:bg-gold transition-all">
-                        <Play size={20} fill="currentColor" stroke="none" className="group-hover:scale-110 transition-transform" />
+                        <AppIcon name="play_arrow" size={20} className="group-hover:scale-110 transition-transform" />
                         Watch Archive
                     </Link>
                     <Link href="#about" className="hero-btn press-scale glass-card-elevated px-12 py-5 rounded-full font-black uppercase tracking-tighter text-white hover:bg-white/10 transition-all border-white/20">
                         Our Vision
                     </Link>
                 </div>
+
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-40">
+                    <AppIcon name="keyboard_arrow_down" size={32} className="text-white" />
+                </div>
             </div>
 
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-30">
-                <span className="text-[10px] font-black tracking-widest uppercase">Scroll to Discover</span>
-                <div className="w-[2px] h-12 bg-gradient-to-b from-white to-transparent" />
-            </div>
+            {/* Ambient Overlays */}
+            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
         </section>
     );
 }

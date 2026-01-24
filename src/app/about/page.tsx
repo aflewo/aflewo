@@ -1,20 +1,18 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { Sparkles, Heart, Shield, Users } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const pillars = [
-    { title: "Unity", desc: "Bringing the diverse church of Africa into a single, cohesive voice of worship.", icon: <Users size={32} /> },
-    { title: "Hope", desc: "Stirring up the expectation of God's goodness across the 'prophetic house' of Africa.", icon: <Sparkles size={32} /> },
-    { title: "Excelence", desc: "Presenting our worship with the highest standard of musical and logistical skill.", icon: <Shield size={32} /> },
-    { title: "Intercession", desc: "Standing in the gap for nations like DR Congo, Nigeria, and South Sudan.", icon: <Heart size={32} /> },
+    { title: "Unity", desc: "Bringing the diverse church of Africa into a single, cohesive voice of worship.", icon: "groups" },
+    { title: "Hope", desc: "Stirring up the expectation of God's goodness across the 'prophetic house' of Africa.", icon: "auto_awesome" },
+    { title: "Excellence", desc: "Presenting our worship with the highest standard of musical and logistical skill.", icon: "verified_user" },
+    { title: "Intercession", desc: "Standing in the gap for nations like DR Congo, Nigeria, and South Sudan.", icon: "favorite" },
 ];
 
 export default function AboutPage() {
@@ -47,8 +45,6 @@ export default function AboutPage() {
 
     return (
         <main ref={containerRef} className="bg-background min-h-screen">
-            <Navbar />
-
             {/* Subpage Hero */}
             <section className="relative pt-40 pb-24 px-6 overflow-hidden">
                 <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 blur-3xl bg-gold/20 -z-10" />
@@ -57,9 +53,9 @@ export default function AboutPage() {
                         <span className="text-gold font-black uppercase tracking-[0.4em] text-xs">Our Identity</span>
                         <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.85]">
                             THE VISION <br />
-                            <span className="text-gold">BEHIND THE ALTAR.</span>
+                            <span className="text-gold uppercase">BEHIND THE ALTAR.</span>
                         </h1>
-                        <p className="text-2xl text-foreground/60 font-medium leading-relaxed font-serif-spiritual italic">
+                        <p className="text-2xl text-foreground/60 font-medium leading-relaxed italic border-l-2 border-gold/30 pl-8">
                             AFLEWO (Africa Let’s Worship) is a movement birthed from the heart of Daystar University alumni,
                             committed to raising an annual altar of worship and prayer for the nations of Africa.
                         </p>
@@ -72,15 +68,15 @@ export default function AboutPage() {
                 <div className="max-container grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="glass-card-elevated p-12 space-y-6 md:mt-12">
                         <h3 className="text-gold font-black uppercase tracking-widest text-xs">The Mission</h3>
-                        <h2 className="text-4xl font-black tracking-tight">PURSUING UNITY <span className="text-gold">IN WORSHIP.</span></h2>
+                        <h2 className="text-4xl font-black tracking-tight uppercase">PURSUING UNITY <span className="text-gold">IN WORSHIP.</span></h2>
                         <p className="text-foreground/60 font-medium leading-loose text-lg">
                             To stir up hope in Jesus through annual large-scale musical and prayer events from a united church front across Africa.
                             Since 2004, we have provided a platform where denominations fade, and the name of Jesus is exalted.
                         </p>
                     </div>
-                    <div className="bg-primary text-primary-foreground p-12 rounded-[2rem] space-y-6">
+                    <div className="bg-gold/10 border border-gold/20 p-12 rounded-[2rem] space-y-6">
                         <h3 className="text-gold font-black uppercase tracking-widest text-xs">The Vision</h3>
-                        <h2 className="text-4xl font-black tracking-tight text-white">A PROPHETIC <span className="text-gold">HOUSE.</span></h2>
+                        <h2 className="text-4xl font-black tracking-tight text-white uppercase">A PROPHETIC <span className="text-gold">HOUSE.</span></h2>
                         <p className="text-white/60 font-medium leading-loose text-lg">
                             To see all of Africa seeing itself through the eyes of its Maker. We aim to achieve this through corporate worship,
                             establishing local chapters that maintain the pulse of intercession in every major African city.
@@ -93,15 +89,17 @@ export default function AboutPage() {
             <section className="section-padding bg-background/50" id="pillars">
                 <div className="max-container">
                     <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-20">
-                        <h2 className="text-5xl font-black tracking-tighter">OUR GUIDING <span className="text-gold">PILLARS.</span></h2>
+                        <h2 className="text-5xl font-black tracking-tighter uppercase">OUR GUIDING <span className="text-gold">PILLARS.</span></h2>
                         <p className="text-foreground/50 max-w-xs font-bold text-sm uppercase tracking-widest">The foundation of every AFLEWO experience.</p>
                     </div>
 
                     <div className="pillars-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {pillars.map((pillar, i) => (
                             <div key={i} className="pillar-card glass-card p-10 space-y-6 hover:-translate-y-2 transition-transform duration-500">
-                                <div className="text-gold">{pillar.icon}</div>
-                                <h3 className="text-2xl font-black">{pillar.title}</h3>
+                                <div className="text-gold">
+                                    <AppIcon name={pillar.icon} size={32} />
+                                </div>
+                                <h3 className="text-2xl font-black uppercase tracking-tighter">{pillar.title}</h3>
                                 <p className="text-foreground/60 text-sm font-medium leading-relaxed">{pillar.desc}</p>
                             </div>
                         ))}
@@ -113,7 +111,7 @@ export default function AboutPage() {
             <section className="section-padding overflow-hidden relative">
                 <div className="max-container flex flex-col md:flex-row items-center gap-20">
                     <div className="flex-1 space-y-8">
-                        <h2 className="text-5xl font-black tracking-tighter">THE SING AFRICA <br /><span className="text-gold">LEGACY.</span></h2>
+                        <h2 className="text-5xl font-black tracking-tighter uppercase">THE SING AFRICA <br /><span className="text-gold">LEGACY.</span></h2>
                         <p className="text-foreground/60 text-lg font-medium leading-relaxed">
                             Birthed in October 2003, the alumni of Sing Africa sought to create a united front for the church.
                             Under the leadership of Timothy Kaberia and Ruguru, the phrase "Africa Let's Worship" became our anthem.
@@ -143,8 +141,6 @@ export default function AboutPage() {
                     </div>
                 </div>
             </section>
-
-            <Footer />
         </main>
     );
 }

@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Draggable } from "gsap/all";
+import AppIcon from "@/components/ui/AppIcon";
 import Link from "next/link";
-import { Quote, Heart, Sparkles, ArrowRight, ChevronLeft, ChevronRight, Play } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, Draggable);
 
 interface Story {
     content: string;
@@ -54,67 +55,132 @@ const stories: Story[] = [
 
 export default function StoriesTeaser() {
     const sectionRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const proxyRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-    const carouselRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            gsap.from(".stories-header", {
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top 80%",
-                },
-                x: -60,
-                opacity: 0,
-                duration: 1.2,
-                ease: "expo.out"
-            });
+        const storiesCount = stories.length;
+        const cards = gsap.utils.toArray(".story-card") as HTMLElement[];
 
-            gsap.from(".story-card", {
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top 70%",
-                },
-                x: 60,
-                opacity: 0,
-                stagger: 0.15,
-                duration: 1,
-                ease: "power3.out"
-            });
-        }, sectionRef);
+        // Configuration for the seamless loop
+        const spacing = 0.3; // Spacing between cards (stagger)
+        const snap = gsap.utils.snap(spacing);
 
-        return () => ctx.revert();
-    }, []);
+        // Set initial state of cards
+        gsap.set(cards, { xPercent: 400, opacity: 0, scale: 0.8 });
 
-    useEffect(() => {
-        if (!isAutoPlaying) return;
+        const animateFunc = (element: HTMLElement) => {
+            const tl = gsap.timeline();
+            tl.fromTo(element,
+                { scale: 0.8, opacity: 0 },
+                { scale: 1, opacity: 1, zIndex: 100, duration: 0.5, yoyo: true, repeat: 1, ease: "power1.inOut", immediateRender: false }
+            ).fromTo(element,
+                { xPercent: 450 },
+                { xPercent: -450, duration: 1, ease: "none", immediateRender: false },
+                0
+            );
+            return tl;
+        };
 
-        const interval = setInterval(() => {
-            setActiveIndex((prev) => (prev + 1) % stories.length);
-        }, 5000);
+        const seamlessLoop = buildSeamlessLoop(cards, spacing, animateFunc);
+        const playhead = { offset: 0 };
+        const wrapTime = gsap.utils.wrap(0, seamlessLoop.duration());
 
-        return () => clearInterval(interval);
-    }, [isAutoPlaying]);
+        const scrub = gsap.to(playhead, {
+            offset: 0,
+            onUpdate() {
+                seamlessLoop.time(wrapTime(playhead.offset));
+                // Sync active index for UI dots
+                const normalizedOffset = wrapTime(playhead.offset) / seamlessLoop.duration();
+                const currentIdx = Math.round(normalizedOffset * storiesCount) % storiesCount;
+                setActiveIndex(currentIdx);
+            },
+            duration: 0.5,
+            ease: "power3",
+            paused: true
+        });
 
-    useEffect(() => {
-        if (carouselRef.current) {
-            gsap.to(carouselRef.current, {
-                x: -activeIndex * 100 + "%",
-                duration: 0.8,
-                ease: "power3.inOut"
+        const trigger = ScrollTrigger.create({
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            onUpdate(self) {
+                if (self.isActive) {
+                    scrub.vars.offset = self.progress * seamlessLoop.duration();
+                    scrub.invalidate().restart();
+                }
+            }
+        });
+
+        const draggable = Draggable.create(proxyRef.current, {
+            type: "x",
+            trigger: containerRef.current,
+            inertia: true,
+            onPress() {
+                this.startOffset = playhead.offset;
+            },
+            onDrag() {
+                playhead.offset = this.startOffset + (this.startX - this.x) * 0.001;
+                scrub.invalidate().restart();
+            },
+            onDragEnd() {
+                scrollToOffset(playhead.offset);
+            }
+        })[0];
+
+        function scrollToOffset(offset: number) {
+            const snappedTime = snap(offset);
+            gsap.to(playhead, {
+                offset: snappedTime,
+                duration: 0.6,
+                ease: "power3.out",
+                onUpdate: scrub.vars.onUpdate
             });
         }
-    }, [activeIndex]);
 
-    const goToSlide = (index: number) => {
-        setIsAutoPlaying(false);
-        setActiveIndex(index);
-        setTimeout(() => setIsAutoPlaying(true), 10000);
-    };
+        // Helper function to build the loop
+        function buildSeamlessLoop(items: HTMLElement[], spacing: number, animateFunc: (el: HTMLElement) => gsap.core.Timeline) {
+            const overlap = Math.ceil(1 / spacing);
+            const startTime = items.length * spacing + 0.5;
+            const loopTime = (items.length + overlap) * spacing + 1;
+            const rawSequence = gsap.timeline({ paused: true });
+            const seamlessLoop = gsap.timeline({
+                paused: true,
+                repeat: -1,
+                onRepeat() {
+                    this._time === this._dur && (this._tTime += this._dur - 0.01);
+                }
+            });
+            const l = items.length + overlap * 2;
+            let time, i, index;
 
-    const nextSlide = () => goToSlide((activeIndex + 1) % stories.length);
-    const prevSlide = () => goToSlide((activeIndex - 1 + stories.length) % stories.length);
+            for (i = 0; i < l; i++) {
+                index = i % items.length;
+                time = i * spacing;
+                rawSequence.add(animateFunc(items[index]), time);
+            }
+
+            rawSequence.time(startTime);
+            seamlessLoop.to(rawSequence, {
+                time: loopTime,
+                duration: loopTime - startTime,
+                ease: "none"
+            }).fromTo(rawSequence, { time: overlap * spacing + 1 }, {
+                time: startTime,
+                duration: startTime - (overlap * spacing + 1),
+                immediateRender: false,
+                ease: "none"
+            });
+            return seamlessLoop;
+        }
+
+        return () => {
+            trigger.kill();
+            draggable.kill();
+            seamlessLoop.kill();
+        };
+    }, []);
 
     return (
         <section ref={sectionRef} className="section-padding bg-brown text-white relative overflow-hidden" id="stories">
@@ -124,98 +190,59 @@ export default function StoriesTeaser() {
             </div>
 
             <div className="max-container relative z-10">
-                <div className="flex flex-col lg:flex-row gap-16 lg:gap-20 items-start">
-                    <div className="stories-header flex-1 space-y-8 lg:sticky lg:top-32">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                            <Sparkles size={14} /> The AFLEWO Spirit
+                <div className="flex flex-col lg:flex-row gap-16 lg:gap-20 items-center min-h-[600px]">
+                    <div className="stories-header flex-1 space-y-8 text-center lg:text-left">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em] mx-auto lg:mx-0">
+                            <AppIcon name="auto_awesome" size={14} /> The AFLEWO Spirit
                         </div>
                         <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9]">
                             HEIRS OF <br />
-                            <span className="text-gold">GLORY</span>
+                            <span className="text-gold uppercase">GLORY</span>
                         </h2>
-                        <p className="text-white/60 text-xl font-medium leading-relaxed font-sans-aflewo italic max-w-md">
+                        <p className="text-white/60 text-xl font-medium leading-relaxed italic max-w-md mx-auto lg:mx-0">
                             "Behind every worship night is a story of transformation. From the hidden prayers of volunteers to the global echoes of our anthem."
                         </p>
 
-                        <div className="flex items-center gap-4 pt-4">
-                            <button
-                                onClick={prevSlide}
-                                className="p-4 rounded-full glass-card hover:bg-white/10 transition-colors"
-                            >
-                                <ChevronLeft size={20} />
-                            </button>
-                            <div className="flex gap-2">
+                        <div className="flex items-center justify-center lg:justify-start gap-4 pt-4">
+                            <div className="flex gap-3">
                                 {stories.map((_, i) => (
-                                    <button
+                                    <div
                                         key={i}
-                                        onClick={() => goToSlide(i)}
-                                        className={`h-2 rounded-full transition-all duration-500 ${i === activeIndex ? "w-8 bg-gold" : "w-2 bg-white/20 hover:bg-white/40"
+                                        className={`h-1.5 rounded-full transition-all duration-500 ${i === activeIndex ? "w-10 bg-gold" : "w-1.5 bg-white/20"
                                             }`}
                                     />
                                 ))}
                             </div>
-                            <button
-                                onClick={nextSlide}
-                                className="p-4 rounded-full glass-card hover:bg-white/10 transition-colors"
-                            >
-                                <ChevronRight size={20} />
-                            </button>
                         </div>
 
                         <Link
                             href="/stories"
-                            className="press-scale inline-flex items-center gap-4 bg-gold text-brown px-10 py-5 rounded-lg font-black uppercase tracking-tighter hover:brightness-110 transition-all"
+                            className="press-scale inline-flex items-center gap-4 bg-gold text-brown px-12 py-5 rounded-lg font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
                         >
-                            Read All Stories <ArrowRight size={20} />
+                            Read All Stories <AppIcon name="arrow_forward" size={20} />
                         </Link>
                     </div>
 
-                    <div
-                        className="flex-1 w-full overflow-hidden cursor-grab active:cursor-grabbing"
-                        onTouchStart={(e) => {
-                            const startX = e.touches[0].clientX;
-                            const handleTouchEnd = (ee: TouchEvent) => {
-                                const endX = ee.changedTouches[0].clientX;
-                                if (startX - endX > 50) nextSlide();
-                                if (startX - endX < -50) prevSlide();
-                                document.removeEventListener("touchend", handleTouchEnd);
-                            };
-                            document.addEventListener("touchend", handleTouchEnd);
-                        }}
-                    >
-                        <div
-                            ref={carouselRef}
-                            className="flex touch-none"
-                            style={{ width: `${stories.length * 100}%` }}
-                        >
+                    <div ref={containerRef} className="flex-1 w-full h-[500px] relative overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing">
+                        <div ref={proxyRef} className="absolute invisible" />
+                        <ul className="cards relative w-full h-full list-none p-0 m-0">
                             {stories.map((story, i) => (
-                                <div
-                                    key={i}
-                                    className="story-card w-full px-2"
-                                    style={{ width: `${100 / stories.length}%` }}
-                                >
-                                    <div className="glass-card-elevated p-10 md:p-12 relative overflow-hidden group rounded-lg h-full border-white/5">
-                                        <Quote className="absolute top-8 right-8 text-gold/10 group-hover:text-gold/20 transition-colors duration-500" size={80} />
+                                <li key={i} className="story-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[400px]">
+                                    <div className="glass-card-elevated p-10 md:p-12 relative overflow-hidden group rounded-[2rem] border-white/5 bg-brown/40 backdrop-blur-3xl shadow-2xl">
+                                        <AppIcon name="format_quote" size={80} className="absolute top-8 right-8 text-gold/10 group-hover:text-gold/20 transition-colors duration-500" />
 
                                         <div className="relative z-10 space-y-8">
                                             <div className="flex items-center gap-3">
-                                                {story.chapter && (
-                                                    <span className="px-3 py-1 rounded-full bg-gold/10 text-gold text-[10px] font-black uppercase tracking-widest">
-                                                        {story.chapter}
-                                                    </span>
-                                                )}
-                                                {story.year && (
-                                                    <span className="text-white/30 text-[10px] font-black uppercase tracking-widest">
-                                                        {story.year}
-                                                    </span>
-                                                )}
+                                                <span className="px-3 py-1 rounded-full bg-gold/10 text-gold text-[10px] font-black uppercase tracking-widest">
+                                                    {story.chapter}
+                                                </span>
                                             </div>
 
-                                            <p className="text-2xl md:text-3xl font-black tracking-tight text-white leading-snug">
+                                            <p className="text-xl md:text-2xl font-black tracking-tight text-white leading-snug">
                                                 "{story.content}"
                                             </p>
 
-                                            <div className="flex justify-between items-end border-t border-white/10 pt-8">
+                                            <div className="flex justify-between items-end border-t border-white/5 pt-8">
                                                 <div className="space-y-1">
                                                     <h4 className="font-black text-gold uppercase tracking-widest text-xs">
                                                         {story.name}
@@ -225,17 +252,15 @@ export default function StoriesTeaser() {
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-gold/10">
-                                                    <Heart size={16} className="text-gold" fill="currentColor" />
+                                                    <AppIcon name="favorite" size={16} className="text-gold" />
                                                     <span className="text-xs font-black text-gold">{story.stat}</span>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                     </div>
-                                </div>
+                                </li>
                             ))}
-                        </div>
+                        </ul>
                     </div>
                 </div>
             </div>

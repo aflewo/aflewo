@@ -1,0 +1,54 @@
+.slider-root {
+    position: relative;
+    display: flex;
+    height: 100%;
+    width: 2rem;
+    flex-direction: column;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.slider-root:active {
+    cursor: grabbing;
+}
+
+.slider-track {
+    position: relative;
+    width: 4px;
+    height: 100%;
+    border-radius: 9999px;
+    background-color: rgba(255, 255, 255, 0.1);
+    overflow: visible;
+}
+
+.slider-range {
+    position: absolute;
+    width: 100%;
+    background-color: hsl(var(--gold));
+    border-radius: 9999px;
+    top: 0;
+}
+
+.shadow-glow {
+    box-shadow: 0 0 30px -5px hsla(var(--gold), 0.4);
+}
+
+/* Node Label Animation */
+.node-label {
+    animation: slideInRight 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translate(10px, -50%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(0, -50%);
+    }
+}

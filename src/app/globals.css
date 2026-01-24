@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    /* Dark Mode (Default) - African Sunset */
+    /* Baseline: Dark Mode (Default) - African Sunset & Obsidian */
     --background: 20 14% 4%;
     --foreground: 42 100% 95%;
 
@@ -37,15 +37,17 @@
 
     --radius: 0.5rem;
 
-    /* Brand Colors */
+    /* Brand Constants */
     --gold: 42 92% 56%;
     --brown: 20 30% 18%;
     --cream: 42 100% 95%;
     --midnight: 220 60% 12%;
+    --emerald: 160 84% 39%;
+    --white: 0 0% 100%;
   }
 
   .light {
-    /* Light Mode - Yellow Cream White */
+    /* Light Mode - Yellow Cream & Savannah Sun */
     --background: 42 60% 98%;
     --foreground: 20 14% 10%;
 
@@ -70,9 +72,6 @@
     --border: 42 30% 85%;
     --input: 42 30% 85%;
     --ring: 42 92% 56%;
-
-    /* Brand Overrides for Light Mode */
-    --brown: 20 14% 10%;
   }
 }
 
@@ -90,7 +89,6 @@
     font-family: 'Inter', system-ui, sans-serif;
   }
 
-  /* Universal Headline Treatment */
   h1,
   h2,
   h3,
@@ -98,10 +96,26 @@
   h5,
   h6 {
     @apply font-black tracking-tighter leading-tight;
+  }
 
-    /* Auto-center on mobile */
-    @media (max-width: 768px) {
+  p {
+    @apply font-medium;
+  }
+
+  /* Fixed Nesting for Build */
+  @media (max-width: 768px) {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       @apply text-center;
+    }
+
+    p {
+      @apply text-center mx-auto !important;
     }
   }
 
@@ -113,15 +127,6 @@
     @apply text-4xl md:text-6xl;
   }
 
-  p {
-    @apply font-medium;
-
-    @media (max-width: 768px) {
-      @apply text-center mx-auto !important;
-    }
-  }
-
-  /* Remove full stops from headlines */
   h1::after,
   h2::after {
     content: none !important;
@@ -142,7 +147,7 @@
   }
 
   .shadow-glow {
-    box-shadow: 0 0 30px -5px hsla(42, 92%, 56%, 0.4);
+    box-shadow: 0 0 30px -5px hsla(var(--gold), 0.4);
   }
 
   .max-container {
@@ -160,6 +165,13 @@
   .bg-gold {
     background-color: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
+  }
+
+  /* Bento Hover Fixes - Removing All Transitions for GSAP Control */
+  .chapter-card,
+  .bento-item {
+    transition: none !important;
+    will-change: transform;
   }
 }
 
@@ -181,16 +193,10 @@
   background: hsl(var(--primary));
 }
 
-/* Performance Optimizations */
-img {
-  content-visibility: auto;
-}
-
 .perspective-1000 {
   perspective: 1000px;
 }
 
-/* Hide scrollbar */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -200,7 +206,6 @@ img {
   scrollbar-width: none;
 }
 
-/* Stagger Animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -217,12 +222,6 @@ img {
   animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-/* Chapter Hover Effect Corrective */
-.chapter-card {
-  transition: transform 0.1s linear !important;
-}
-
-/* Grid helper */
 .auto-rows-fr {
   grid-auto-rows: 1fr;
 }
