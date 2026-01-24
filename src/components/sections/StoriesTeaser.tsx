@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Draggable } from "gsap/draggable";
+import { ScrollTrigger, Draggable } from "gsap/all";
 import Link from "next/link";
 import AppIcon from "@/components/ui/AppIcon";
 
@@ -208,7 +207,7 @@ export default function StoriesTeaser() {
                             <span className="text-gold">GLORY</span>
                         </h2>
                         <p className="text-white/60 text-xl font-medium leading-relaxed font-sans-aflewo italic max-w-md">
-                            "Behind every worship night is a story of transformation. From the hidden prayers of volunteers to the global echoes of our anthem."
+                            &quot;Behind every worship night is a story of transformation. From the hidden prayers of volunteers to the global echoes of our anthem.&quot;
                         </p>
 
                         <div className="flex items-center gap-4 pt-4">
@@ -269,7 +268,7 @@ export default function StoriesTeaser() {
                                             </div>
 
                                             <p className="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight">
-                                                "{story.content}"
+                                                &quot;{story.content}&quot;
                                             </p>
 
                                             <div className="flex justify-between items-end border-t border-white/10 pt-8">

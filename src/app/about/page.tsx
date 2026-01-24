@@ -115,7 +115,7 @@ export default function AboutPage() {
                         <h2 className="text-5xl font-black tracking-tighter">THE SING AFRICA <br /><span className="text-gold">LEGACY.</span></h2>
                         <p className="text-foreground/60 text-lg font-medium leading-relaxed">
                             Birthed in October 2003, the alumni of Sing Africa sought to create a united front for the church.
-                            Under the leadership of Timothy Kaberia and Ruguru, the phrase "Africa Let's Worship" became our anthem.
+                            Under the leadership of Timothy Kaberia and Ruguru, the phrase &quot;Africa Let&apos;s Worship&quot; became our anthem.
                         </p>
                         <div className="flex items-center gap-4 py-4 border-y border-white/5">
                             <div className="w-12 h-12 rounded-full overflow-hidden grayscale relative">
