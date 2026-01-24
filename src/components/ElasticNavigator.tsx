@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import AppIcon from "@/components/ui/AppIcon";
-import { motion, animate, useMotionValue, useMotionValueEvent, useTransform, useSpring, AnimatePresence, PanInfo } from "framer-motion";
+import { motion, animate, useMotionValue, useMotionValueEvent, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import './ElasticNavigator.css';
 
 const sections = [
@@ -16,9 +16,9 @@ const sections = [
     { id: "join", label: "Join" },
 ];
 
-const MAX_OVERFLOW = 50;
-const SPRING_CONFIG = { stiffness: 400, damping: 30, mass: 0.8 };
-const PREDICTIVE_DAMPING = 0.9;
+const MAX_OVERFLOW = 40;
+const SPRING_CONFIG = { stiffness: 450, damping: 35, mass: 0.5 };
+const PREDICTIVE_DAMPING = 0.8;
 
 function decay(value: number, max: number) {
     if (max === 0) return 0;
@@ -31,50 +31,38 @@ export default function ElasticNavigator() {
     const [isVisible, setIsVisible] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const [region, setRegion] = useState<'top' | 'middle' | 'bottom'>('middle');
-    const [isIdle, setIsIdle] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
 
     const sliderRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
-    const idleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const velocityRef = useRef(0);
+    const idleTimeoutRef = useRef<number | null>(null);
+    const rafRef = useRef<number | null>(null);
     const lastYRef = useRef(0);
     const lastTimeRef = useRef(0);
+    const velocityRef = useRef(0);
 
     const value = useMotionValue(0);
-    const clientY = useMotionValue(0);
     const overflow = useMotionValue(0);
-    const scale = useMotionValue(1);
-    const panOffset = useMotionValue(0);
+    const predictiveValue = useMotionValue(0);
+    const thumbY = useMotionValue(0);
+    const thumbLeft = useMotionValue(0);
 
     const springOverflow = useSpring(overflow, SPRING_CONFIG);
-    const springScaleX = useTransform(springOverflow, [0, MAX_OVERFLOW], [1, 0.8]);
-    const springScaleY = useTransform(springOverflow, (v) => {
-        if (sliderRef.current) {
-            const { height } = sliderRef.current.getBoundingClientRect();
-            return 1 + v / height;
-        }
-        return 1;
-    });
-
-    const [activeIndex, setActiveIndex] = useState(0);
-
-    useMotionValueEvent(value, "change", (latest) => {
-        const index = getClosestSectionIndex(latest);
-        if (index !== activeIndex) {
-            setActiveIndex(index);
-        }
-    });
-
-    // Brand Colors for Framer Motion (Standard RGBA)
-    const GOLD = "rgba(245, 166, 35, 1)";
-    const GOLD_MUTED = "rgba(245, 166, 35, 0.3)";
+    const springScaleX = useTransform(springOverflow, [0, MAX_OVERFLOW], [1, 0.75]);
+    const springScaleY = useTransform(springOverflow, (v) => 1 + (v / 200));
 
     const rangeHeight = useTransform(value, (v) => `${v}%`);
-    const predictiveValue = useMotionValue(0);
     const predictiveHeight = useTransform(predictiveValue, (v) => `${v}%`);
 
-    const transformOrigin = region === 'top' ? 'top center' : region === 'bottom' ? 'bottom center' : 'center center';
+    // Brand Colors
+    const GOLD = "#f5a623";
+    const GOLD_MUTED = "rgba(245, 166, 35, 0.2)";
+
+    const getClosestSectionIndex = useCallback((percentage: number) => {
+        const span = 100 / (sections.length - 1);
+        return Math.max(0, Math.min(sections.length - 1, Math.round(percentage / span)));
+    }, []);
 
     const scrollToPercentage = useCallback((percentage: number, behavior: ScrollBehavior = 'auto') => {
         const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -84,296 +72,248 @@ export default function ElasticNavigator() {
             top: targetScroll,
             behavior: behavior === 'auto' ? 'auto' : 'smooth'
         });
-
         value.set(percentage);
     }, [value]);
 
-    const getClosestSectionIndex = useCallback((percentage: number) => {
-        const sectionPercentage = 100 / (sections.length - 1);
-        return Math.round(percentage / sectionPercentage);
-    }, []);
+    const updateThumbPosition = useCallback(() => {
+        if (!trackRef.current) return;
+        const rect = trackRef.current.getBoundingClientRect();
+        const currentPct = value.get();
+        const y = rect.top + (currentPct / 100) * rect.height;
+        thumbY.set(y);
+        thumbLeft.set(rect.left + rect.width / 2);
+    }, [value, thumbY, thumbLeft]);
 
-    const snapToNearestSection = useCallback((currentPercentage: number) => {
-        const sectionPercentage = 100 / (sections.length - 1);
-        const closestIndex = getClosestSectionIndex(currentPercentage);
-        const targetPercentage = closestIndex * sectionPercentage;
-
-        animate(value, targetPercentage, {
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-            onUpdate: (latest) => {
-                scrollToPercentage(latest, 'auto');
-            }
-        });
-    }, [getClosestSectionIndex, scrollToPercentage, value]);
+    useMotionValueEvent(value, "change", (latest) => {
+        const index = getClosestSectionIndex(latest);
+        if (index !== activeIndex) setActiveIndex(index);
+        updateThumbPosition();
+    });
 
     useEffect(() => {
         const handleScroll = () => {
             if (isDragging) return;
-
-            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (docHeight <= 0) return;
+            const scrollPercent = (window.scrollY / docHeight) * 100;
             value.set(scrollPercent);
-            setIsVisible(window.scrollY > window.innerHeight * 0.8);
+            setIsVisible(window.scrollY > window.innerHeight * 0.5);
 
-            setIsIdle(false);
-            if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-            idleTimeoutRef.current = setTimeout(() => {
-                setIsIdle(true);
-                setIsExpanded(false);
-            }, 5000);
-        };
-
-        const handleResize = () => {
-            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-            value.set(scrollPercent);
+            if (idleTimeoutRef.current) window.clearTimeout(idleTimeoutRef.current);
+            idleTimeoutRef.current = window.setTimeout(() => setIsExpanded(false), 8000);
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
-        window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', updateThumbPosition);
+        handleScroll();
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
-            window.removeEventListener('resize', handleResize);
-            if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+            window.removeEventListener('resize', updateThumbPosition);
+            if (idleTimeoutRef.current) window.clearTimeout(idleTimeoutRef.current);
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+            try { value.stop(); overflow.stop(); predictiveValue.stop(); } catch (e) { }
         };
-    }, [isDragging, value]);
+    }, [isDragging, value, updateThumbPosition]);
 
-    const handleDragStart = () => {
+    const handleTrackPointer = (ev: React.PointerEvent) => {
+        if (!trackRef.current) return;
+        ev.preventDefault();
+        const rect = trackRef.current.getBoundingClientRect();
+        const clickY = Math.max(rect.top, Math.min(ev.clientY, rect.bottom));
+        const perc = ((clickY - rect.top) / rect.height) * 100;
+
+        const idx = getClosestSectionIndex(perc);
+        const targetPerc = (100 / (sections.length - 1)) * idx;
+
+        animate(value, targetPerc, {
+            type: "spring",
+            stiffness: 400,
+            damping: 30,
+            onUpdate: (v) => scrollToPercentage(v, 'auto')
+        });
+    };
+
+    const onPointerDown = (ev: React.PointerEvent) => {
+        if (!trackRef.current) return;
+        (ev.target as Element).setPointerCapture(ev.pointerId);
         setIsDragging(true);
-        setIsIdle(false);
-        if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+        lastYRef.current = ev.clientY;
+        lastTimeRef.current = performance.now();
         velocityRef.current = 0;
-        lastYRef.current = 0;
-        lastTimeRef.current = Date.now();
     };
 
-    const handleDrag = (event: any, info: PanInfo) => {
-        if (!sliderRef.current || !trackRef.current) return;
+    const onPointerMove = (ev: PointerEvent) => {
+        if (!isDragging || !trackRef.current) return;
 
-        const rect = sliderRef.current.getBoundingClientRect();
-        const trackRect = trackRef.current.getBoundingClientRect();
-        const currentY = info.point.y;
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        rafRef.current = requestAnimationFrame(() => {
+            const rect = trackRef.current!.getBoundingClientRect();
+            const now = performance.now();
+            const dt = Math.max(1, now - lastTimeRef.current);
 
-        const now = Date.now();
-        const deltaTime = now - lastTimeRef.current;
+            const dy = ev.clientY - lastYRef.current;
+            velocityRef.current = (dy / dt) * 1000;
+            lastYRef.current = ev.clientY;
+            lastTimeRef.current = now;
 
-        if (deltaTime > 0) {
-            const deltaY = currentY - lastYRef.current;
-            velocityRef.current = (deltaY / deltaTime) * 1000;
-        }
+            const constrainedY = Math.max(rect.top - MAX_OVERFLOW, Math.min(ev.clientY, rect.bottom + MAX_OVERFLOW));
 
-        lastYRef.current = currentY;
-        lastTimeRef.current = now;
+            if (constrainedY < rect.top) {
+                setRegion('top');
+                overflow.set(decay(rect.top - constrainedY, MAX_OVERFLOW));
+            } else if (constrainedY > rect.bottom) {
+                setRegion('bottom');
+                overflow.set(decay(constrainedY - rect.bottom, MAX_OVERFLOW));
+            } else {
+                setRegion('middle');
+                overflow.set(0);
+            }
 
-        const relativeY = currentY - rect.top;
-        let newPercentage = (relativeY / rect.height) * 100;
+            const clampedY = Math.max(rect.top, Math.min(constrainedY, rect.bottom));
+            const newPerc = ((clampedY - rect.top) / rect.height) * 100;
+            value.set(newPerc);
+            scrollToPercentage(newPerc, 'auto');
 
-        const trackTop = trackRect.top - rect.top;
-        const trackBottom = trackRect.bottom - rect.top;
-        const trackHeight = trackRect.height;
-
-        if (relativeY < trackTop) {
-            setRegion('top');
-            const overflowAmount = trackTop - relativeY;
-            overflow.set(decay(overflowAmount, MAX_OVERFLOW));
-
-            const overflowFactor = 1 - (overflowAmount / MAX_OVERFLOW);
-            newPercentage = 0 - (10 * (1 - overflowFactor));
-        } else if (relativeY > trackBottom) {
-            setRegion('bottom');
-            const overflowAmount = relativeY - trackBottom;
-            overflow.set(decay(overflowAmount, MAX_OVERFLOW));
-
-            const overflowFactor = 1 - (overflowAmount / MAX_OVERFLOW);
-            newPercentage = 100 + (10 * (1 - overflowFactor));
-        } else {
-            setRegion('middle');
-            overflow.set(0);
-
-            const trackRelativeY = relativeY - trackTop;
-            newPercentage = (trackRelativeY / trackHeight) * 100;
-        }
-
-        newPercentage = Math.max(0, Math.min(newPercentage, 100));
-        value.set(newPercentage);
-        scrollToPercentage(newPercentage, 'auto');
-
-        const predictedPercentage = newPercentage + (velocityRef.current * PREDICTIVE_DAMPING);
-        predictiveValue.set(Math.max(0, Math.min(predictedPercentage, 100)));
+            const pred = newPerc + (velocityRef.current * PREDICTIVE_DAMPING * 0.05);
+            predictiveValue.set(Math.max(0, Math.min(pred, 100)));
+        });
     };
 
-    const handleDragEnd = () => {
+    const onPointerUp = (ev: React.PointerEvent) => {
         setIsDragging(false);
+        setRegion('middle');
+        animate(overflow, 0, { type: "spring", stiffness: 500, damping: 30 });
 
-        const finalVelocity = velocityRef.current;
-        const currentPercentage = value.get();
+        const currentPerc = value.get();
+        const span = 100 / (sections.length - 1);
+        const targetIdx = getClosestSectionIndex(currentPerc + (velocityRef.current * 0.1));
+        const targetPerc = targetIdx * span;
 
-        let targetPercentage = currentPercentage + (finalVelocity * PREDICTIVE_DAMPING);
-        targetPercentage = Math.max(0, Math.min(targetPercentage, 100));
-
-        animate(overflow, 0, {
-            type: 'spring',
-            bounce: 0.5,
-            duration: 0.3
+        animate(value, targetPerc, {
+            type: "spring",
+            stiffness: 300,
+            damping: 30,
+            onUpdate: (v) => scrollToPercentage(v, 'auto')
         });
 
-        if (Math.abs(finalVelocity) > 50) {
-            animate(value, targetPercentage, {
-                type: "spring",
-                stiffness: 200,
-                damping: 20,
-                onUpdate: (latest) => {
-                    scrollToPercentage(latest, 'auto');
-                },
-                onComplete: () => {
-                    snapToNearestSection(value.get());
-                }
-            });
-        } else {
-            snapToNearestSection(currentPercentage);
-        }
+        try { (ev.target as Element).releasePointerCapture(ev.pointerId); } catch (e) { }
     };
 
-    const handleNodeClick = useCallback((index: number) => {
-        const sectionPercentage = (100 / (sections.length - 1)) * index;
-        scrollToPercentage(sectionPercentage, 'smooth');
-    }, [scrollToPercentage]);
+    useEffect(() => {
+        const moveHandler = (e: PointerEvent) => onPointerMove(e);
+        window.addEventListener('pointermove', moveHandler);
+        return () => window.removeEventListener('pointermove', moveHandler);
+    }, [isDragging]);
 
     return (
         <div className={cn(
-            "fixed right-6 bottom-8 z-[100] transition-all duration-700",
-            isVisible ? "translate-x-0" : "translate-x-32",
-            isIdle && !isExpanded ? "opacity-20 scale-90" : "opacity-100 scale-100"
+            "fixed right-6 bottom-8 z-[100] transition-all duration-1000 cubic-bezier(0.23, 1, 0.32, 1)",
+            isVisible ? "translate-x-0 opacity-100" : "translate-x-32 opacity-0"
         )}>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
                 {!isExpanded ? (
                     <motion.button
                         key="fab"
-                        initial={{ scale: 0, rotate: -45 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        exit={{ scale: 0, rotate: 45 }}
-                        onClick={() => setIsExpanded(true)}
+                        layoutId="navigator-frame"
                         className="fab-trigger"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
+                        onClick={() => {
+                            setIsExpanded(true);
+                            setTimeout(updateThumbPosition, 50);
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                     >
-                        <AppIcon name="navigation" size={24} />
+                        <AppIcon name="navigation" size={28} />
                     </motion.button>
                 ) : (
                     <motion.div
                         key="slider"
-                        initial={{ height: 56, width: 56, borderRadius: 20 }}
-                        animate={{
-                            height: 400,
-                            width: 32,
-                            borderRadius: 16,
-                            transition: { type: "spring", stiffness: 300, damping: 25 }
-                        }}
-                        exit={{
-                            height: 56,
-                            width: 56,
-                            borderRadius: 20,
-                            transition: { duration: 0.2 }
-                        }}
-                        className="bg-brown/40 backdrop-blur-3xl border border-white/10 flex flex-col items-center py-6 relative shadow-2xl rounded-3xl"
-                        style={{ transformOrigin: "bottom right" }}
+                        layoutId="navigator-frame"
+                        className="slider-container"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
                     >
                         <motion.button
                             onClick={() => setIsExpanded(false)}
-                            className="text-gold/50 hover:text-gold mb-2 transition-colors"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
+                            className="text-gold/40 hover:text-gold mb-6 transition-colors"
                         >
-                            <AppIcon name="close" size={16} />
+                            <AppIcon name="close" size={20} />
                         </motion.button>
 
-                        <motion.div
+                        <div
                             ref={sliderRef}
                             className="slider-root"
-                            onPanStart={handleDragStart}
-                            onPan={handleDrag}
-                            onPanEnd={handleDragEnd}
-                            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            onPointerDown={onPointerDown}
+                            onPointerUp={onPointerUp}
                         >
                             <motion.div
                                 ref={trackRef}
+                                className="slider-track"
+                                onPointerDown={handleTrackPointer}
                                 style={{
                                     scaleX: springScaleX,
                                     scaleY: springScaleY,
-                                    transformOrigin,
+                                    transformOrigin: region === 'top' ? 'top center' : region === 'bottom' ? 'bottom center' : 'center center'
                                 }}
-                                className="slider-track"
                             >
-                                <motion.div className="slider-range" style={{ height: rangeHeight }} />
-
-                                <div className="predictive-track">
-                                    <motion.div
-                                        className="predictive-range"
-                                        style={{
-                                            height: predictiveHeight
-                                        }}
-                                    />
-                                </div>
+                                <motion.div className="slider-fill" style={{ height: rangeHeight }} />
+                                <motion.div className="predictive-fill" style={{ height: predictiveHeight }} />
 
                                 {sections.map((section, i) => {
                                     const nodePos = (i / (sections.length - 1)) * 100;
                                     const isActive = activeIndex === i;
 
                                     return (
-                                        <motion.button
+                                        <motion.div
                                             key={section.id}
-                                            className={cn(
-                                                "section-node",
-                                                isActive && "active",
-                                                "touch-none select-none"
-                                            )}
+                                            className={cn("section-node", isActive && "active")}
                                             style={{ top: `${nodePos}%` }}
                                             animate={{
-                                                scale: isActive ? 1.3 : 1,
+                                                scale: isActive ? 1.4 : 1,
                                                 backgroundColor: isActive ? GOLD : GOLD_MUTED
                                             }}
-                                            whileHover={{ scale: 1.4 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleNodeClick(i);
-                                            }}
-                                            onPointerDown={(e) => e.stopPropagation()}
                                         >
-                                            {isActive && (
-                                                <motion.div
-                                                    className="value-indicator"
-                                                    initial={{ opacity: 0, y: -20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -20 }}
-                                                >
-                                                    {section.label}
-                                                </motion.div>
-                                            )}
-                                            <div className="node-hit-area" />
-                                        </motion.button>
+                                            <AnimatePresence>
+                                                {isActive && (
+                                                    <motion.div
+                                                        className="value-indicator"
+                                                        initial={{ opacity: 0, x: 10 }}
+                                                        animate={{ opacity: 1, x: 0 }}
+                                                        exit={{ opacity: 0, x: 10 }}
+                                                    >
+                                                        {section.label}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                            <div className="node-hit-area" onClick={() => scrollToPercentage(nodePos, 'smooth')} />
+                                        </motion.div>
                                     );
                                 })}
                             </motion.div>
-                        </motion.div>
+                        </div>
 
                         <motion.div
-                            className="mt-2 text-gold"
+                            className="nav-arrow"
                             animate={{
-                                scale: region === 'bottom' ? 1.2 : region === 'top' ? 1.2 : 1,
-                                opacity: value.get() > 99 ? 0.3 : 1
+                                y: region === 'top' ? [-4, 0, -4] : region === 'bottom' ? [4, 0, 4] : 0,
+                                opacity: isDragging ? 1 : 0.4
                             }}
-                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                            transition={{ repeat: Infinity, duration: 1.5 }}
                         >
-                            <AppIcon
-                                name={region === 'top' ? "keyboard_double_arrow_up" : "keyboard_double_arrow_down"}
-                                size={20}
-                            />
+                            <AppIcon name={region === 'top' ? "stat_3" : region === 'bottom' ? "stat_minus_3" : "expand_more"} size={22} />
                         </motion.div>
+
+                        {isDragging && (
+                            <motion.div
+                                className="slider-thumb"
+                                style={{
+                                    y: thumbY,
+                                    "--thumb-left": `${thumbLeft.get()}px`
+                                } as any}
+                            />
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>

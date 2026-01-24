@@ -1,124 +1,16 @@
-.slider-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-}
+/* ElasticNavigator.css - Clean, Standardized Implementation */
 
-.slider-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    touch-action: none;
-    user-select: none;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.slider-root {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 200px;
-    width: 32px;
-    flex-grow: 1;
-    cursor: grab;
-    touch-action: none;
-    user-select: none;
-    align-items: center;
-    padding: 0 1rem;
-}
-
-.slider-root:active {
-    cursor: grabbing;
-}
-
-.slider-track-wrapper {
-    display: flex;
-    flex-grow: 1;
-    width: 100%;
-    justify-content: center;
-}
-
-.slider-track {
-    position: relative;
-    width: 4px;
-    height: 100%;
-    flex-grow: 1;
-    overflow: visible;
-    border-radius: 9999px;
-    background-color: rgba(212, 175, 55, 0.2);
-}
-
-.slider-range {
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    background-color: #D4AF37;
-    border-radius: 9999px;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-}
-
-.section-node {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    border: 2px solid #1a1405;
-    transition: all 0.3s ease;
-}
-
-.section-node.active {
-    background: #D4AF37;
-    transform: translate(-50%, -50%) scale(1.5);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
-}
-
-.value-indicator {
-    color: #D4AF37;
-    position: absolute;
-    right: 40px;
-    font-size: 0.75rem;
-    font-weight: 900;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    background: rgba(26, 20, 5, 0.8);
-    padding: 4px 12px;
-    border-radius: 8px;
-    border: 1px solid rgba(212, 175, 55, 0.2);
+.fab-container {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 2rem;
+    z-index: 100;
 }
 
 .fab-trigger {
-    width: 56px;
-    height: 56px;
-    background: #D4AF37;
-    color: #1a1405;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(212, 175, 55, 0.2);
-    cursor: pointer;
-    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.fab-trigger:active {
-    transform: scale(0.9);
-}
-
-/* ElasticNavigator.css */
-.fab-trigger {
-    width: 56px;
-    height: 56px;
-    border-radius: 20px;
+    width: 64px;
+    height: 64px;
+    border-radius: 24px;
     background: hsla(20, 20%, 8%, 0.4);
     border: 1px solid hsla(42, 92%, 56%, 0.2);
     backdrop-filter: blur(24px) saturate(180%);
@@ -126,134 +18,160 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--gold);
+    color: #f5a623;
+    /* gold */
     cursor: pointer;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.6);
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .fab-trigger:hover {
     background: hsla(20, 20%, 8%, 0.6);
     border-color: hsla(42, 92%, 56%, 0.4);
-    box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.6);
-    transform: translateY(-4px) scale(1.05);
+    transform: translateY(-4px);
+}
+
+.slider-container {
+    padding: 2.5rem 0.5rem;
+    background: hsla(20, 20%, 8%, 0.4);
+    backdrop-filter: blur(32px) saturate(180%);
+    -webkit-backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
+    width: 56px;
+    height: 480px;
+    position: relative;
+    user-select: none;
+    touch-action: none;
 }
 
 .slider-root {
     position: relative;
     width: 100%;
-    height: 320px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    touch-action: none;
-    user-select: none;
+    cursor: grab;
+}
+
+.slider-root:active {
+    cursor: grabbing;
 }
 
 .slider-track {
     position: relative;
     width: 6px;
     height: 100%;
-    background: hsla(42, 92%, 56%, 0.1);
+    background: hsla(42, 90%, 50%, 0.08);
     border-radius: 9999px;
     overflow: visible;
 }
 
-.slider-range {
+.slider-fill {
     position: absolute;
-    bottom: 0;
+    top: 0;
+    /* Anchored to top so dragging down fills down */
     left: 0;
     width: 100%;
-    background: var(--gold);
+    background: #f5a623;
     border-radius: 9999px;
-    transform-origin: bottom;
-    transition: height 0.1s linear;
+    transform-origin: top;
+    box-shadow: 0 0 15px hsla(42, 92%, 56%, 0.4);
 }
 
-.predictive-track {
+.predictive-fill {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    opacity: 0.3;
-    pointer-events: none;
-}
-
-.predictive-range {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: hsla(42, 92%, 56%, 0.5);
+    background: hsla(42, 92%, 56%, 0.2);
     border-radius: 9999px;
+    transform-origin: top;
+    pointer-events: none;
 }
 
 .section-node {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    top: 0;
+    /* Standardized: top is set via style prop */
+    transform: translate(-50%, -50%);
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: hsla(42, 92%, 56%, 0.2);
-    border: 1px solid hsla(42, 92%, 56%, 0.3);
+    background: hsla(42, 92%, 56%, 0.25);
+    border: 1px solid hsla(42, 92%, 56%, 0.4);
     cursor: pointer;
-    z-index: 10;
+    z-index: 20;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: background 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    appearance: none;
+    outline: none;
 }
 
 .section-node.active {
-    background: var(--gold);
-    border-color: var(--gold);
-    box-shadow: 0 0 15px hsla(42, 92%, 56%, 0.5);
-    width: 14px;
-    height: 14px;
-}
-
-.section-node:hover {
-    transform: translateX(-50%) scale(1.2);
-    box-shadow: 0 0 15px var(--gold/30);
+    background: #f5a623;
+    border-color: #f5a623;
+    box-shadow: 0 0 20px hsla(42, 92%, 56%, 0.6);
 }
 
 .node-hit-area {
     position: absolute;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
     top: 50%;
     left: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent;
+    pointer-events: auto;
+    z-index: 25;
+}
+
+.slider-thumb {
+    position: fixed;
+    left: var(--thumb-left, 0);
+    /* Set dynamically */
+    width: 22px;
+    height: 22px;
+    background: #f5a623;
+    border: 2px solid white;
+    border-radius: 50%;
+    z-index: 50;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    will-change: transform;
 }
 
 .value-indicator {
     position: absolute;
-    right: 30px;
-    background: var(--brown);
-    color: var(--gold);
-    padding: 4px 12px;
-    border-radius: 12px;
+    right: 54px;
+    background: hsla(20, 20%, 8%, 0.95);
+    border: 1px solid hsla(42, 92%, 56%, 0.25);
+    color: #f5a623;
+    padding: 6px 16px;
+    border-radius: 14px;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
     white-space: nowrap;
-    border: 1px solid var(--gold/20);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(16px);
     pointer-events: none;
-    z-index: 100;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
 }
 
-.value-indicator::after {
-    content: '';
-    position: absolute;
-    right: -6px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
-    border-left: 6px solid var(--brown);
+.nav-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: hsla(42, 92%, 56%, 0.6);
+    margin-top: 1rem;
+    cursor: pointer;
 }
