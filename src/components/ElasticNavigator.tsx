@@ -57,14 +57,11 @@ export default function ElasticNavigator() {
         return 1;
     });
 
-    const transformOrigin = useTransform(() => {
-        if (region === 'top') return 'top center';
-        if (region === 'bottom') return 'bottom center';
-        return 'center center';
-    });
-
     const rangeHeight = useTransform(value, (v) => `${v}%`);
     const predictiveValue = useMotionValue(0);
+    const predictiveHeight = useTransform(predictiveValue, (v) => `${v}%`);
+
+    const transformOrigin = region === 'top' ? 'top center' : region === 'bottom' ? 'bottom center' : 'center center';
 
     const scrollToPercentage = useCallback((percentage: number, behavior: ScrollBehavior = 'auto') => {
         const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -303,7 +300,7 @@ export default function ElasticNavigator() {
                                     <motion.div
                                         className="predictive-range"
                                         style={{
-                                            height: useTransform(predictiveValue, v => `${v}%`)
+                                            height: predictiveHeight
                                         }}
                                     />
                                 </div>
