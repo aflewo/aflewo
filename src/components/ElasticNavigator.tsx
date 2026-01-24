@@ -40,6 +40,14 @@ export default function ElasticNavigator() {
     const scale = useMotionValue(1);
 
     const springOverflow = useSpring(overflow, { stiffness: 400, damping: 30 });
+    const springScaleX = useTransform(springOverflow, [0, MAX_OVERFLOW], [1, 0.8]);
+    const springScaleY = useTransform(springOverflow, (v) => {
+        if (sliderRef.current) {
+            const { height } = sliderRef.current.getBoundingClientRect();
+            return 1 + v / height;
+        }
+        return 1;
+    });
 
     useEffect(() => {
         const handleScroll = () => {
@@ -146,14 +154,8 @@ export default function ElasticNavigator() {
                         >
                             <motion.div
                                 style={{
-                                    scaleX: useTransform(springOverflow, [0, MAX_OVERFLOW], [1, 0.8]),
-                                    scaleY: useTransform(springOverflow, (v) => {
-                                        if (sliderRef.current) {
-                                            const { height } = sliderRef.current.getBoundingClientRect();
-                                            return 1 + v / height;
-                                        }
-                                        return 1;
-                                    }),
+                                    scaleX: springScaleX,
+                                    scaleY: springScaleY,
                                 }}
                                 className="slider-track"
                             >

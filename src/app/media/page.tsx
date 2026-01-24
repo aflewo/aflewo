@@ -50,7 +50,7 @@ export default function MediaPage() {
                                 VISUAL <br /><span className="text-gold">TESTIMONY.</span>
                             </h1>
                         </div>
-                        <div className="flex flex-wrap gap-4 glass-card p-2 rounded-full">
+                        <div className="flex overflow-x-auto hide-scrollbar gap-4 glass-card p-2 rounded-full max-w-full">
                             {["All", "Video", "Image", "Nairobi", "Mombasa"].map((f) => (
                                 <button
                                     key={f}

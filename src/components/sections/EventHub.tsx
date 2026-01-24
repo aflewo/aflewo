@@ -331,9 +331,9 @@ export default function EventHub() {
                     <div className="lg:col-span-5 hub-panel space-y-6">
                         <div className="glass-card-elevated p-6 md:p-8 rounded-lg border-white/5">
                             <div className="flex items-center justify-between mb-6">
-                                <button onClick={() => navigateMonth(-1)} className="p-3 rounded-lg glass-card hover:bg-white/10"><AppIcon name="chevron_left" size={20} /></button>
+                                <button onClick={() => navigateMonth(-1)} className="p-3 rounded-lg glass-card hover:bg-white/10 flex items-center justify-center"><AppIcon name="arrow_back_ios" size={16} /></button>
                                 <h3 className="text-xl font-black tracking-tight">{months[currentMonth.getMonth()]} {currentMonth.getFullYear()}</h3>
-                                <button onClick={() => navigateMonth(1)} className="p-3 rounded-lg glass-card hover:bg-white/10"><AppIcon name="chevron_right" size={20} /></button>
+                                <button onClick={() => navigateMonth(1)} className="p-3 rounded-lg glass-card hover:bg-white/10 flex items-center justify-center"><AppIcon name="arrow_forward_ios" size={16} /></button>
                             </div>
                             <div className="grid grid-cols-7 gap-1 mb-2">
                                 {weekDays.map(day => <div key={day} className="text-center text-[10px] font-black uppercase tracking-widest text-white/30 py-2">{day}</div>)}

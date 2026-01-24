@@ -29,10 +29,10 @@ export default function Footer() {
                             The sound of heaven echoing from the heart of the continent.
                         </p>
                         <div className="flex gap-4">
-                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="public" size={20} /></button>
-                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="groups" size={20} /></button>
-                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="play_circle" size={20} /></button>
-                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="alternate_email" size={20} /></button>
+                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="language" size={20} /></button>
+                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="group" size={20} /></button>
+                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="play_arrow" size={20} /></button>
+                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="mail" size={20} /></button>
                         </div>
                     </div>
 
@@ -70,8 +70,8 @@ export default function Footer() {
                                         placeholder="email@africa.com"
                                         className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-6 pr-12 text-xs font-medium text-white appearance-none outline-none focus:ring-1 focus:ring-gold"
                                     />
-                                    <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-gold text-brown rounded-full hover:scale-110 transition-transform">
-                                        <AppIcon name="north_east" size={16} />
+                                    <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-gold text-brown rounded-full hover:scale-110 transition-transform flex items-center justify-center">
+                                        <AppIcon name="arrow_outward" size={16} />
                                     </button>
                                 </div>
                             </div>

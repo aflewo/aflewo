@@ -113,14 +113,14 @@ export default function StoriesPage() {
             </section>
 
             {/* Submission CTA */}
-            <section className="section-padding bg-primary text-primary-foreground text-center">
+            <section className="section-padding bg-brown text-white text-center border-t border-gold/10">
                 <div className="max-container space-y-12">
                     <AppIcon name="auto_awesome" className="mx-auto text-gold" size={48} />
-                    <h2 className="text-4xl md:text-6xl font-black tracking-tight text-white">WHAT{"'"}S YOUR <span className="text-gold">AFLEWO STORY?</span></h2>
-                    <p className="max-w-2xl mx-auto text-white/60 text-lg font-medium">
+                    <h2 className="text-4xl md:text-6xl font-black tracking-tight">WHAT{"'"}S YOUR <span className="text-gold">AFLEWO STORY?</span></h2>
+                    <p className="max-w-2xl mx-auto text-white/80 text-lg font-medium">
                         Whether you were in the choir in 2004 or attended for the first time in 2025, we want to hear how God has moved in your life through worship.
                     </p>
-                    <button className="press-scale bg-white text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter hover:bg-gold transition-all">
+                    <button className="press-scale bg-gold text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter hover:bg-white transition-all shadow-glow">
                         Share Your Story
                     </button>
 
