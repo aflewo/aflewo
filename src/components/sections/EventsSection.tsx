@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, MapPin, Users, ArrowRight } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 const events = [
     {
@@ -58,22 +58,22 @@ export default function EventsSection() {
                                     <h3 className="text-2xl font-bold text-foreground mb-6 group-hover:text-gold transition-colors">{event.title}</h3>
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-3 text-muted-foreground">
-                                            <Calendar size={18} className="text-gold" />
+                                            <AppIcon name="calendar_month" size={18} className="text-gold" />
                                             <span className="text-sm font-medium">{event.date}</span>
                                         </div>
                                         <div className="flex items-center gap-3 text-muted-foreground">
-                                            <MapPin size={18} className="text-gold" />
+                                            <AppIcon name="location_on" size={18} className="text-gold" />
                                             <span className="text-sm font-medium">{event.venue}</span>
                                         </div>
                                         <div className="flex items-center gap-3 text-muted-foreground">
-                                            <Users size={18} className="text-gold" />
+                                            <AppIcon name="groups" size={18} className="text-gold" />
                                             <span className="text-sm font-medium">{event.impact}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <button className="mt-8 flex items-center gap-2 font-black text-gold uppercase tracking-wider text-sm group/btn">
-                                    Reserve My Space <ArrowRight size={16} className="group-hover/btn:translate-x-2 transition-transform" />
+                                    Reserve My Space <AppIcon name="arrow_forward" size={16} className="group-hover/btn:translate-x-2 transition-transform" />
                                 </button>
                             </div>
                         </div>

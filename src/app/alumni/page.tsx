@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { Users, Heart, Star, Compass, ArrowRight, ShieldCheck, Milestone, Globe } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 const founders = [
     { name: "Timothy Kaberia", role: "Founding Visionary", org: "Daystar Alumni" },
@@ -41,7 +41,7 @@ export default function AlumniPage() {
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gold/5 blur-[120px] -z-10" />
                 <div className="max-container space-y-8">
                     <div className="animate-fade inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.3em] mx-auto">
-                        <Star size={14} /> The Legacy Circle
+                        <AppIcon name="auto_awesome" size={14} /> The Legacy Circle
                     </div>
                     <h1 className="animate-fade text-7xl md:text-9xl font-black tracking-tighter leading-[0.85] text-white">
                         ALUMNI <br /><span className="text-gold">SOCIETY</span>
@@ -70,12 +70,12 @@ export default function AlumniPage() {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="glass-card p-8 rounded-lg space-y-3">
-                                <Milestone className="text-gold" size={24} />
+                                <AppIcon name="milestone" className="text-gold" size={24} />
                                 <h4 className="font-black text-white text-sm uppercase">7,000+ ALUMNI</h4>
                                 <p className="text-white/30 text-xs">Spread across the Continent</p>
                             </div>
                             <div className="glass-card p-8 rounded-lg space-y-3">
-                                <Globe className="text-gold" size={24} />
+                                <AppIcon name="public" className="text-gold" size={24} />
                                 <h4 className="font-black text-white text-sm uppercase">8+ CHAPTERS</h4>
                                 <p className="text-white/30 text-xs">Unified in One Vision</p>
                             </div>
@@ -107,7 +107,7 @@ export default function AlumniPage() {
                         {founders.map((founder, i) => (
                             <div key={i} className="animate-fade glass-card-elevated p-10 rounded-lg border-white/5 text-center group hover:border-gold/30 transition-all duration-500">
                                 <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-8 text-gold group-hover:scale-110 group-hover:bg-gold group-hover:text-brown transition-all duration-500 border border-gold/20">
-                                    <ShieldCheck size={40} />
+                                    <AppIcon name="verified_user" size={40} />
                                 </div>
                                 <h4 className="text-2xl font-black text-white">{founder.name}</h4>
                                 <p className="text-gold text-[10px] font-black uppercase tracking-[0.3em] mt-3">{founder.role}</p>
@@ -128,10 +128,10 @@ export default function AlumniPage() {
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                         <button className="press-scale w-full sm:w-auto px-16 py-6 bg-gold text-brown rounded-lg font-black uppercase tracking-widest hover:brightness-110 transition-all inline-flex items-center justify-center gap-4 shadow-glow">
-                            Update Your Profile <ArrowRight size={20} />
+                            Update Your Profile <AppIcon name="arrow_forward" size={20} />
                         </button>
                         <button className="press-scale w-full sm:w-auto px-16 py-6 glass-card text-white rounded-lg font-black uppercase tracking-widest hover:bg-white/10 transition-all inline-flex items-center justify-center gap-4">
-                            Alumni Portal <Globe size={20} />
+                            Alumni Portal <AppIcon name="public" size={20} />
                         </button>
                     </div>
                 </div>

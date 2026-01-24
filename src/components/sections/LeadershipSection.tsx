@@ -2,15 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ShieldCheck, Music, Users, Heart, Globe, MessageSquare } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 const leadership = [
-    { name: "Hubert de Rogue Maura", role: "Chairman / Team Leader", icon: <ShieldCheck size={24} /> },
-    { name: "Timothy Kaberia", role: "Founder / Visionary", icon: <Globe size={24} /> },
-    { name: "Philip Kitoto", role: "Pastoral Advisor", icon: <MessageSquare size={24} /> },
-    { name: "Tom Otieno", role: "Pastoral Advisor", icon: <Heart size={24} /> },
-    { name: "Nairobi Team", role: "Music & Logistics", icon: <Music size={24} /> },
-    { name: "Summit Council", role: "Oversight", icon: <Users size={24} /> }
+    { name: "Hubert de Rogue Maura", role: "Chairman / Team Leader", icon: "verified_user" },
+    { name: "Timothy Kaberia", role: "Founder / Visionary", icon: "public" },
+    { name: "Philip Kitoto", role: "Pastoral Advisor", icon: "forum" },
+    { name: "Tom Otieno", role: "Pastoral Advisor", icon: "favorite" },
+    { name: "Nairobi Team", role: "Music & Logistics", icon: "music_note" },
+    { name: "Summit Council", role: "Oversight", icon: "groups" }
 ];
 
 export default function LeadershipSection() {
@@ -61,7 +61,7 @@ export default function LeadershipSection() {
 
                             <div className="space-y-6">
                                 <div className="w-14 h-14 bg-gold/10 rounded-lg flex items-center justify-center text-gold group-hover:scale-110 transition-transform duration-500 border border-gold/20">
-                                    {leader.icon}
+                                    <AppIcon name={leader.icon} size={24} />
                                 </div>
                                 <div className="space-y-2">
                                     <h4 className="text-2xl font-black tracking-tighter group-hover:text-gold transition-colors">{leader.name}</h4>

@@ -3,22 +3,9 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-    MapPin,
-    Users,
-    Calendar,
-    QrCode,
-    ArrowRight,
-    Globe,
-    Phone,
-    Mail,
-    X,
-    MessageCircle,
-    Music,
-    Radio
-} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import AppIcon from "@/components/ui/AppIcon";
 import { chapters as chapterData } from "@/lib/chapters";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -109,7 +96,7 @@ export default function ChaptersSection() {
                 <div className="chapter-header flex flex-col md:flex-row justify-between items-center md:items-end gap-12 mb-20 text-center md:text-left">
                     <div className="max-w-2xl space-y-6">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em] mx-auto md:mx-0">
-                            <MapPin size={12} /> The Prophetic House
+                            <AppIcon name="location-city" size={12} /> The Prophetic House
                         </div>
                         <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9]">
                             CHAPTERS OF <br /><span className="text-gold">IDENTITY</span>
@@ -120,7 +107,7 @@ export default function ChaptersSection() {
                             A continental network of worship, uniting 10+ major hubs across Africa
                         </p>
                         <Link href="https://whatsapp.com/channel/AFLEWO" className="press-scale inline-flex items-center gap-2 text-gold font-black uppercase tracking-widest text-[10px] hover:gap-4 transition-all">
-                            Join our WhatsApp Channel <MessageCircle size={14} />
+                            Join our WhatsApp Channel <AppIcon name="forum" size={14} />
                         </Link>
                     </div>
                 </div>
@@ -145,7 +132,7 @@ export default function ChaptersSection() {
                                             </span>
                                             {chapter.slug === "mombasa" && (
                                                 <span className="flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-red-400 bg-red-500/20 px-2 py-0.5 rounded-full">
-                                                    <Radio size={8} className="animate-pulse" /> Live
+                                                    <AppIcon name="radio" size={8} className="animate-pulse" /> Live
                                                 </span>
                                             )}
                                         </div>
@@ -160,7 +147,7 @@ export default function ChaptersSection() {
                                         }}
                                         className="p-3 glass-card bg-gold/10 border-gold/30 rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"
                                     >
-                                        <QrCode size={18} />
+                                        <AppIcon name="qr-code-2" size={18} />
                                     </button>
                                 </div>
                                 <p className="text-foreground/40 text-sm font-medium leading-relaxed max-w-[300px]">
@@ -171,16 +158,16 @@ export default function ChaptersSection() {
                             <div className="pt-6 border-t border-white/5 relative z-10 space-y-4">
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
-                                        <Calendar size={14} className="text-gold" />
+                                        <AppIcon name="calendar-month" size={14} className="text-gold" />
                                         <span>EST. {chapter.established}</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
-                                        <MapPin size={14} className="text-gold" />
+                                        <AppIcon name="location-on" size={14} className="text-gold" />
                                         <span className="truncate">{chapter.venue.split(",")[0]}</span>
                                     </div>
                                     {chapter.capacity && (
                                         <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
-                                            <Users size={14} className="text-gold" />
+                                            <AppIcon name="groups" size={14} className="text-gold" />
                                             <span>{chapter.capacity} Worshippers</span>
                                         </div>
                                     )}
@@ -191,7 +178,7 @@ export default function ChaptersSection() {
                                         href={`/chapters/${chapter.slug}`}
                                         className="press-scale flex-1 inline-flex items-center justify-between px-5 py-3 bg-gold text-brown rounded-lg font-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all"
                                     >
-                                        Explore Chapter <ArrowRight size={14} />
+                                        Explore Chapter <AppIcon name="arrow-forward" size={14} />
                                     </Link>
                                 </div>
                             </div>
@@ -206,7 +193,7 @@ export default function ChaptersSection() {
                     <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 blur-[100px] -z-10" />
                     <div className="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
                         <div className="p-6 rounded-lg bg-gold/10 text-gold border border-gold/20 shadow-glow">
-                            <Globe size={40} />
+                            <AppIcon name="public" size={40} />
                         </div>
                         <div className="space-y-2">
                             <h4 className="text-3xl font-black tracking-tighter">Central Administration</h4>

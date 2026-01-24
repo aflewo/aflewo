@@ -6,15 +6,15 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { Sparkles, Heart, Shield, Users } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const pillars = [
-    { title: "Unity", desc: "Bringing the diverse church of Africa into a single, cohesive voice of worship.", icon: <Users size={32} /> },
-    { title: "Hope", desc: "Stirring up the expectation of God's goodness across the 'prophetic house' of Africa.", icon: <Sparkles size={32} /> },
-    { title: "Excelence", desc: "Presenting our worship with the highest standard of musical and logistical skill.", icon: <Shield size={32} /> },
-    { title: "Intercession", desc: "Standing in the gap for nations like DR Congo, Nigeria, and South Sudan.", icon: <Heart size={32} /> },
+    { title: "Unity", desc: "Bringing the diverse church of Africa into a single, cohesive voice of worship.", icon: "groups" },
+    { title: "Hope", desc: "Stirring up the expectation of God's goodness across the 'prophetic house' of Africa.", icon: "auto_awesome" },
+    { title: "Excellence", desc: "Presenting our worship with the highest standard of musical and logistical skill.", icon: "verified_user" },
+    { title: "Intercession", desc: "Standing in the gap for nations like DR Congo, Nigeria, and South Sudan.", icon: "favorite" },
 ];
 
 export default function AboutPage() {
@@ -100,7 +100,9 @@ export default function AboutPage() {
                     <div className="pillars-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {pillars.map((pillar, i) => (
                             <div key={i} className="pillar-card glass-card p-10 space-y-6 hover:-translate-y-2 transition-transform duration-500">
-                                <div className="text-gold">{pillar.icon}</div>
+                                <div className="text-gold">
+                                    <AppIcon name={pillar.icon} size={32} />
+                                </div>
                                 <h3 className="text-2xl font-black">{pillar.title}</h3>
                                 <p className="text-foreground/60 text-sm font-medium leading-relaxed">{pillar.desc}</p>
                             </div>

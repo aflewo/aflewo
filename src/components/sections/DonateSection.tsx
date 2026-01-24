@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 import { cn } from "@/lib/utils";
 
 type PaymentStatus = "idle" | "pending" | "success" | "failed";
@@ -86,7 +86,7 @@ export default function DonateSection() {
                             >
                                 {status === "pending" ? (
                                     <span className="flex items-center justify-center gap-2">
-                                        <Loader2 className="animate-spin" /> Processing... {progress}%
+                                        <AppIcon name="progress_activity" size={20} className="animate-spin" /> Processing... {progress}%
                                     </span>
                                 ) : (
                                     "Donate Now via M-Pesa"
@@ -103,7 +103,7 @@ export default function DonateSection() {
                         )}>
                             <div className="flex items-start gap-4">
                                 <div className={cn("p-3 rounded-full", status === "success" ? "bg-emerald text-white" : "bg-muted")}>
-                                    <CheckCircle2 size={24} />
+                                    <AppIcon name="check_circle" size={24} />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-lg mb-1">Airtight Verification</h3>
@@ -118,7 +118,7 @@ export default function DonateSection() {
                         )}>
                             <div className="flex items-start gap-4">
                                 <div className={cn("p-3 rounded-full", status === "pending" ? "bg-gold text-brown" : "bg-muted")}>
-                                    <Loader2 size={24} className={status === "pending" ? "animate-spin" : ""} />
+                                    <AppIcon name="progress_activity" size={24} className={status === "pending" ? "animate-spin" : ""} />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-lg mb-1">Real-time Feedback</h3>

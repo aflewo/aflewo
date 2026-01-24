@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Menu, X, Sun, Moon, Globe, Heart } from "lucide-react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import AppIcon from "@/components/ui/AppIcon";
 
 const links = [
     { name: "About", href: "/about" },
@@ -88,9 +88,9 @@ export default function Navbar() {
                     {/* Theme Toggle */}
                     <button
                         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                        className="p-3 rounded-lg glass-card text-gold hover:bg-gold hover:text-brown transition-all"
+                        className="p-3 rounded-lg glass-card text-gold hover:bg-gold hover:text-brown transition-all border border-white/5"
                     >
-                        {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+                        <AppIcon name={theme === "dark" ? "light-mode" : "dark-mode"} size={18} />
                     </button>
 
                     <Link
@@ -103,9 +103,9 @@ export default function Navbar() {
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="md:hidden p-3 rounded-lg glass-card text-foreground/60 hover:text-gold transition-colors"
+                        className="md:hidden p-3 rounded-lg glass-card text-foreground/60 hover:text-gold transition-colors border border-white/5"
                     >
-                        {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                        <AppIcon name={isMobileMenuOpen ? "close" : "menu"} size={20} />
                     </button>
                 </div>
             </div>
@@ -119,7 +119,7 @@ export default function Navbar() {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="absolute top-8 right-8 p-4 rounded-full glass-card text-gold hover:rotate-90 transition-all duration-500"
                 >
-                    <X size={24} />
+                    <AppIcon name="close" size={24} />
                 </button>
 
                 <div className="flex flex-col items-center gap-4">
@@ -151,8 +151,8 @@ export default function Navbar() {
                         Register Now
                     </button>
                     <div className="flex gap-4">
-                        <Globe size={20} className="text-white/20" />
-                        <Heart size={20} className="text-white/20" />
+                        <AppIcon name="public" size={20} className="text-white/20" />
+                        <AppIcon name="favorite" size={20} className="text-white/20" />
                     </div>
                 </div>
             </div>

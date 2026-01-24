@@ -1,12 +1,12 @@
 "use client";
 
 import { useParams, notFound } from "next/navigation";
-import { chapters, getChapter } from "@/lib/chapters";
+import { getChapter } from "@/lib/chapters";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Calendar, Users, ArrowLeft, Phone, Mail, Globe, ExternalLink, History, Milestone } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
@@ -51,7 +51,7 @@ export default function ChapterPage() {
 
                 <div className="max-container relative z-10 space-y-6 px-6 text-center md:text-left">
                     <Link href="/#chapters" className="inline-flex items-center gap-3 text-gold text-[10px] font-black uppercase tracking-[0.3em] hover:gap-5 transition-all mb-8 bg-brown/40 backdrop-blur-md px-6 py-2 rounded-full border border-gold/10">
-                        <ArrowLeft size={14} /> Back to Chapters
+                        <AppIcon name="arrow_back" size={14} /> Back to Chapters
                     </Link>
                     <div className="animate-up space-y-4">
                         <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-gradient-to-r ${chapter.color} text-white`}>
@@ -83,21 +83,21 @@ export default function ChapterPage() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div className="glass-card p-10 rounded-lg space-y-4 border-white/5">
-                                <Calendar className="text-gold" size={28} />
+                                <AppIcon name="calendar_month" className="text-gold" size={28} />
                                 <div className="space-y-1">
                                     <p className="text-[9px] font-black uppercase tracking-widest text-white/30">Inception</p>
                                     <p className="text-2xl font-black text-white">{chapter.established}</p>
                                 </div>
                             </div>
                             <div className="glass-card p-10 rounded-lg space-y-4 border-white/5">
-                                <MapPin className="text-gold" size={28} />
+                                <AppIcon name="location_on" className="text-gold" size={28} />
                                 <div className="space-y-1">
                                     <p className="text-[9px] font-black uppercase tracking-widest text-white/30">Current Base</p>
                                     <p className="text-lg font-black text-white leading-tight">{chapter.venue.split(',')[0]}</p>
                                 </div>
                             </div>
                             <div className="glass-card p-10 rounded-lg space-y-4 border-white/5">
-                                <Users className="text-gold" size={28} />
+                                <AppIcon name="groups" className="text-gold" size={28} />
                                 <div className="space-y-1">
                                     <p className="text-[9px] font-black uppercase tracking-widest text-white/40">Gathering</p>
                                     <p className="text-2xl font-black text-white">{chapter.capacity || "5,000+"}</p>
@@ -109,7 +109,7 @@ export default function ChapterPage() {
                         {chapter.history && (
                             <div className="space-y-10">
                                 <div className="flex items-center gap-4">
-                                    <History size={20} className="text-gold" />
+                                    <AppIcon name="history" size={20} className="text-gold" />
                                     <h3 className="text-2xl font-black tracking-tighter text-white">MILESTONES</h3>
                                 </div>
                                 <div className="space-y-4">
@@ -137,7 +137,7 @@ export default function ChapterPage() {
                             <div className="glass-card-elevated p-10 rounded-lg border-gold/20 bg-gold/5 space-y-8 relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-gold/5 animate-pulse" />
                                 <div className="space-y-4 text-center relative z-10">
-                                    <Milestone size={32} className="text-gold mx-auto" />
+                                    <AppIcon name="milestone" size={32} className="text-gold mx-auto" />
                                     <h3 className="text-2xl font-black tracking-tighter text-white">UPCOMING GATHERING</h3>
                                     <p className="text-lg font-black text-gold uppercase tracking-tighter">{chapter.upcomingEvent}</p>
                                 </div>
@@ -154,18 +154,18 @@ export default function ChapterPage() {
                             <div className="space-y-4">
                                 {chapter.contactPhone && (
                                     <Link href={`tel:${chapter.contactPhone}`} className="flex items-center gap-5 p-4 rounded-lg bg-white/5 border border-white/5 hover:border-gold/30 transition-all text-foreground/60 hover:text-white capitalize">
-                                        <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center text-gold"><Phone size={18} /></div>
+                                        <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center text-gold"><AppIcon name="call" size={18} /></div>
                                         <span className="text-xs font-black uppercase tracking-widest">Call Secretary</span>
                                     </Link>
                                 )}
                                 {chapter.contactEmail && (
                                     <Link href={`mailto:${chapter.contactEmail}`} className="flex items-center gap-5 p-4 rounded-lg bg-white/5 border border-white/5 hover:border-gold/30 transition-all text-foreground/60 hover:text-white">
-                                        <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center text-gold"><Mail size={18} /></div>
+                                        <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center text-gold"><AppIcon name="mail" size={18} /></div>
                                         <span className="text-xs font-black uppercase tracking-widest">Send Inquiry</span>
                                     </Link>
                                 )}
                                 <Link href="#" className="flex items-center gap-5 p-4 rounded-lg bg-white/5 border border-white/5 hover:border-gold/30 transition-all text-foreground/60 hover:text-white">
-                                    <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center text-gold"><Globe size={18} /></div>
+                                    <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center text-gold"><AppIcon name="public" size={18} /></div>
                                     <span className="text-xs font-black uppercase tracking-widest">WhatsApp Hub</span>
                                 </Link>
                             </div>

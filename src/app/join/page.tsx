@@ -4,16 +4,15 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { Users, Music, Handshake, Heart, Shield, Camera, Star, ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import AppIcon from "@/components/ui/AppIcon";
 
 const tracks = [
-    { title: "Voice & Choir", desc: "Join the mass choir of 1,000+ voices. Auditions required for the national and regional chapters.", icon: <Music size={32} /> },
-    { title: "Band & Orchestra", desc: "For skilled instrumentalists ready to create the sound of heaven with professional excellence.", icon: <Star size={32} /> },
-    { title: "Production & Media", desc: "Videography, sound engineering, photography, and digital storytelling for the archive.", icon: <Camera size={32} /> },
-    { title: "Ushering & Logistics", desc: "Be the face of the movement, ensuring every worshipper is welcomed in the Spirit.", icon: <Heart size={32} /> },
-    { title: "Security & Safety", desc: "Stewarding the physical space so that the spiritual atmosphere remains undisturbed.", icon: <Shield size={32} /> },
-    { title: "Corporate Partners", desc: "Align your organization with the continental worship and prayer agenda.", icon: <Handshake size={32} /> },
+    { title: "Voice & Choir", desc: "Join the mass choir of 1,000+ voices. Auditions required for the national and regional chapters.", icon: "music_note" },
+    { title: "Band & Orchestra", desc: "For skilled instrumentalists ready to create the sound of heaven with professional excellence.", icon: "auto_awesome" },
+    { title: "Production & Media", desc: "Videography, sound engineering, photography, and digital storytelling for the archive.", icon: "photo_camera" },
+    { title: "Ushering & Logistics", desc: "Be the face of the movement, ensuring every worshipper is welcomed in the Spirit.", icon: "favorite" },
+    { title: "Security & Safety", desc: "Stewarding the physical space so that the spiritual atmosphere remains undisturbed.", icon: "verified_user" },
+    { title: "Corporate Partners", desc: "Align your organization with the continental worship and prayer agenda.", icon: "volunteer_activism" },
 ];
 
 export default function JoinPage() {
@@ -58,14 +57,16 @@ export default function JoinPage() {
                         {tracks.map((track, i) => (
                             <div key={i} className="track-card glass-card-elevated p-10 space-y-8 group hover:border-gold/30 transition-all cursor-pointer rounded-lg relative overflow-hidden">
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-gold/5 blur-2xl group-hover:bg-gold/10 transition-colors" />
-                                <div className="text-gold group-hover:scale-110 transition-transform duration-500">{track.icon}</div>
+                                <div className="text-gold group-hover:scale-110 transition-transform duration-500">
+                                    <AppIcon name={track.icon} size={32} />
+                                </div>
                                 <div className="space-y-4">
                                     <h3 className="text-2xl font-black tracking-tighter text-white">{track.title}</h3>
                                     <p className="text-foreground/40 text-sm font-bold leading-relaxed">{track.desc}</p>
                                 </div>
                                 <div className="pt-6 border-t border-white/5">
                                     <button className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-gold hover:gap-5 transition-all">
-                                        Express Interest <ArrowRight size={14} />
+                                        Express Interest <AppIcon name="arrow_forward" size={14} />
                                     </button>
                                 </div>
                             </div>
@@ -104,7 +105,7 @@ export default function JoinPage() {
                         </p>
                         <div className="glass-card-elevated p-10 space-y-6 rounded-lg border-gold/10 shadow-2xl relative">
                             <div className="absolute top-0 right-0 p-6 opacity-10">
-                                <Handshake size={60} className="text-gold" />
+                                <AppIcon name="volunteer_activism" size={60} className="text-gold" />
                             </div>
                             <h4 className="font-black text-gold uppercase tracking-widest text-[11px]">Prophetic Stewardship</h4>
                             <div className="space-y-4">
@@ -126,10 +127,10 @@ export default function JoinPage() {
                             </div>
                             <div className="space-y-6">
                                 <button className="w-full py-6 glass-card-elevated hover:bg-gold hover:text-brown transition-all rounded-lg font-black text-xs uppercase tracking-widest flex items-center justify-center gap-4">
-                                    Give via PayPal <ArrowRight size={18} />
+                                    Give via PayPal <AppIcon name="arrow_forward" size={18} />
                                 </button>
                                 <button className="w-full py-6 glass-card-elevated hover:bg-gold hover:text-brown transition-all rounded-lg font-black text-xs uppercase tracking-widest flex items-center justify-center gap-4">
-                                    Bank Transfers <ArrowRight size={18} />
+                                    Bank Transfers <AppIcon name="arrow_forward" size={18} />
                                 </button>
                             </div>
                         </div>

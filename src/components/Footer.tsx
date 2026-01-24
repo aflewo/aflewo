@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram, Twitter, Youtube, Facebook, ArrowUpRight, Heart, Globe } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -30,10 +30,10 @@ export default function Footer() {
                                 "Uniting the Continent through the Altar of Worship. One God, one people, one Africa."
                             </p>
                             <div className="flex justify-center lg:justify-start gap-3">
-                                <Link href="https://instagram.com/aflewoke" target="_blank" className="p-4 glass-card rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"><Instagram size={20} /></Link>
-                                <Link href="https://facebook.com/aflewoke" target="_blank" className="p-4 glass-card rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"><Facebook size={20} /></Link>
-                                <Link href="https://youtube.com/@aflewo" target="_blank" className="p-4 glass-card rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"><Youtube size={20} /></Link>
-                                <Link href="#" className="p-4 glass-card rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"><Twitter size={20} /></Link>
+                                <Link href="https://instagram.com/aflewoke" target="_blank" className="p-4 glass-card rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="public" size={20} /></Link>
+                                <Link href="https://facebook.com/aflewoke" target="_blank" className="p-4 glass-card rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="groups" size={20} /></Link>
+                                <Link href="https://youtube.com/@aflewo" target="_blank" className="p-4 glass-card rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="play-circle" size={20} /></Link>
+                                <Link href="#" className="p-4 glass-card rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="alternate-email" size={20} /></Link>
                             </div>
                         </div>
                     </div>
@@ -78,11 +78,11 @@ export default function Footer() {
                                             className="w-full bg-white/5 border border-white/10 rounded-lg py-5 pl-8 pr-12 text-xs font-bold text-white outline-none focus:border-gold transition-all"
                                         />
                                         <button className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-gold text-brown rounded hover:scale-110 transition-transform">
-                                            <ArrowUpRight size={18} />
+                                            <AppIcon name="north-east" size={18} />
                                         </button>
                                     </div>
                                     <div className="flex items-center gap-2 p-4 glass-card rounded-lg border-gold/20">
-                                        <Globe size={14} className="text-gold" />
+                                        <AppIcon name="public" size={14} className="text-gold" />
                                         <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">Global Altar 2026</span>
                                     </div>
                                 </div>
@@ -100,7 +100,7 @@ export default function Footer() {
                     </div>
                     <div className="flex flex-wrap justify-center gap-10">
                         <Link href="#" className="hover:text-gold flex items-center gap-2 transition-colors">
-                            <Heart size={12} className="text-gold/40" /> M-Pesa Paybill: 819867
+                            <AppIcon name="favorite" size={12} className="text-gold/40" /> M-Pesa Paybill: 819867
                         </Link>
                         <Link href="/privacy" className="hover:text-gold transition-colors">Privacy</Link>
                         <Link href="/contact" className="hover:text-gold transition-colors">Contact HQ</Link>

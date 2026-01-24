@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Image from "next/image";
-import { PlayCircle, Filter, X, ChevronDown, Camera, Film } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 import { cn } from "@/lib/utils";
 
 const archivalMedia = [
@@ -58,7 +58,7 @@ export default function MediaPage() {
                 <div className="max-container">
                     <div className="flex flex-col items-center text-center space-y-8 mb-20">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.3em]">
-                            <Camera size={12} /> The Eternal Record
+                            <AppIcon name="photo_camera" size={12} /> The Eternal Record
                         </div>
                         <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.85]">
                             FAITH IN <br /><span className="text-gold">MOTION</span>
@@ -80,7 +80,7 @@ export default function MediaPage() {
                                         activeType === t ? "bg-gold text-brown shadow-glow" : "text-white/40 hover:text-white"
                                     )}
                                 >
-                                    {t === "Video" ? <Film size={14} /> : t === "Image" ? <Camera size={14} /> : null}
+                                    {t === "Video" ? <AppIcon name="movie" size={14} /> : t === "Image" ? <AppIcon name="photo_camera" size={14} /> : null}
                                     {t}
                                 </button>
                             ))}
@@ -94,8 +94,8 @@ export default function MediaPage() {
                                 showFilters ? "text-gold" : "text-white/40 hover:text-white"
                             )}
                         >
-                            <Filter size={14} /> {showFilters ? "Hide Filters" : "Advanced Search"}
-                            <ChevronDown size={14} className={cn("transition-transform duration-300", showFilters && "rotate-180")} />
+                            <AppIcon name="filter_list" size={14} /> {showFilters ? "Hide Filters" : "Advanced Search"}
+                            <AppIcon name="keyboard_arrow_down" size={14} className={cn("transition-transform duration-300", showFilters && "rotate-180")} />
                         </button>
                     </div>
 
@@ -155,9 +155,8 @@ export default function MediaPage() {
                                     <div className="absolute inset-0 p-10 flex flex-col justify-between">
                                         <div className="flex justify-between items-start">
                                             <div className="p-4 bg-white/10 backdrop-blur-xl rounded-lg text-white border border-white/10">
-                                                {item.type === "Video" ? <PlayCircle size={24} className="text-gold" /> : <Camera size={24} className="text-gold" />}
+                                                {item.type === "Video" ? <AppIcon name="play_circle" size={24} className="text-gold" /> : <AppIcon name="photo_camera" size={24} className="text-gold" />}
                                             </div>
-                                            {/* Download icon removed as requested */}
                                         </div>
 
                                         <div className="space-y-4">
@@ -180,7 +179,7 @@ export default function MediaPage() {
                             ))
                         ) : (
                             <div className="col-span-full py-40 text-center space-y-4 opacity-50">
-                                <X size={48} className="mx-auto text-gold" />
+                                <AppIcon name="close" size={48} className="mx-auto text-gold" />
                                 <p className="text-xl font-black tracking-tighter">THE RECORD IS STILL TO BE REVEALED</p>
                                 <p className="text-[10px] font-black uppercase tracking-widest">Adjust filters to find historical milestones</p>
                             </div>

@@ -2,8 +2,8 @@
 
 import { animate, motion, useMotionValue, useMotionValueEvent, useTransform } from 'framer-motion';
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { ChevronUp, ChevronDown, Anchor, Compass, MoveVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import AppIcon from '@/components/ui/AppIcon';
 import './ElasticNavigator.css';
 
 const MAX_OVERFLOW = 50;
@@ -64,7 +64,7 @@ export default function ElasticNavigator() {
                     onClick={() => setIsExpanded(true)}
                     className="w-14 h-14 bg-gold text-brown rounded-full flex items-center justify-center shadow-glow press-scale border-4 border-background"
                 >
-                    <Anchor size={24} />
+                    <AppIcon name="anchor" size={24} />
                 </button>
             ) : (
                 <SliderContainer
@@ -85,7 +85,9 @@ function SliderContainer({ onClose, activeSection }: { onClose: () => void, acti
 
     useEffect(() => {
         const index = SECTIONS.findIndex(s => s.id === activeSection);
-        setValue((index / (SECTIONS.length - 1)) * 100);
+        if (index !== -1) {
+            setValue((index / (SECTIONS.length - 1)) * 100);
+        }
     }, [activeSection]);
 
     useMotionValueEvent(clientY, 'change', latest => {
@@ -129,7 +131,7 @@ function SliderContainer({ onClose, activeSection }: { onClose: () => void, acti
             onPointerLeave={handlePointerUp}
         >
             <button onClick={onClose} className="p-2 text-gold/50 hover:text-gold">
-                <ChevronUp size={20} />
+                <AppIcon name="north" size={20} />
             </button>
 
             <div
@@ -172,7 +174,7 @@ function SliderContainer({ onClose, activeSection }: { onClose: () => void, acti
             </div>
 
             <button onClick={handlePointerUp} className="p-2 text-gold/50 hover:text-gold">
-                <ChevronDown size={20} />
+                <AppIcon name="south" size={20} />
             </button>
             <div className="text-[8px] font-black uppercase tracking-widest text-gold/30">Navigator</div>
         </motion.div>

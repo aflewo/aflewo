@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Draggable } from "gsap/all";
 import Link from "next/link";
-import { Quote, Heart, Sparkles, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 gsap.registerPlugin(ScrollTrigger, Draggable);
 
@@ -28,7 +28,7 @@ const stories: Story[] = [
         chapter: "Nairobi"
     },
     {
-        content: "Since 2004, the vision of corporate worship has birthed 10 chapters across Kenya, Tanzania and Rwanda. The movement grows.",
+        content: "Since 2004, the vision of corporate worship has birthed 10 chapters across Africa. The movement grows.",
         name: "Hubert de Rogue Maura",
         role: "Chairman",
         stat: "10 Chapters",
@@ -65,7 +65,6 @@ export default function StoriesTeaser() {
 
         const spacing = 0.25;
         const snap = gsap.utils.snap(spacing);
-        const cardsCount = cards.length;
 
         gsap.set(cards, { xPercent: 400, opacity: 0, scale: 0.8 });
 
@@ -191,7 +190,7 @@ export default function StoriesTeaser() {
                 <div className="flex flex-col lg:flex-row gap-16 lg:gap-20 items-center min-h-[600px]">
                     <div className="stories-header flex-1 space-y-8 text-center lg:text-left">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em] mx-auto lg:mx-0">
-                            <Sparkles size={14} /> The AFLEWO Spirit
+                            <AppIcon name="auto-awesome" size={14} /> The AFLEWO Spirit
                         </div>
                         <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9]">
                             HEIRS OF <br />
@@ -202,7 +201,6 @@ export default function StoriesTeaser() {
                         </p>
 
                         <div className="flex items-center justify-center lg:justify-start gap-4 pt-4">
-                            {/* Nav manual controls removed in favor of high-fidelity drag */}
                             <div className="flex gap-3">
                                 {stories.map((_, i) => (
                                     <div
@@ -218,7 +216,7 @@ export default function StoriesTeaser() {
                             href="/stories"
                             className="press-scale inline-flex items-center gap-4 bg-gold text-brown px-12 py-6 rounded-lg font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
                         >
-                            Read All Stories <ArrowRight size={20} />
+                            Read All Stories <AppIcon name="arrow-forward" size={20} />
                         </Link>
                     </div>
 
@@ -228,7 +226,7 @@ export default function StoriesTeaser() {
                             {stories.map((story, i) => (
                                 <li key={i} className="story-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[400px]">
                                     <div className="glass-card-elevated p-10 md:p-12 relative overflow-hidden group rounded-[2rem] border-white/5 bg-brown/40 backdrop-blur-3xl shadow-2xl">
-                                        <Quote className="absolute top-8 right-8 text-gold/10 group-hover:text-gold/20 transition-colors duration-500" size={80} />
+                                        <AppIcon name="format-quote" size={80} className="absolute top-8 right-8 text-gold/10 group-hover:text-gold/20 transition-colors duration-500" />
 
                                         <div className="relative z-10 space-y-8">
                                             <div className="flex items-center gap-3">
@@ -251,7 +249,7 @@ export default function StoriesTeaser() {
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-gold/10">
-                                                    <Heart size={16} className="text-gold" fill="currentColor" />
+                                                    <AppIcon name="favorite" size={16} className="text-gold" />
                                                     <span className="text-xs font-black text-gold">{story.stat}</span>
                                                 </div>
                                             </div>
