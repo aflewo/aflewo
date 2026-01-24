@@ -119,21 +119,24 @@
     width: 56px;
     height: 56px;
     border-radius: 20px;
-    background: var(--brown);
-    border: 1px solid var(--gold/20);
-    backdrop-filter: blur(12px);
+    background: hsla(20, 20%, 8%, 0.4);
+    border: 1px solid hsla(42, 92%, 56%, 0.2);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--gold);
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
 }
 
 .fab-trigger:hover {
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
+    background: hsla(20, 20%, 8%, 0.6);
+    border-color: hsla(42, 92%, 56%, 0.4);
+    box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.6);
+    transform: translateY(-4px) scale(1.05);
 }
 
 .slider-root {
@@ -151,7 +154,7 @@
     position: relative;
     width: 6px;
     height: 100%;
-    background: var(--gold/10);
+    background: hsla(42, 92%, 56%, 0.1);
     border-radius: 9999px;
     overflow: visible;
 }
@@ -182,7 +185,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background: var(--gold/50);
+    background: hsla(42, 92%, 56%, 0.5);
     border-radius: 9999px;
 }
 
@@ -190,23 +193,25 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 24px;
-    height: 24px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: var(--gold/30);
-    border: 2px solid var(--gold/50);
+    background: hsla(42, 92%, 56%, 0.2);
+    border: 1px solid hsla(42, 92%, 56%, 0.3);
     cursor: pointer;
     z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .section-node.active {
     background: var(--gold);
     border-color: var(--gold);
-    box-shadow: 0 0 20px var(--gold/50);
+    box-shadow: 0 0 15px hsla(42, 92%, 56%, 0.5);
+    width: 14px;
+    height: 14px;
 }
 
 .section-node:hover {

@@ -57,6 +57,19 @@ export default function ElasticNavigator() {
         return 1;
     });
 
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    useMotionValueEvent(value, "change", (latest) => {
+        const index = getClosestSectionIndex(latest);
+        if (index !== activeIndex) {
+            setActiveIndex(index);
+        }
+    });
+
+    // Brand Colors for Framer Motion (Standard RGBA)
+    const GOLD = "rgba(245, 166, 35, 1)";
+    const GOLD_MUTED = "rgba(245, 166, 35, 0.3)";
+
     const rangeHeight = useTransform(value, (v) => `${v}%`);
     const predictiveValue = useMotionValue(0);
     const predictiveHeight = useTransform(predictiveValue, (v) => `${v}%`);
@@ -263,7 +276,7 @@ export default function ElasticNavigator() {
                             borderRadius: 20,
                             transition: { duration: 0.2 }
                         }}
-                        className="bg-brown/90 backdrop-blur-2xl border border-gold/20 flex flex-col items-center py-4 relative shadow-2xl"
+                        className="bg-brown/40 backdrop-blur-3xl border border-white/10 flex flex-col items-center py-6 relative shadow-2xl rounded-3xl"
                         style={{ transformOrigin: "bottom right" }}
                     >
                         <motion.button
@@ -307,7 +320,7 @@ export default function ElasticNavigator() {
 
                                 {sections.map((section, i) => {
                                     const nodePos = (i / (sections.length - 1)) * 100;
-                                    const isActive = getClosestSectionIndex(value.get()) === i;
+                                    const isActive = activeIndex === i;
 
                                     return (
                                         <motion.button
@@ -320,7 +333,7 @@ export default function ElasticNavigator() {
                                             style={{ top: `${nodePos}%` }}
                                             animate={{
                                                 scale: isActive ? 1.3 : 1,
-                                                backgroundColor: isActive ? "var(--gold)" : "var(--gold/30)"
+                                                backgroundColor: isActive ? GOLD : GOLD_MUTED
                                             }}
                                             whileHover={{ scale: 1.4 }}
                                             whileTap={{ scale: 0.9 }}
