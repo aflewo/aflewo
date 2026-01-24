@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import AppIcon from "@/components/ui/AppIcon";
-import { motion, animate, useMotionValue, useMotionValueEvent, useTransform, useSpring, AnimatePresence } from "framer-motion";
+import { motion, animate, useMotionValue, useMotionValueEvent, useTransform, useSpring, AnimatePresence, PanInfo } from "framer-motion";
 import './ElasticNavigator.css';
 
 const sections = [
@@ -17,8 +17,8 @@ const sections = [
 ];
 
 const MAX_OVERFLOW = 50;
-const SCROLL_DEBOUNCE_MS = 16; // ~60fps
-const IDLE_TIMEOUT_MS = 5000;
+const SPRING_CONFIG = { stiffness: 400, damping: 30, mass: 0.8 };
+const PREDICTIVE_DAMPING = 0.9;
 
 function decay(value: number, max: number) {
     if (max === 0) return 0;
@@ -27,187 +27,212 @@ function decay(value: number, max: number) {
     return sigmoid * max;
 }
 
-function getScrollPercent() {
-    const scrollY = window.scrollY;
-    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-    return totalHeight > 0 ? (scrollY / totalHeight) * 100 : 0;
-}
-
 export default function ElasticNavigator() {
     const [isVisible, setIsVisible] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
-    const [activeSectionIndex, setActiveSectionIndex] = useState(0);
     const [region, setRegion] = useState<'top' | 'middle' | 'bottom'>('middle');
     const [isIdle, setIsIdle] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
 
     const sliderRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
     const idleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const isDraggingRef = useRef(false);
-    const lastScrollY = useRef(0);
-    const rafRef = useRef<number | null>(null);
+    const velocityRef = useRef(0);
+    const lastYRef = useRef(0);
+    const lastTimeRef = useRef(0);
 
+    const value = useMotionValue(0);
     const clientY = useMotionValue(0);
     const overflow = useMotionValue(0);
     const scale = useMotionValue(1);
-    const scrollProgress = useMotionValue(0);
+    const panOffset = useMotionValue(0);
 
-    const springOverflow = useSpring(overflow, {
-        stiffness: 400,
-        damping: 30,
-        mass: 0.5
-    });
-
+    const springOverflow = useSpring(overflow, SPRING_CONFIG);
     const springScaleX = useTransform(springOverflow, [0, MAX_OVERFLOW], [1, 0.8]);
     const springScaleY = useTransform(springOverflow, (v) => {
         if (sliderRef.current) {
             const { height } = sliderRef.current.getBoundingClientRect();
-            return 1 + Math.min(v / height, 0.3);
+            return 1 + v / height;
         }
         return 1;
     });
 
-    const heightPercent = useTransform(scrollProgress, (v) => `${100 - v}%`);
+    const transformOrigin = useTransform(() => {
+        if (region === 'top') return 'top center';
+        if (region === 'bottom') return 'bottom center';
+        return 'center center';
+    });
 
-    // Calculate active section index based on scroll progress
-    const updateActiveSection = useCallback((progress: number) => {
-        const invertedProgress = 100 - progress;
-        const index = Math.round((invertedProgress / 100) * (sections.length - 1));
-        const clampedIndex = Math.max(0, Math.min(sections.length - 1, index));
+    const rangeHeight = useTransform(value, (v) => `${v}%`);
+    const predictiveValue = useMotionValue(0);
 
-        if (clampedIndex !== activeSectionIndex) {
-            setActiveSectionIndex(clampedIndex);
-        }
-    }, [activeSectionIndex]);
+    const scrollToPercentage = useCallback((percentage: number, behavior: ScrollBehavior = 'auto') => {
+        const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const targetScroll = (percentage / 100) * scrollableHeight;
 
-    // Handle scroll with RAF for smooth updates
-    const handleScroll = useCallback(() => {
-        if (isDraggingRef.current) return;
+        window.scrollTo({
+            top: targetScroll,
+            behavior: behavior === 'auto' ? 'auto' : 'smooth'
+        });
 
-        if (rafRef.current) {
-            cancelAnimationFrame(rafRef.current);
-        }
+        value.set(percentage);
+    }, [value]);
 
-        rafRef.current = requestAnimationFrame(() => {
-            const scrollPercent = getScrollPercent();
+    const getClosestSectionIndex = useCallback((percentage: number) => {
+        const sectionPercentage = 100 / (sections.length - 1);
+        return Math.round(percentage / sectionPercentage);
+    }, []);
 
-            // Update visibility
-            const shouldBeVisible = window.scrollY > window.innerHeight * 0.8;
-            if (shouldBeVisible !== isVisible) {
-                setIsVisible(shouldBeVisible);
+    const snapToNearestSection = useCallback((currentPercentage: number) => {
+        const sectionPercentage = 100 / (sections.length - 1);
+        const closestIndex = getClosestSectionIndex(currentPercentage);
+        const targetPercentage = closestIndex * sectionPercentage;
+
+        animate(value, targetPercentage, {
+            type: "spring",
+            stiffness: 300,
+            damping: 30,
+            onUpdate: (latest) => {
+                scrollToPercentage(latest, 'auto');
             }
+        });
+    }, [getClosestSectionIndex, scrollToPercentage, value]);
 
-            // Update scroll progress
-            scrollProgress.set(scrollPercent);
-            updateActiveSection(scrollPercent);
+    useEffect(() => {
+        const handleScroll = () => {
+            if (isDragging) return;
 
-            // Reset idle timer
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            value.set(scrollPercent);
+            setIsVisible(window.scrollY > window.innerHeight * 0.8);
+
             setIsIdle(false);
             if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
             idleTimeoutRef.current = setTimeout(() => {
                 setIsIdle(true);
                 setIsExpanded(false);
-            }, IDLE_TIMEOUT_MS);
-        });
-    }, [isVisible, scrollProgress, updateActiveSection]);
-
-    useEffect(() => {
-        const throttledScroll = () => {
-            if (scrollTimeoutRef.current) {
-                clearTimeout(scrollTimeoutRef.current);
-            }
-            scrollTimeoutRef.current = setTimeout(handleScroll, SCROLL_DEBOUNCE_MS);
+            }, 5000);
         };
 
-        window.addEventListener('scroll', throttledScroll, { passive: true });
+        const handleResize = () => {
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            value.set(scrollPercent);
+        };
 
-        // Initial check
-        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', handleResize);
 
         return () => {
-            window.removeEventListener('scroll', throttledScroll);
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', handleResize);
             if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-            if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
-    }, [handleScroll]);
+    }, [isDragging, value]);
 
-    const handlePointerMove = useCallback((e: React.PointerEvent) => {
-        if (!sliderRef.current || !isDraggingRef.current) return;
+    const handleDragStart = () => {
+        setIsDragging(true);
+        setIsIdle(false);
+        if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+        velocityRef.current = 0;
+        lastYRef.current = 0;
+        lastTimeRef.current = Date.now();
+    };
+
+    const handleDrag = (event: any, info: PanInfo) => {
+        if (!sliderRef.current || !trackRef.current) return;
 
         const rect = sliderRef.current.getBoundingClientRect();
-        const y = e.clientY - rect.top;
-        let newValue = 100 - (y / rect.height) * 100;
+        const trackRect = trackRef.current.getBoundingClientRect();
+        const currentY = info.point.y;
 
-        if (newValue < 0) {
-            setRegion('bottom');
-            const overflowAmount = Math.min(Math.abs(newValue), MAX_OVERFLOW * 2);
-            overflow.set(decay(overflowAmount, MAX_OVERFLOW));
-        } else if (newValue > 100) {
+        const now = Date.now();
+        const deltaTime = now - lastTimeRef.current;
+
+        if (deltaTime > 0) {
+            const deltaY = currentY - lastYRef.current;
+            velocityRef.current = (deltaY / deltaTime) * 1000;
+        }
+
+        lastYRef.current = currentY;
+        lastTimeRef.current = now;
+
+        const relativeY = currentY - rect.top;
+        let newPercentage = (relativeY / rect.height) * 100;
+
+        const trackTop = trackRect.top - rect.top;
+        const trackBottom = trackRect.bottom - rect.top;
+        const trackHeight = trackRect.height;
+
+        if (relativeY < trackTop) {
             setRegion('top');
-            const overflowAmount = Math.min(newValue - 100, MAX_OVERFLOW * 2);
+            const overflowAmount = trackTop - relativeY;
             overflow.set(decay(overflowAmount, MAX_OVERFLOW));
+
+            const overflowFactor = 1 - (overflowAmount / MAX_OVERFLOW);
+            newPercentage = 0 - (10 * (1 - overflowFactor));
+        } else if (relativeY > trackBottom) {
+            setRegion('bottom');
+            const overflowAmount = relativeY - trackBottom;
+            overflow.set(decay(overflowAmount, MAX_OVERFLOW));
+
+            const overflowFactor = 1 - (overflowAmount / MAX_OVERFLOW);
+            newPercentage = 100 + (10 * (1 - overflowFactor));
         } else {
             setRegion('middle');
             overflow.set(0);
-            newValue = Math.min(Math.max(newValue, 0), 100);
 
-            scrollProgress.set(newValue);
-            updateActiveSection(newValue);
-            clientY.set(e.clientY);
-
-            // Calculate scroll position (inverted for bottom-up navigation)
-            const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollPos = ((100 - newValue) / 100) * totalScroll;
-
-            window.scrollTo({
-                top: scrollPos,
-                behavior: 'instant' as ScrollBehavior
-            });
+            const trackRelativeY = relativeY - trackTop;
+            newPercentage = (trackRelativeY / trackHeight) * 100;
         }
-    }, [overflow, scrollProgress, updateActiveSection]);
 
-    const handlePointerDown = useCallback((e: React.PointerEvent) => {
-        e.preventDefault();
-        setIsDragging(true);
-        isDraggingRef.current = true;
-        setIsIdle(false);
+        newPercentage = Math.max(0, Math.min(newPercentage, 100));
+        value.set(newPercentage);
+        scrollToPercentage(newPercentage, 'auto');
 
-        if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+        const predictedPercentage = newPercentage + (velocityRef.current * PREDICTIVE_DAMPING);
+        predictiveValue.set(Math.max(0, Math.min(predictedPercentage, 100)));
+    };
 
-        handlePointerMove(e);
-        (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
-    }, [handlePointerMove]);
-
-    const handlePointerUp = useCallback(() => {
+    const handleDragEnd = () => {
         setIsDragging(false);
-        isDraggingRef.current = false;
+
+        const finalVelocity = velocityRef.current;
+        const currentPercentage = value.get();
+
+        let targetPercentage = currentPercentage + (finalVelocity * PREDICTIVE_DAMPING);
+        targetPercentage = Math.max(0, Math.min(targetPercentage, 100));
 
         animate(overflow, 0, {
             type: 'spring',
-            stiffness: 400,
-            damping: 30
+            bounce: 0.5,
+            duration: 0.3
         });
-    }, [overflow]);
 
-    const handlePointerLeave = useCallback(() => {
-        if (isDraggingRef.current) {
-            handlePointerUp();
+        if (Math.abs(finalVelocity) > 50) {
+            animate(value, targetPercentage, {
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                onUpdate: (latest) => {
+                    scrollToPercentage(latest, 'auto');
+                },
+                onComplete: () => {
+                    snapToNearestSection(value.get());
+                }
+            });
+        } else {
+            snapToNearestSection(currentPercentage);
         }
-    }, [handlePointerUp]);
+    };
 
-    const scrollToSection = useCallback((index: number) => {
-        const element = document.getElementById(sections[index].id);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-            setIsExpanded(false);
-        }
-    }, []);
+    const handleNodeClick = useCallback((index: number) => {
+        const sectionPercentage = (100 / (sections.length - 1)) * index;
+        scrollToPercentage(sectionPercentage, 'smooth');
+    }, [scrollToPercentage]);
 
     return (
         <div className={cn(
-            "fixed right-6 bottom-8 z-[100] transition-all duration-700 pointer-events-auto",
+            "fixed right-6 bottom-8 z-[100] transition-all duration-700",
             isVisible ? "translate-x-0" : "translate-x-32",
             isIdle && !isExpanded ? "opacity-20 scale-90" : "opacity-100 scale-100"
         )}>
@@ -218,116 +243,121 @@ export default function ElasticNavigator() {
                         initial={{ scale: 0, rotate: -45 }}
                         animate={{ scale: 1, rotate: 0 }}
                         exit={{ scale: 0, rotate: 45 }}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
                         onClick={() => setIsExpanded(true)}
-                        className="fab-trigger w-14 h-14 rounded-full bg-brown/90 backdrop-blur-xl border border-gold/30 flex items-center justify-center shadow-2xl hover:shadow-3xl hover:border-gold/50 transition-shadow duration-300"
+                        className="fab-trigger"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                     >
-                        <AppIcon name="navigation" size={24} className="text-gold" />
+                        <AppIcon name="navigation" size={24} />
                     </motion.button>
                 ) : (
                     <motion.div
                         key="slider"
-                        initial={{ height: 56, width: 56, borderRadius: 20, opacity: 0, scale: 0.8 }}
+                        initial={{ height: 56, width: 56, borderRadius: 20 }}
                         animate={{
                             height: 400,
                             width: 32,
                             borderRadius: 16,
-                            opacity: 1,
-                            scale: 1,
-                            transition: { type: "spring", damping: 25 }
+                            transition: { type: "spring", stiffness: 300, damping: 25 }
                         }}
-                        exit={{ height: 56, width: 56, borderRadius: 20, opacity: 0, scale: 0.8 }}
+                        exit={{
+                            height: 56,
+                            width: 56,
+                            borderRadius: 20,
+                            transition: { duration: 0.2 }
+                        }}
                         className="bg-brown/90 backdrop-blur-2xl border border-gold/20 flex flex-col items-center py-4 relative shadow-2xl"
+                        style={{ transformOrigin: "bottom right" }}
                     >
                         <button
                             onClick={() => setIsExpanded(false)}
-                            className="text-gold/50 hover:text-gold mb-2 transition-colors duration-200 w-6 h-6 flex items-center justify-center rounded-full hover:bg-gold/10"
+                            className="text-gold/50 hover:text-gold mb-2 transition-colors"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
                         >
-                            <AppIcon name="close" size={14} />
+                            <AppIcon name="close" size={16} />
                         </button>
 
-                        <div
+                        <motion.div
                             ref={sliderRef}
-                            className="slider-root w-full flex-1 relative touch-none select-none"
-                            onPointerMove={handlePointerMove}
-                            onPointerDown={handlePointerDown}
-                            onPointerUp={handlePointerUp}
-                            onPointerLeave={handlePointerLeave}
-                            onPointerCancel={handlePointerUp}
+                            className="slider-root"
+                            onPanStart={handleDragStart}
+                            onPan={handleDrag}
+                            onPanEnd={handleDragEnd}
+                            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
                             <motion.div
+                                ref={trackRef}
                                 style={{
                                     scaleX: springScaleX,
                                     scaleY: springScaleY,
+                                    transformOrigin,
                                 }}
-                                className="slider-track absolute inset-0 mx-auto w-1 bg-gold/20 rounded-full overflow-hidden"
+                                className="slider-track"
                             >
-                                {/* Active range indicator */}
-                                <motion.div
-                                    className="slider-range absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gold/80 to-gold/40"
-                                    style={{ height: heightPercent }}
-                                />
+                                <div className="slider-range" style={{ height: rangeHeight }} />
 
-                                {/* Nodes */}
+                                <div className="predictive-track">
+                                    <motion.div
+                                        className="predictive-range"
+                                        style={{
+                                            height: useTransform(predictiveValue, v => `${v}%`)
+                                        }}
+                                    />
+                                </div>
+
                                 {sections.map((section, i) => {
                                     const nodePos = (i / (sections.length - 1)) * 100;
-                                    const isActive = activeSectionIndex === i;
-                                    const distanceFromActive = Math.abs(i - activeSectionIndex);
+                                    const isActive = getClosestSectionIndex(value.get()) === i;
 
                                     return (
                                         <motion.button
                                             key={section.id}
                                             className={cn(
-                                                "section-node absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 transition-all duration-300",
-                                                isActive
-                                                    ? "bg-gold border-gold scale-125"
-                                                    : "bg-brown border-gold/30 hover:border-gold/60 hover:scale-110"
+                                                "section-node",
+                                                isActive && "active",
+                                                "touch-none select-none"
                                             )}
                                             style={{ top: `${nodePos}%` }}
-                                            whileHover={{ scale: 1.3 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            onClick={() => scrollToSection(i)}
                                             animate={{
-                                                opacity: 0.3 + (0.7 / (distanceFromActive + 1))
+                                                scale: isActive ? 1.3 : 1,
+                                                backgroundColor: isActive ? "var(--gold)" : "var(--gold/30)"
                                             }}
+                                            whileHover={{ scale: 1.4 }}
+                                            whileTap={{ scale: 0.9 }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleNodeClick(i);
+                                            }}
+                                            onPointerDown={(e) => e.stopPropagation()}
                                         >
                                             {isActive && (
                                                 <motion.div
-                                                    initial={{ opacity: 0, x: -20 }}
-                                                    animate={{ opacity: 1, x: -24 }}
-                                                    exit={{ opacity: 0, x: -20 }}
-                                                    className="value-indicator absolute right-full mr-2 px-2 py-1 bg-brown/90 backdrop-blur-sm border border-gold/20 rounded-md text-xs text-gold whitespace-nowrap"
+                                                    className="value-indicator"
+                                                    initial={{ opacity: 0, y: -20 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -20 }}
                                                 >
                                                     {section.label}
                                                 </motion.div>
                                             )}
+                                            <div className="node-hit-area" />
                                         </motion.button>
                                     );
                                 })}
-
-                                {/* Draggable handle */}
-                                <motion.div
-                                    className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gradient-to-br from-gold/90 to-gold/60 border-2 border-gold/30 shadow-lg cursor-grab active:cursor-grabbing"
-                                    style={{ top: `${100 - scrollProgress.get()}%` }}
-                                    animate={{
-                                        scale: isDragging ? 1.2 : 1,
-                                        boxShadow: isDragging
-                                            ? "0 10px 25px -5px rgba(245, 158, 11, 0.4), 0 0 15px rgba(245, 158, 11, 0.3)"
-                                            : "0 4px 12px -2px rgba(245, 158, 11, 0.3)"
-                                    }}
-                                    whileHover={{ scale: 1.1 }}
-                                />
                             </motion.div>
-                        </div>
+                        </motion.div>
 
                         <motion.div
-                            className="mt-4 text-gold/60"
+                            className="mt-2 text-gold"
                             animate={{
-                                y: region === 'bottom' ? springOverflow.get() / 2 : region === 'top' ? -springOverflow.get() / 2 : 0,
-                                opacity: scrollProgress.get() > 99 ? 0.3 : 1
+                                scale: region === 'bottom' ? 1.2 : region === 'top' ? 1.2 : 1,
+                                opacity: value.get() > 99 ? 0.3 : 1
                             }}
-                            transition={{ type: "spring", damping: 30 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
                         >
                             <AppIcon
                                 name={region === 'top' ? "keyboard_double_arrow_up" : "keyboard_double_arrow_down"}
