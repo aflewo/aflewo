@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { Quote, Heart, MessageCircle, Sparkles } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -88,7 +88,7 @@ export default function StoriesPage() {
                     <div key={i} className="story-section min-h-[80vh] flex items-center border-b border-white/5 py-24 px-6 md:px-0">
                         <div className={`max-container flex flex-col ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} gap-20 items-center`}>
                             <div className="flex-1 space-y-8">
-                                <Quote className="text-gold opacity-20" size={64} />
+                                <AppIcon name="format_quote" className="text-gold opacity-20" size={64} />
                                 <h2 className="reveal-text text-5xl md:text-7xl font-black tracking-tighter leading-tight">{story.title}</h2>
                                 <p className="reveal-text text-xl text-foreground/60 font-medium leading-loose font-serif-spiritual">
                                     "{story.desc}"
@@ -115,8 +115,8 @@ export default function StoriesPage() {
             {/* Submission CTA */}
             <section className="section-padding bg-primary text-primary-foreground text-center">
                 <div className="max-container space-y-12">
-                    <Sparkles className="mx-auto text-gold" size={48} />
-                    <h2 className="text-4xl md:text-6xl font-black tracking-tight text-white">WHAT'S YOUR <span className="text-gold">AFLEWO STORY?</span></h2>
+                    <AppIcon name="auto_awesome" className="mx-auto text-gold" size={48} />
+                    <h2 className="text-4xl md:text-6xl font-black tracking-tight text-white">WHAT{"'"}S YOUR <span className="text-gold">AFLEWO STORY?</span></h2>
                     <p className="max-w-2xl mx-auto text-white/60 text-lg font-medium">
                         Whether you were in the choir in 2004 or attended for the first time in 2025, we want to hear how God has moved in your life through worship.
                     </p>
@@ -126,11 +126,11 @@ export default function StoriesPage() {
 
                     <div className="flex justify-center gap-12 pt-12 border-t border-white/5 opacity-40">
                         <div className="flex flex-col items-center gap-2">
-                            <Heart size={24} />
+                            <AppIcon name="favorite" size={24} />
                             <span className="text-[10px] font-black uppercase">7,000+ Alumni</span>
                         </div>
                         <div className="flex flex-col items-center gap-2">
-                            <MessageCircle size={24} />
+                            <AppIcon name="forum" size={24} />
                             <span className="text-[10px] font-black uppercase">Thousands of Stories</span>
                         </div>
                     </div>

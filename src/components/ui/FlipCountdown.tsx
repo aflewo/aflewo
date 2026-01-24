@@ -18,18 +18,14 @@ interface TimeLeft {
 }
 
 function FlipCard({ value, label }: { value: number; label: string }) {
-    const topRef = useRef<HTMLDivElement>(null);
-    const bottomRef = useRef<HTMLDivElement>(null);
     const flipRef = useRef<HTMLDivElement>(null);
     const prevValueRef = useRef(value);
-    const currentValueRef = useRef(value);
     const [displayValue, setDisplayValue] = useState(value);
     const [nextValue, setNextValue] = useState(value);
 
     useEffect(() => {
         if (prevValueRef.current !== value) {
             setNextValue(value);
-            currentValueRef.current = value;
 
             const tl = gsap.timeline({
                 onComplete: () => {
@@ -44,7 +40,7 @@ function FlipCard({ value, label }: { value: number; label: string }) {
             if (flipRef.current) {
                 tl.to(flipRef.current, {
                     rotateX: -180,
-                    duration: 0.6,
+                    duration: 0.7,
                     ease: "power2.inOut"
                 });
             }
@@ -55,74 +51,63 @@ function FlipCard({ value, label }: { value: number; label: string }) {
     const formattedNext = nextValue.toString().padStart(2, '0');
 
     return (
-        <div className="flip-countdown-unit flex flex-col items-center gap-3">
-            <div className="relative" style={{ perspective: "400px" }}>
-                <div className="flip-card-container relative w-16 h-20 sm:w-20 sm:h-24 md:w-28 md:h-32">
-                    <div
-                        ref={topRef}
-                        className="flip-card-top absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-[hsl(30,6%,14%)] to-[hsl(30,6%,11%)] rounded-t-xl overflow-hidden border border-white/5 border-b-0"
-                    >
-                        <div className="absolute inset-0 flex items-end justify-center pb-0">
-                            <span className="text-3xl sm:text-4xl md:text-5xl font-black text-white translate-y-1/2">
-                                {formattedDisplay}
-                            </span>
-                        </div>
-                        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent" />
+        <div className="flip-countdown-unit flex flex-col items-center gap-4 group">
+            <div className="relative" style={{ perspective: "1000px" }}>
+                {/* Physical Base Shadow */}
+                <div className="absolute inset-0 bg-black/40 blur-2xl translate-y-4 scale-90" />
+
+                <div className="flip-card-container relative w-16 h-20 sm:w-20 sm:h-24 md:w-28 md:h-36 rounded-2xl overflow-hidden glass shadow-2xl border border-white/5">
+                    {/* Top Static Part */}
+                    <div className="absolute inset-x-0 top-0 h-1/2 bg-[hsl(20,20%,12%)] flex items-end justify-center overflow-hidden">
+                        <span className="text-4xl sm:text-5xl md:text-7xl font-black text-white translate-y-1/2 tracking-tighter">
+                            {formattedNext}
+                        </span>
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
                     </div>
 
-                    <div
-                        ref={bottomRef}
-                        className="flip-card-bottom absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[hsl(30,6%,14%)] to-[hsl(30,6%,11%)] rounded-b-xl overflow-hidden border border-white/5 border-t-0"
-                    >
-                        <div className="absolute inset-0 flex items-start justify-center pt-0">
-                            <span className="text-3xl sm:text-4xl md:text-5xl font-black text-white -translate-y-1/2">
-                                {formattedDisplay}
-                            </span>
-                        </div>
+                    {/* Bottom Static Part */}
+                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[hsl(20,20%,10%)] flex items-start justify-center overflow-hidden">
+                        <span className="text-4xl sm:text-5xl md:text-7xl font-black text-white -translate-y-1/2 tracking-tighter">
+                            {formattedDisplay}
+                        </span>
+                        <div className="absolute inset-0 bg-gradient-to-t from-gold/5 to-transparent" />
                     </div>
 
+                    {/* Flipper */}
                     <div
                         ref={flipRef}
-                        className="flip-card-flip absolute inset-x-0 top-0 h-1/2 origin-bottom rounded-t-xl overflow-hidden"
-                        style={{
-                            backfaceVisibility: "hidden",
-                            transformStyle: "preserve-3d"
-                        }}
+                        className="absolute inset-x-0 top-0 h-1/2 origin-bottom z-20"
+                        style={{ transformStyle: "preserve-3d" }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(30,6%,14%)] to-[hsl(30,6%,11%)] border border-white/5 border-b-0 rounded-t-xl" style={{ backfaceVisibility: "hidden" }}>
-                            <div className="absolute inset-0 flex items-end justify-center pb-0">
-                                <span className="text-3xl sm:text-4xl md:text-5xl font-black text-white translate-y-1/2">
-                                    {formattedDisplay}
-                                </span>
-                            </div>
-                            <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent" />
+                        {/* Front (Visible before flip) */}
+                        <div className="absolute inset-0 bg-[hsl(20,20%,12%)] border-b border-black/40 flex items-end justify-center overflow-hidden rounded-t-2xl px-2" style={{ backfaceVisibility: "hidden" }}>
+                            <span className="text-4xl sm:text-5xl md:text-7xl font-black text-white translate-y-1/2 tracking-tighter">
+                                {formattedDisplay}
+                            </span>
                         </div>
 
+                        {/* Back (Visible after 180 deg) */}
                         <div
-                            className="absolute inset-0 bg-gradient-to-t from-[hsl(30,6%,14%)] to-[hsl(30,6%,11%)] border border-white/5 border-t-0 rounded-b-xl"
+                            className="absolute inset-0 bg-[hsl(20,20%,10%)] border-t border-white/5 flex items-start justify-center overflow-hidden rounded-b-2xl px-2 shadow-inner"
                             style={{
                                 backfaceVisibility: "hidden",
                                 transform: "rotateX(180deg)"
                             }}
                         >
-                            <div className="absolute inset-0 flex items-start justify-center pt-0">
-                                <span className="text-3xl sm:text-4xl md:text-5xl font-black text-white -translate-y-1/2">
-                                    {formattedNext}
-                                </span>
-                            </div>
+                            <span className="text-4xl sm:text-5xl md:text-7xl font-black text-white -translate-y-1/2 tracking-tighter">
+                                {formattedNext}
+                            </span>
                         </div>
                     </div>
 
-                    <div className="absolute inset-y-0 left-0 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-black/40 z-10" />
+                    {/* Center Groove */}
+                    <div className="absolute inset-y-0 left-0 right-0 top-1/2 -translate-y-1/2 h-[3px] bg-black/60 z-30 shadow-[0_1px_0_rgba(255,255,255,0.05)]" />
 
-                    <div className="absolute inset-0 rounded-xl shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)] pointer-events-none" />
-
-                    <div className="absolute inset-0 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                        <div className="absolute inset-0 rounded-xl shadow-[0_0_40px_-10px_hsl(45,100%,50%,0.3)]" />
-                    </div>
+                    {/* Ambient Occlusion Corner Shadows */}
+                    <div className="absolute inset-0 rounded-2xl shadow-[inset_0_0_40px_rgba(0,0,0,0.4)] pointer-events-none z-40" />
                 </div>
             </div>
-            <span className="text-[8px] sm:text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-gold/60">
+            <span className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.4em] text-gold/40 group-hover:text-gold transition-colors duration-500">
                 {label}
             </span>
         </div>
@@ -170,53 +155,53 @@ export default function FlipCountdown({
     useEffect(() => {
         if (containerRef.current) {
             gsap.fromTo(containerRef.current,
-                { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
+                { opacity: 0, scale: 0.95 },
+                { opacity: 1, scale: 1, duration: 1.5, ease: "power4.out" }
             );
         }
     }, []);
 
     return (
-        <div ref={containerRef} className="flip-countdown-wrapper space-y-8">
+        <div ref={containerRef} className="flip-countdown-wrapper space-y-12 py-10">
             {(eventTitle || eventLocation) && (
-                <div className="text-center space-y-2">
+                <div className="text-center space-y-4">
                     {eventTitle && (
-                        <h3 className="text-2xl md:text-3xl font-black tracking-tighter text-white">
+                        <h3 className="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic">
                             {eventTitle}
                         </h3>
                     )}
                     {eventLocation && (
-                        <p className="text-sm font-medium text-white/50">
+                        <p className="text-sm md:text-lg font-bold uppercase tracking-widest text-gold bg-gold/10 inline-block px-6 py-2 rounded-full border border-gold/20">
                             {eventLocation}
                         </p>
                     )}
                 </div>
             )}
 
-            <div className="flex justify-center items-center gap-2 sm:gap-3 md:gap-4">
+            <div className="flex justify-center items-center gap-4 sm:gap-6 md:gap-10">
                 <FlipCard value={timeLeft.days} label="Days" />
-                <div className="flex flex-col gap-3 pb-6">
-                    <div className="w-2 h-2 rounded-full bg-gold/50" />
-                    <div className="w-2 h-2 rounded-full bg-gold/50" />
+                <div className="flex flex-col gap-4 pb-10 opacity-30">
+                    <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]" />
+                    <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]" />
                 </div>
                 <FlipCard value={timeLeft.hours} label="Hours" />
-                <div className="flex flex-col gap-3 pb-6">
-                    <div className="w-2 h-2 rounded-full bg-gold/50" />
-                    <div className="w-2 h-2 rounded-full bg-gold/50" />
+                <div className="flex flex-col gap-4 pb-10 opacity-30">
+                    <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]" />
+                    <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]" />
                 </div>
                 <FlipCard value={timeLeft.mins} label="Mins" />
-                <div className="flex flex-col gap-3 pb-6">
-                    <div className="w-2 h-2 rounded-full bg-gold/50" />
-                    <div className="w-2 h-2 rounded-full bg-gold/50" />
+                <div className="flex flex-col gap-4 pb-10 opacity-30">
+                    <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]" />
+                    <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]" />
                 </div>
                 <FlipCard value={timeLeft.secs} label="Secs" />
             </div>
 
             {isComplete && (
-                <div className="text-center animate-pulse">
-                    <span className="text-gold font-black uppercase tracking-[0.3em] text-sm">
-                        Event Has Started!
-                    </span>
+                <div className="text-center">
+                    <div className="inline-flex items-center gap-4 px-10 py-5 rounded-2xl bg-gold text-brown font-black uppercase text-xl animate-bounce shadow-glow">
+                        The Event is Live!
+                    </div>
                 </div>
             )}
         </div>

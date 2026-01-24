@@ -3,22 +3,7 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-    Calendar as CalendarIcon,
-    Clock,
-    Bell,
-    Plus,
-    ExternalLink,
-    Sparkles,
-    MapPin,
-    ChevronLeft,
-    ChevronRight,
-    Download,
-    Filter,
-    Check,
-    Apple,
-    X
-} from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -146,6 +131,8 @@ const chapterColors: Record<string, { bg: string; text: string; border: string }
     Meru: { bg: "bg-lime-500/20", text: "text-lime-400", border: "border-lime-500/30" }
 };
 
+const chapters = Object.keys(chapterColors);
+
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -181,34 +168,55 @@ interface FlipDigitProps {
 }
 
 function FlipDigit({ value, label }: FlipDigitProps) {
-    const digitRef = useRef<HTMLDivElement>(null);
+    const flipRef = useRef<HTMLDivElement>(null);
     const prevValue = useRef(value);
+    const [displayValue, setDisplayValue] = useState(value);
+    const [nextValue, setNextValue] = useState(value);
 
     useEffect(() => {
-        if (prevValue.current !== value && digitRef.current) {
-            gsap.fromTo(digitRef.current,
-                { rotateX: -90, opacity: 0 },
-                { rotateX: 0, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }
-            );
+        if (prevValue.current !== value) {
+            setNextValue(value);
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    setDisplayValue(value);
+                    if (flipRef.current) gsap.set(flipRef.current, { rotateX: 0 });
+                }
+            });
+            if (flipRef.current) {
+                tl.to(flipRef.current, { rotateX: -180, duration: 0.6, ease: "power2.inOut" });
+            }
         }
         prevValue.current = value;
     }, [value]);
 
+    const formattedDisplay = displayValue.toString().padStart(2, '0');
+    const formattedNext = nextValue.toString().padStart(2, '0');
+
     return (
-        <div className="flex flex-col items-center gap-2">
-            <div className="relative perspective-1000">
-                <div
-                    ref={digitRef}
-                    className="countdown-digit relative glass-card-elevated w-16 h-20 md:w-24 md:h-28 flex items-center justify-center rounded-xl border-white/10 overflow-hidden"
-                >
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent" />
-                    <span className="text-3xl md:text-5xl font-black text-white">
-                        {value.toString().padStart(2, '0')}
-                    </span>
-                    <div className="absolute top-1/2 left-0 right-0 h-px bg-black/30" />
+        <div className="flex flex-col items-center gap-2 group">
+            <div className="relative" style={{ perspective: "1000px" }}>
+                <div className="relative w-16 h-20 md:w-24 md:h-32 rounded-xl overflow-hidden glass-card shadow-2xl border border-white/5">
+                    {/* Top Static */}
+                    <div className="absolute inset-x-0 top-0 h-1/2 bg-[hsl(20,20%,12%)] flex items-end justify-center overflow-hidden">
+                        <span className="text-3xl md:text-5xl font-black text-white translate-y-1/2">{formattedNext}</span>
+                    </div>
+                    {/* Bottom Static */}
+                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[hsl(20,20%,10%)] flex items-start justify-center overflow-hidden">
+                        <span className="text-3xl md:text-5xl font-black text-white -translate-y-1/2">{formattedDisplay}</span>
+                    </div>
+                    {/* Flipper */}
+                    <div ref={flipRef} className="absolute inset-x-0 top-0 h-1/2 origin-bottom z-10" style={{ transformStyle: "preserve-3d" }}>
+                        <div className="absolute inset-0 bg-[hsl(20,20%,12%)] flex items-end justify-center overflow-hidden rounded-t-xl" style={{ backfaceVisibility: "hidden" }}>
+                            <span className="text-3xl md:text-5xl font-black text-white translate-y-1/2">{formattedDisplay}</span>
+                        </div>
+                        <div className="absolute inset-0 bg-[hsl(20,20%,10%)] flex items-start justify-center overflow-hidden rounded-b-xl" style={{ backfaceVisibility: "hidden", transform: "rotateX(180deg)" }}>
+                            <span className="text-3xl md:text-5xl font-black text-white -translate-y-1/2">{formattedNext}</span>
+                        </div>
+                    </div>
+                    <div className="absolute top-1/2 left-0 right-0 h-px bg-black/40 z-20 shadow-[0_1px_0_rgba(255,255,255,0.05)]" />
                 </div>
             </div>
-            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-white/30">{label}</span>
+            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-white/30 group-hover:text-gold transition-colors">{label}</span>
         </div>
     );
 }
@@ -227,26 +235,21 @@ export default function EventHub() {
             if (!nextEvent) return;
             const eventDate = parseEventDate(nextEvent.date);
             if (!eventDate) return;
-
             const now = new Date();
             const diff = eventDate.getTime() - now.getTime();
-
             if (diff <= 0) {
                 setTimeLeft({ days: 0, hours: 0, mins: 0, secs: 0 });
                 return;
             }
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-            setTimeLeft({ days, hours, mins, secs });
+            setTimeLeft({
+                days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                mins: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+                secs: Math.floor((diff % (1000 * 60)) / 1000)
+            });
         };
-
         calculateTimeLeft();
         const timer = setInterval(calculateTimeLeft, 1000);
-
         return () => clearInterval(timer);
     }, [nextEvent]);
 
@@ -264,154 +267,42 @@ export default function EventHub() {
                 ease: "power4.out"
             });
         }, sectionRef);
-
         return () => ctx.revert();
     }, []);
 
-    const getDaysInMonth = useCallback((date: Date) => {
-        return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-    }, []);
-
-    const getFirstDayOfMonth = useCallback((date: Date) => {
-        return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-    }, []);
-
-    const getEventsForDate = useCallback((date: Date) => {
-        return events.filter(event => {
-            const eventDate = parseEventDate(event.date);
-            if (!eventDate) return false;
-            return eventDate.toDateString() === date.toDateString();
-        });
-    }, []);
+    const getDaysInMonth = useCallback((date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(), []);
+    const getFirstDayOfMonth = useCallback((date: Date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay(), []);
+    const getEventsForDate = useCallback((date: Date) => events.filter(e => {
+        const d = parseEventDate(e.date);
+        return d && d.toDateString() === date.toDateString();
+    }), []);
 
     const filteredEvents = useMemo(() => {
         let filtered = events;
-        if (activeFilters.length > 0) {
-            filtered = filtered.filter(e => activeFilters.includes(e.chapter));
-        }
-        if (selectedDate) {
-            filtered = filtered.filter(e => {
-                const eventDate = parseEventDate(e.date);
-                return eventDate && eventDate.toDateString() === selectedDate.toDateString();
-            });
-        }
+        if (activeFilters.length > 0) filtered = filtered.filter(e => activeFilters.includes(e.chapter));
+        if (selectedDate) filtered = filtered.filter(e => {
+            const d = parseEventDate(e.date);
+            return d && d.toDateString() === selectedDate.toDateString();
+        });
         return filtered;
     }, [activeFilters, selectedDate]);
 
     const toggleFilter = (chapter: string) => {
-        setActiveFilters(prev =>
-            prev.includes(chapter)
-                ? prev.filter(c => c !== chapter)
-                : [...prev, chapter]
-        );
+        setActiveFilters(prev => prev.includes(chapter) ? prev.filter(c => c !== chapter) : [...prev, chapter]);
     };
 
-    const navigateMonth = (direction: number) => {
-        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1));
-    };
-
-    const addToGoogleCalendar = (event: Event) => {
-        const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&details=${encodeURIComponent((event.description || "") + " | AFLEWO " + event.chapter)}&location=${encodeURIComponent(event.location)}`;
-        window.open(url, '_blank');
-    };
-
-    const downloadICS = (event: Event) => {
-        const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//AFLEWO//Events//EN
-BEGIN:VEVENT
-UID:${event.id}@aflewo.org
-DTSTART:${event.start}
-DTEND:${event.end}
-SUMMARY:${event.title}
-DESCRIPTION:${event.description || event.type + " for AFLEWO " + event.chapter}
-LOCATION:${event.location}
-END:VEVENT
-END:VCALENDAR`;
-        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.setAttribute('download', `${event.title.replace(/\s+/g, '_')}.ics`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
+    const navigateMonth = (direction: number) => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1));
 
     const downloadAllICS = () => {
-        const icsEvents = events.filter(e => e.date !== "Every Night").map(event =>
-            `BEGIN:VEVENT
-UID:${event.id}@aflewo.org
-DTSTART:${event.start}
-DTEND:${event.end}
-SUMMARY:${event.title}
-DESCRIPTION:${event.description || event.type + " for AFLEWO " + event.chapter}
-LOCATION:${event.location}
-END:VEVENT`
-        ).join('\n');
-
-        const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//AFLEWO//Events//EN
-X-WR-CALNAME:AFLEWO Events 2026
-${icsEvents}
-END:VCALENDAR`;
-        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const content = `BEGIN:VCALENDAR\nVERSION:2.0\nX-WR-CALNAME:AFLEWO 2026\n${events.map(e => `BEGIN:VEVENT\nSUMMARY:${e.title}\nDTSTART:${e.start}\nDTEND:${e.end}\nLOCATION:${e.location}\nEND:VEVENT`).join('\n')}\nEND:VCALENDAR`;
         const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.setAttribute('download', 'AFLEWO_Events_2026.ics');
-        document.body.appendChild(link);
+        link.href = window.URL.createObjectURL(new Blob([content], { type: 'text/calendar' }));
+        link.download = 'AFLEWO_2026.ics';
         link.click();
-        document.body.removeChild(link);
     };
-
-    const renderCalendarGrid = () => {
-        const daysInMonth = getDaysInMonth(currentMonth);
-        const firstDay = getFirstDayOfMonth(currentMonth);
-        const days = [];
-
-        for (let i = 0; i < firstDay; i++) {
-            days.push(<div key={`empty-${i}`} className="h-10 md:h-14" />);
-        }
-
-        for (let day = 1; day <= daysInMonth; day++) {
-            const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-            const dayEvents = getEventsForDate(date);
-            const isSelected = selectedDate && selectedDate.toDateString() === date.toDateString();
-            const hasEvents = dayEvents.length > 0;
-
-            days.push(
-                <button
-                    key={day}
-                    onClick={() => setSelectedDate(isSelected ? null : date)}
-                    className={`relative h-10 md:h-14 rounded-lg text-sm font-bold transition-all ${isSelected
-                        ? "bg-gold text-brown"
-                        : hasEvents
-                            ? "bg-white/5 hover:bg-white/10 text-white"
-                            : "text-white/40 hover:bg-white/5"
-                        }`}
-                >
-                    {day}
-                    {hasEvents && !isSelected && (
-                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5">
-                            {dayEvents.slice(0, 3).map((e, i) => (
-                                <span
-                                    key={i}
-                                    className={`w-1 h-1 rounded-full ${chapterColors[e.chapter]?.bg || "bg-gold"}`}
-                                />
-                            ))}
-                        </div>
-                    )}
-                </button>
-            );
-        }
-
-        return days;
-    };
-
-    const chapters = Object.keys(chapterColors);
 
     return (
-        <section ref={sectionRef} className="section-padding bg-background relative overflow-hidden" id="events">
+        <section ref={sectionRef} id="events" className="section-padding bg-background relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-[150px]" />
             </div>
@@ -421,7 +312,7 @@ END:VCALENDAR`;
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-12">
                         <div className="space-y-4">
                             <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                                <CalendarIcon size={12} /> Events & Calendar
+                                <AppIcon name="calendar_month" size={12} /> Events & Calendar
                             </div>
                             <h2 className="text-5xl md:text-7xl font-black tracking-tighter">
                                 THE <span className="text-gold">CALENDAR</span>
@@ -431,7 +322,7 @@ END:VCALENDAR`;
                             onClick={downloadAllICS}
                             className="press-scale px-8 py-4 bg-gold text-brown rounded-lg font-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-3"
                         >
-                            <Download size={16} /> Sync All 2026 Events
+                            <AppIcon name="download" size={16} /> Sync All 2026 Events
                         </button>
                     </div>
                 </div>
@@ -440,239 +331,93 @@ END:VCALENDAR`;
                     <div className="lg:col-span-5 hub-panel space-y-6">
                         <div className="glass-card-elevated p-6 md:p-8 rounded-lg border-white/5">
                             <div className="flex items-center justify-between mb-6">
-                                <button
-                                    onClick={() => navigateMonth(-1)}
-                                    className="p-3 rounded-lg glass-card hover:bg-white/10 transition-colors"
-                                >
-                                    <ChevronLeft size={20} />
-                                </button>
-                                <h3 className="text-xl font-black tracking-tight">
-                                    {months[currentMonth.getMonth()]} {currentMonth.getFullYear()}
-                                </h3>
-                                <button
-                                    onClick={() => navigateMonth(1)}
-                                    className="p-3 rounded-lg glass-card hover:bg-white/10 transition-colors"
-                                >
-                                    <ChevronRight size={20} />
-                                </button>
+                                <button onClick={() => navigateMonth(-1)} className="p-3 rounded-lg glass-card hover:bg-white/10"><AppIcon name="chevron_left" size={20} /></button>
+                                <h3 className="text-xl font-black tracking-tight">{months[currentMonth.getMonth()]} {currentMonth.getFullYear()}</h3>
+                                <button onClick={() => navigateMonth(1)} className="p-3 rounded-lg glass-card hover:bg-white/10"><AppIcon name="chevron_right" size={20} /></button>
                             </div>
-
                             <div className="grid grid-cols-7 gap-1 mb-2">
-                                {weekDays.map(day => (
-                                    <div key={day} className="text-center text-[10px] font-black uppercase tracking-widest text-white/30 py-2">
-                                        {day}
-                                    </div>
-                                ))}
+                                {weekDays.map(day => <div key={day} className="text-center text-[10px] font-black uppercase tracking-widest text-white/30 py-2">{day}</div>)}
                             </div>
-
                             <div className="grid grid-cols-7 gap-1">
-                                {renderCalendarGrid()}
+                                {Array.from({ length: getFirstDayOfMonth(currentMonth) }).map((_, i) => <div key={`empty-${i}`} className="h-10 md:h-14" />)}
+                                {Array.from({ length: getDaysInMonth(currentMonth) }).map((_, i) => {
+                                    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), i + 1);
+                                    const hasEvents = getEventsForDate(date).length > 0;
+                                    const isSelected = selectedDate?.toDateString() === date.toDateString();
+                                    return (
+                                        <button key={i} onClick={() => setSelectedDate(isSelected ? null : date)} className={`relative h-10 md:h-14 rounded-lg text-sm font-bold transition-all ${isSelected ? "bg-gold text-brown" : hasEvents ? "bg-white/5 hover:bg-white/10" : "text-white/40 hover:bg-white/5"}`}>
+                                            {i + 1}
+                                            {hasEvents && !isSelected && <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-gold rounded-full" />}
+                                        </button>
+                                    );
+                                })}
                             </div>
-
-                            {selectedDate && (
-                                <button
-                                    onClick={() => setSelectedDate(null)}
-                                    className="mt-4 w-full py-3 glass-card rounded-lg text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white transition-colors flex items-center justify-center gap-2"
-                                >
-                                    <X size={14} /> Clear Selection
-                                </button>
-                            )}
+                            {selectedDate && <button onClick={() => setSelectedDate(null)} className="mt-4 w-full py-3 glass-card rounded-lg text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white flex items-center justify-center gap-2"><AppIcon name="close" size={14} /> Clear Selection</button>}
                         </div>
 
                         <div className="glass-card p-6 rounded-lg border-white/5">
                             <div className="flex items-center justify-between mb-4">
                                 <h4 className="text-sm font-black uppercase tracking-widest">Filter by Chapter</h4>
-                                <button
-                                    onClick={() => setShowFilters(!showFilters)}
-                                    className={`p-2 rounded-lg transition-colors ${showFilters ? "bg-gold text-brown" : "glass-card"}`}
-                                >
-                                    <Filter size={16} />
-                                </button>
+                                <button onClick={() => setShowFilters(!showFilters)} className={`p-2 rounded-lg transition-colors ${showFilters ? "bg-gold text-brown" : "glass-card"}`}><AppIcon name="filter_list" size={16} /></button>
                             </div>
-
                             {showFilters && (
                                 <div className="flex flex-wrap gap-2">
-                                    {chapters.map(chapter => {
-                                        const colors = chapterColors[chapter];
-                                        const isActive = activeFilters.includes(chapter);
-                                        return (
-                                            <button
-                                                key={chapter}
-                                                onClick={() => toggleFilter(chapter)}
-                                                className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${isActive
-                                                    ? `${colors.bg} ${colors.text} ${colors.border} border`
-                                                    : "glass-card text-white/50 hover:text-white"
-                                                    }`}
-                                            >
-                                                {isActive && <Check size={12} />}
-                                                {chapter}
-                                            </button>
-                                        );
-                                    })}
-                                    {activeFilters.length > 0 && (
-                                        <button
-                                            onClick={() => setActiveFilters([])}
-                                            className="px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-red-400 hover:bg-red-500/20 transition-colors"
-                                        >
-                                            Clear All
-                                        </button>
-                                    )}
+                                    {chapters.map((c: string) => <button key={c} onClick={() => toggleFilter(c)} className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeFilters.includes(c) ? "bg-gold/20 text-gold border border-gold/30" : "glass-card text-white/50"}`}>{activeFilters.includes(c) && <AppIcon name="check" size={12} />}{c}</button>)}
                                 </div>
                             )}
-                        </div>
-
-                        <div className="flex gap-4 text-[10px] font-black uppercase tracking-widest text-white/30">
-                            <span>* All times in EAT (UTC+3)</span>
                         </div>
                     </div>
 
                     <div className="lg:col-span-7 hub-panel space-y-6">
                         <div className="glass-card-elevated p-6 md:p-8 rounded-lg border-white/5">
                             <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-xl font-black tracking-tight">
-                                    {selectedDate
-                                        ? `Events on ${selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
-                                        : activeFilters.length > 0
-                                            ? `Filtered Events (${filteredEvents.length})`
-                                            : "Upcoming Events"
-                                    }
-                                </h3>
-                                <span className="px-3 py-1 rounded-full bg-white/5 text-[10px] font-black uppercase tracking-widest text-white/50">
-                                    {filteredEvents.length} Events
-                                </span>
+                                <h3 className="text-xl font-black tracking-tight">{selectedDate ? `Events on ${selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}` : "Upcoming Events"}</h3>
+                                <span className="px-3 py-1 rounded-full bg-white/5 text-[10px] font-black">{filteredEvents.length} Events</span>
                             </div>
-
                             <div className="space-y-3 max-h-[500px] overflow-y-auto hide-scrollbar">
-                                {filteredEvents.length === 0 ? (
-                                    <div className="text-center py-12 text-white/30">
-                                        <CalendarIcon size={48} className="mx-auto mb-4 opacity-50" />
-                                        <p className="text-sm font-bold">No events found</p>
-                                        <p className="text-[10px] uppercase tracking-widest mt-2">Try adjusting your filters</p>
-                                    </div>
-                                ) : (
-                                    filteredEvents.map((event, i) => {
-                                        const colors = chapterColors[event.chapter] || chapterColors.Nairobi;
-                                        return (
-                                            <div
-                                                key={event.id}
-                                                className={`group flex flex-col md:flex-row md:items-center justify-between p-5 glass-card rounded-lg hover:border-gold/30 transition-all border ${colors.border}`}
-                                                style={{ animationDelay: `${i * 50}ms` }}
-                                            >
-                                                <div className="flex items-start md:items-center gap-4 mb-4 md:mb-0">
-                                                    <div className={`w-14 h-14 rounded-lg ${colors.bg} flex flex-col items-center justify-center ${colors.text} border ${colors.border}`}>
-                                                        <span className="text-lg font-black leading-none">
-                                                            {event.date === "Every Night" ? "∞" : event.date.split(' ')[1]?.replace(',', '')}
-                                                        </span>
-                                                        <span className="text-[8px] font-black uppercase">
-                                                            {event.date === "Every Night" ? "DAILY" : event.date.split(' ')[0]}
-                                                        </span>
-                                                    </div>
-                                                    <div className="space-y-1 flex-1">
-                                                        <h4 className="text-base font-bold tracking-tight text-white group-hover:text-gold transition-colors">
-                                                            {event.title}
-                                                        </h4>
-                                                        <div className="flex flex-wrap items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/40">
-                                                            <span className="flex items-center gap-1">
-                                                                <Clock size={12} /> {event.time} EAT
-                                                            </span>
-                                                            <span className={`px-2 py-0.5 rounded-full ${colors.bg} ${colors.text}`}>
-                                                                {event.chapter}
-                                                            </span>
-                                                        </div>
-                                                        <div className="flex items-center gap-1 text-[10px] text-white/30">
-                                                            <MapPin size={10} />
-                                                            <Link
-                                                                href={`https://maps.google.com/?q=${encodeURIComponent(event.location)}`}
-                                                                target="_blank"
-                                                                className="hover:text-gold transition-colors underline-offset-2 hover:underline"
-                                                                onClick={(e) => e.stopPropagation()}
-                                                            >
-                                                                {event.location}
-                                                            </Link>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                    <button
-                                                        onClick={() => downloadICS(event)}
-                                                        className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-[8px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors"
-                                                        title="Add to Apple Calendar"
-                                                    >
-                                                        <Apple size={14} /> iCloud
-                                                    </button>
-                                                    <button
-                                                        onClick={() => addToGoogleCalendar(event)}
-                                                        className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gold text-brown text-[8px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
-                                                        title="Add to Google Calendar"
-                                                    >
-                                                        <CalendarIcon size={14} /> Google
-                                                    </button>
+                                {filteredEvents.map(e => (
+                                    <div key={e.id} className="group flex flex-col md:flex-row md:items-center justify-between p-5 glass-card rounded-lg border-white/5 hover:border-gold/30 transition-all">
+                                        <div className="flex items-start md:items-center gap-4">
+                                            <div className="w-14 h-14 rounded-lg bg-gold/10 flex flex-col items-center justify-center text-gold border border-gold/20">
+                                                <span className="text-lg font-black">{e.date === "Every Night" ? "∞" : e.date.split(' ')[1]}</span>
+                                                <span className="text-[8px] font-black uppercase">{e.date === "Every Night" ? "DAILY" : e.date.split(' ')[0]}</span>
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-white group-hover:text-gold transition-colors">{e.title}</h4>
+                                                <div className="flex items-center gap-3 text-[10px] font-black uppercase text-white/40 mt-1">
+                                                    <span className="flex items-center gap-1"><AppIcon name="schedule" size={12} /> {e.time}</span>
+                                                    <span className="bg-gold/10 text-gold px-2 py-0.5 rounded-full">{e.chapter}</span>
                                                 </div>
                                             </div>
-                                        );
-                                    })
-                                )}
+                                        </div>
+                                        <div className="flex gap-2 mt-4 md:mt-0">
+                                            <button className="p-2 border border-white/10 rounded-lg hover:bg-white/5 transition-colors"><AppIcon name="calendar_month" size={16} /></button>
+                                            <Link href={`https://maps.google.com/?q=${encodeURIComponent(e.location)}`} target="_blank" className="p-2 bg-gold text-brown rounded-lg hover:brightness-110"><AppIcon name="location_on" size={16} /></Link>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
                         <div className="glass-card-elevated p-8 md:p-10 rounded-lg border-white/5 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-6">
-                                <Sparkles className="text-gold animate-pulse" />
-                            </div>
-
+                            <div className="absolute top-0 right-0 p-6"><AppIcon name="auto_awesome" className="text-gold animate-pulse" /></div>
                             <div className="space-y-8 relative z-10">
-                                <div className="space-y-3 text-center">
+                                <div className="text-center space-y-3">
                                     <span className="text-gold font-black uppercase tracking-[0.4em] text-xs">Prophetic Countdown</span>
-                                    <h2 className="text-3xl font-black tracking-tighter">
-                                        {nextEvent ? nextEvent.title : "THE NEXT ALTAR"}
-                                    </h2>
-                                    <p className="text-foreground/40 text-xs font-medium">
-                                        {nextEvent
-                                            ? `${nextEvent.chapter} • ${nextEvent.date}`
-                                            : "Stay tuned for upcoming events"
-                                        }
-                                    </p>
+                                    <h2 className="text-3xl font-black tracking-tighter">{nextEvent?.title || "THE NEXT ALTAR"}</h2>
+                                    <p className="text-white/40 text-xs">{nextEvent ? `${nextEvent.chapter} • ${nextEvent.date}` : ""}</p>
                                 </div>
-
                                 <div className="flex justify-center gap-2 md:gap-4">
                                     <FlipDigit value={timeLeft.days} label="Days" />
                                     <FlipDigit value={timeLeft.hours} label="Hours" />
                                     <FlipDigit value={timeLeft.mins} label="Mins" />
                                     <FlipDigit value={timeLeft.secs} label="Secs" />
                                 </div>
-
-                                <button className="press-scale w-full py-4 rounded-lg bg-white text-brown font-black uppercase tracking-tighter hover:bg-gold transition-all shadow-lg">
-                                    Register Now
-                                </button>
+                                <button className="press-scale w-full py-4 rounded-lg bg-white text-brown font-black uppercase tracking-tighter hover:bg-gold transition-all shadow-lg">Register Now</button>
                             </div>
-
                             <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
                         </div>
-
-                        <div className="glass-card p-6 rounded-2xl border-white/5 flex items-center justify-between group cursor-pointer hover:border-gold/30 transition-all">
-                            <div className="flex items-center gap-6">
-                                <div className="p-4 rounded-2xl bg-gold/10 text-gold group-hover:scale-110 transition-transform">
-                                    <Bell size={24} />
-                                </div>
-                                <div>
-                                    <h4 className="font-black text-xs uppercase tracking-widest text-white">Event Alerts</h4>
-                                    <p className="text-[10px] text-white/40 font-medium">Get notified for new events</p>
-                                </div>
-                            </div>
-                            <div className="w-12 h-6 rounded-full bg-gold p-1 flex items-center justify-end">
-                                <div className="w-4 h-4 rounded-full bg-white" />
-                            </div>
-                        </div>
                     </div>
-                </div>
-
-                <div className="mt-12 flex items-center justify-center">
-                    <Link
-                        href="#"
-                        className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-gold/60 hover:text-gold transition-colors"
-                    >
-                        View Full 2026 Roadmap <ExternalLink size={14} />
-                    </Link>
                 </div>
             </div>
         </section>

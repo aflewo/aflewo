@@ -4,13 +4,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { Users, Music, Handshake, Heart } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 const tracks = [
-    { title: "Music & Choir", desc: "Join the mass choir or instrumental team. Requires registration and auditions.", icon: <Music size={32} /> },
-    { title: "Production & Media", desc: "Helping in videography, sound engineering, and digital storytelling.", icon: <Users size={32} /> },
-    { title: "Hospitality & Logistics", desc: "Ensuring every worshipper feels at home and every event runs smoothly.", icon: <Heart size={32} /> },
-    { title: "Partners & Sponsors", desc: "For corporate and individual tracks looking to support the vision.", icon: <Handshake size={32} /> },
+    { title: "Music & Choir", desc: "Join the mass choir or instrumental team. Requires registration and auditions.", icon: "music_note" },
+    { title: "Production & Media", desc: "Helping in videography, sound engineering, and digital storytelling.", icon: "groups" },
+    { title: "Hospitality & Logistics", desc: "Ensuring every worshipper feels at home and every event runs smoothly.", icon: "favorite" },
+    { title: "Partners & Sponsors", desc: "For corporate and individual tracks looking to support the vision.", icon: "handshake" },
 ];
 
 export default function JoinPage() {
@@ -53,7 +53,7 @@ export default function JoinPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {tracks.map((track, i) => (
                             <div key={i} className="track-card glass-card p-10 space-y-6 group hover:border-gold/30 transition-all cursor-pointer rounded-lg">
-                                <div className="text-gold group-hover:scale-110 transition-transform duration-500">{track.icon}</div>
+                                <div className="text-gold group-hover:scale-110 transition-transform duration-500"><AppIcon name={track.icon} size={32} /></div>
                                 <h3 className="text-2xl font-black tracking-tighter">{track.title}</h3>
                                 <p className="text-foreground/50 text-sm font-bold leading-relaxed">{track.desc}</p>
                                 <div className="pt-4">

@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Image from "next/image";
-import { Play, PlayCircle, Filter, Download } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 const archivalMedia = [
     { title: "Nairobi Live", year: "2024", type: "Video", src: "/hero-bg.mp4", thumb: "/archival-1.jpg", chapter: "Nairobi" },
@@ -78,10 +78,10 @@ export default function MediaPage() {
                                 <div className="absolute inset-0 p-8 flex flex-col justify-between">
                                     <div className="flex justify-between items-start opacity-0 group-hover:opacity-100 transition-all translate-y-[-10px] group-hover:translate-y-0">
                                         <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl text-white">
-                                            {item.type === "Video" ? <PlayCircle size={24} /> : <Image src="/archival-1.jpg" width={24} height={24} className="opacity-0" alt="" />}
+                                            {item.type === "Video" ? <AppIcon name="play_circle" size={24} /> : <div className="w-6 h-6" />}
                                         </div>
                                         <button className="p-3 bg-white/10 backdrop-blur-md rounded-2xl text-white hover:bg-gold hover:text-brown transition-colors">
-                                            <Download size={20} />
+                                            <AppIcon name="download" size={20} />
                                         </button>
                                     </div>
 

@@ -3,10 +3,9 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { Users, Heart, Star, Compass, ArrowRight, ShieldCheck } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 const founders = [
     { name: "Sing Africa", role: "Founding Alumni", org: "Daystar University" },
@@ -39,7 +38,7 @@ export default function AlumniPage() {
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gold/5 blur-[120px] -z-10" />
                 <div className="max-container space-y-8">
                     <div className="animate-fade inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.3em]">
-                        <Star size={14} /> The Legacy Circle
+                        <AppIcon name="star" size={14} /> The Legacy Circle
                     </div>
                     <h1 className="animate-fade text-7xl md:text-9xl font-black tracking-tighter leading-[0.85]">
                         ALUMNI <br /><span className="text-gold">SOCIETY</span>
@@ -65,12 +64,12 @@ export default function AlumniPage() {
                         </div>
                         <div className="flex flex-wrap gap-4">
                             <div className="glass-card p-6 rounded-lg space-y-2 flex-1 min-w-[200px]">
-                                <Compass className="text-gold" size={24} />
+                                <AppIcon name="explore" className="text-gold" size={24} />
                                 <h4 className="font-black text-white text-sm">Visionaries</h4>
                                 <p className="text-white/40 text-xs">Sing Africa Alumni</p>
                             </div>
                             <div className="glass-card p-6 rounded-lg space-y-2 flex-1 min-w-[200px]">
-                                <Heart className="text-gold" size={24} />
+                                <AppIcon name="favorite" className="text-gold" size={24} />
                                 <h4 className="font-black text-white text-sm">Founding Venue</h4>
                                 <p className="text-white/40 text-xs">CITAM Karen (2004)</p>
                             </div>
@@ -99,7 +98,7 @@ export default function AlumniPage() {
                         {founders.map((founder, i) => (
                             <div key={i} className="animate-fade glass-card-elevated p-8 rounded-lg border-white/5 text-center group hover:border-gold/30 transition-all">
                                 <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-6 text-gold group-hover:scale-110 transition-transform">
-                                    <ShieldCheck size={32} />
+                                    <AppIcon name="verified_user" size={32} />
                                 </div>
                                 <h4 className="text-xl font-black text-white">{founder.name}</h4>
                                 <p className="text-gold text-[10px] font-black uppercase tracking-widest mt-2">{founder.role}</p>
@@ -119,7 +118,7 @@ export default function AlumniPage() {
                         If you served in the AFLEWO choir, band, or production teams in previous years, we want to reconnect with you as we celebrate our 22nd season.
                     </p>
                     <button className="press-scale px-12 py-5 bg-gold text-brown rounded-lg font-black uppercase tracking-widest hover:brightness-110 transition-all inline-flex items-center gap-4">
-                        Update Your Profile <ArrowRight size={20} />
+                        Update Your Profile <AppIcon name="arrow_forward" size={20} />
                     </button>
                 </div>
             </section>

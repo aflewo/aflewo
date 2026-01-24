@@ -1,0 +1,115 @@
+.slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.slider-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    touch-action: none;
+    user-select: none;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.slider-root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 200px;
+    width: 32px;
+    flex-grow: 1;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.slider-root:active {
+    cursor: grabbing;
+}
+
+.slider-track-wrapper {
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+    justify-content: center;
+}
+
+.slider-track {
+    position: relative;
+    width: 4px;
+    height: 100%;
+    flex-grow: 1;
+    overflow: visible;
+    border-radius: 9999px;
+    background-color: rgba(212, 175, 55, 0.2);
+}
+
+.slider-range {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background-color: #D4AF37;
+    border-radius: 9999px;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+.section-node {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid #1a1405;
+    transition: all 0.3s ease;
+}
+
+.section-node.active {
+    background: #D4AF37;
+    transform: translate(-50%, -50%) scale(1.5);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+}
+
+.value-indicator {
+    color: #D4AF37;
+    position: absolute;
+    right: 40px;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: rgba(26, 20, 5, 0.8);
+    padding: 4px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.fab-trigger {
+    width: 56px;
+    height: 56px;
+    background: #D4AF37;
+    color: #1a1405;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(212, 175, 55, 0.2);
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fab-trigger:active {
+    transform: scale(0.9);
+}

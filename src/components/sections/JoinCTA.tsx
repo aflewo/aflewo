@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import { Users, Handshake, MessageSquare, ArrowRight, Sparkles, Heart } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,7 +12,7 @@ const opportunities = [
     {
         title: "Volunteer",
         desc: "Join production, music, or hospitality teams. Be part of the 1,000+ volunteers that make AFLEWO happen.",
-        icon: Users,
+        icon: "groups",
         href: "/join?tab=volunteer",
         stat: "1,000+ Volunteers",
         color: "from-gold/20 to-gold/5"
@@ -20,7 +20,7 @@ const opportunities = [
     {
         title: "Partner",
         desc: "Support the vision technically or financially. Become a pillar of continental worship.",
-        icon: Handshake,
+        icon: "handshake",
         href: "/join?tab=partner",
         stat: "50+ Partners",
         color: "from-emerald/20 to-emerald/5"
@@ -28,7 +28,7 @@ const opportunities = [
     {
         title: "Testify",
         desc: "Share your AFLEWO story with the world. Let your testimony ignite hope in others.",
-        icon: MessageSquare,
+        icon: "chat_bubble",
         href: "/join?tab=testify",
         stat: "∞ Stories",
         color: "from-purple-500/20 to-purple-500/5"
@@ -89,7 +89,7 @@ export default function JoinCTA() {
     }, []);
 
     return (
-        <section ref={sectionRef} className="section-padding bg-background relative overflow-hidden" id="join">
+        <section ref={sectionRef} id="join" className="section-padding bg-background relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-1/3 -left-32 w-96 h-96 bg-gold/5 rounded-full blur-[150px]" />
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-emerald/5 blur-[150px]" />
@@ -98,7 +98,7 @@ export default function JoinCTA() {
             <div className="max-container relative z-10">
                 <div className="join-header text-center space-y-8 mb-20">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                        <Heart size={14} fill="currentColor" /> Join the Movement
+                        <AppIcon name="favorite" size={14} /> Join the Movement
                     </div>
                     <h2 className="text-6xl md:text-8xl font-black tracking-tighter">
                         BE THE <span className="text-gradient-gold">VOICE.</span>
@@ -123,11 +123,11 @@ export default function JoinCTA() {
 
                                 <div className="relative z-10 h-full flex flex-col">
                                     <div className="flex justify-between items-start mb-8">
-                                        <div className="card-icon p-4 rounded-2xl bg-gold/10 text-gold">
-                                            <item.icon size={32} />
+                                        <div className="card-icon p-4 rounded-2xl bg-gold/10 text-gold flex items-center justify-center">
+                                            <AppIcon name={item.icon} size={32} />
                                         </div>
                                         <div className="card-stat text-right opacity-60">
-                                            <Sparkles size={16} className="text-gold mb-1 ml-auto" />
+                                            <AppIcon name="auto_awesome" size={16} className="text-gold mb-1 ml-auto" />
                                             <span className="text-[10px] font-black uppercase tracking-widest text-gold/80">
                                                 {item.stat}
                                             </span>
@@ -144,7 +144,7 @@ export default function JoinCTA() {
                                     <div className="mt-8 pt-6 border-t border-white/5">
                                         <span className="text-gold font-black uppercase tracking-widest text-[10px] flex items-center gap-3">
                                             Reveal Opportunity
-                                            <ArrowRight size={16} className="card-arrow" />
+                                            <AppIcon name="arrow_forward" size={16} className="card-arrow" />
                                         </span>
                                     </div>
                                 </div>
@@ -156,9 +156,9 @@ export default function JoinCTA() {
                 <div className="mt-16 text-center">
                     <Link
                         href="/join"
-                        className="press-scale inline-flex items-center gap-4 bg-gold text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-lg"
+                        className="press-scale inline-flex items-center gap-4 bg-gold text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
                     >
-                        View All Opportunities <ArrowRight size={20} />
+                        View All Opportunities <AppIcon name="arrow_forward" size={20} />
                     </Link>
                 </div>
             </div>

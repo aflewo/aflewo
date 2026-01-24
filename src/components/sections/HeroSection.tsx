@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import { Play } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,6 +55,7 @@ export default function HeroSection() {
     return (
         <section
             ref={sectionRef}
+            id="hero"
             className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-background"
         >
             {/* Immersive Video Layer */}
@@ -79,12 +80,12 @@ export default function HeroSection() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
                     </span>
-                    Live from Winners' Chapel
+                    Live from Winners{"'"} Chapel
                 </div>
 
                 <h1 className="hero-title text-7xl md:text-9xl font-black tracking-tighter text-white leading-[0.85] perspective-1000 mb-8">
                     AFRICA <br />
-                    <span className="text-gradient-gold">LET'S WORSHIP</span>
+                    <span className="text-gradient-gold">LET{"'"}S WORSHIP</span>
                 </h1>
 
                 <p className="hero-sub text-xl md:text-2xl text-white/70 font-medium max-w-2xl mx-auto mb-12 leading-relaxed font-serif-spiritual">
@@ -94,7 +95,7 @@ export default function HeroSection() {
 
                 <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
                     <Link href="/media" className="hero-btn press-scale bg-white text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter flex items-center gap-3 group hover:bg-gold transition-all">
-                        <Play size={20} fill="currentColor" stroke="none" className="group-hover:scale-110 transition-transform" />
+                        <AppIcon name="play_arrow" size={20} className="group-hover:scale-110 transition-transform" />
                         Watch Archive
                     </Link>
                     <Link href="#about" className="hero-btn press-scale glass-card-elevated px-12 py-5 rounded-full font-black uppercase tracking-tighter text-white hover:bg-white/10 transition-all border-white/20">

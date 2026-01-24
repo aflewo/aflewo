@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram, Twitter, Youtube, Facebook, ArrowUpRight } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -16,23 +16,23 @@ export default function Footer() {
                         <Link href="/" className="flex items-center gap-4 group">
                             <div className="relative w-16 h-16 group-hover:rotate-6 transition-transform duration-500">
                                 <Image
-                                    src="/brand/AFLEWO-LOGO-1-Photoroom.svg"
+                                    src="/brand/AFLEWO LOGO 1-Photoroom.png"
                                     alt="AFLEWO"
                                     fill
-                                    className="object-contain brightness-0 invert"
+                                    className="object-contain"
                                 />
                             </div>
-                            <span className="font-black text-3xl tracking-tighter text-white">AFLEWO</span>
+                            <span className="font-black text-3xl tracking-tighter text-white">AFRICA LET{"'"}S WORSHIP</span>
                         </Link>
                         <p className="text-white/40 text-lg font-medium leading-relaxed font-serif-spiritual italic max-w-md">
                             Igniting and uniting Africa through worship. One God, one people, one Africa.
                             The sound of heaven echoing from the heart of the continent.
                         </p>
                         <div className="flex gap-4">
-                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><Instagram size={20} /></button>
-                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><Twitter size={20} /></button>
-                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><Youtube size={20} /></button>
-                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><Facebook size={20} /></button>
+                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="public" size={20} /></button>
+                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="groups" size={20} /></button>
+                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="play_circle" size={20} /></button>
+                            <button className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all"><AppIcon name="alternate_email" size={20} /></button>
                         </div>
                     </div>
 
@@ -71,7 +71,7 @@ export default function Footer() {
                                         className="w-full bg-white/5 border border-white/10 rounded-full py-3 pl-6 pr-12 text-xs font-medium text-white appearance-none outline-none focus:ring-1 focus:ring-gold"
                                     />
                                     <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-gold text-brown rounded-full hover:scale-110 transition-transform">
-                                        <ArrowUpRight size={16} />
+                                        <AppIcon name="north_east" size={16} />
                                     </button>
                                 </div>
                             </div>

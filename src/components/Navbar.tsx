@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 const links = [
     { name: "About", href: "/about" },
@@ -17,6 +18,7 @@ const links = [
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -48,16 +50,27 @@ export default function Navbar() {
                 </Link>
 
                 {/* Desktop Links */}
-                <div className="hidden md:flex items-center gap-8 lg:gap-10">
-                    {links.map((link) => (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 hover:text-gold transition-colors"
-                        >
-                            {link.name}
-                        </Link>
-                    ))}
+                <div className="hidden md:flex items-center gap-1 xl:gap-2">
+                    {links.map((link) => {
+                        const isActive = pathname === link.href;
+                        return (
+                            <Link
+                                key={link.name}
+                                href={link.href}
+                                className={cn(
+                                    "px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all relative group",
+                                    isActive
+                                        ? "text-gold bg-gold/5"
+                                        : "text-white/60 hover:text-white"
+                                )}
+                            >
+                                {link.name}
+                                {isActive && (
+                                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-gold rounded-full" />
+                                )}
+                            </Link>
+                        );
+                    })}
                 </div>
 
                 {/* Right Action */}
@@ -71,7 +84,7 @@ export default function Navbar() {
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className="md:hidden p-2 text-white hover:text-gold transition-colors"
                     >
-                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        <AppIcon name={isMobileMenuOpen ? "close" : "menu"} size={24} />
                     </button>
                 </div>
             </div>
@@ -85,19 +98,25 @@ export default function Navbar() {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="absolute top-8 right-8 p-2 text-white/50 hover:text-gold transition-colors"
                 >
-                    <X size={32} />
+                    <AppIcon name="close" size={32} />
                 </button>
 
-                {links.map((link) => (
-                    <Link
-                        key={link.name}
-                        href={link.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-3xl font-black uppercase tracking-[0.3em] text-white/60 hover:text-gold transition-all hover:scale-110"
-                    >
-                        {link.name}
-                    </Link>
-                ))}
+                {links.map((link) => {
+                    const isActive = pathname === link.href;
+                    return (
+                        <Link
+                            key={link.name}
+                            href={link.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className={cn(
+                                "text-3xl font-black uppercase tracking-[0.3em] transition-all hover:scale-110",
+                                isActive ? "text-gold scale-110" : "text-white/60 hover:text-gold"
+                            )}
+                        >
+                            {link.name}
+                        </Link>
+                    );
+                })}
 
                 <button className="press-scale bg-white text-brown px-12 py-5 rounded-full font-black text-xs uppercase tracking-[0.2em] shadow-glow mt-8">
                     Connect Now
@@ -106,4 +125,3 @@ export default function Navbar() {
         </nav>
     );
 }
-

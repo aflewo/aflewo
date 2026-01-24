@@ -3,22 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-    MapPin,
-    Users,
-    Calendar,
-    QrCode,
-    ExternalLink,
-    MessageCircle,
-    X,
-    Radio,
-    Globe,
-    Church,
-    Music,
-    Phone,
-    Mail,
-    ArrowRight
-} from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -244,7 +229,7 @@ function ChapterModal({ chapter, isOpen, onClose }: ChapterModalProps) {
                     onClick={onClose}
                     className="absolute top-6 right-6 z-10 p-3 rounded-full glass-card hover:bg-white/10 transition-colors"
                 >
-                    <X size={20} />
+                    <AppIcon name="close" size={20} />
                 </button>
 
                 {chapter.venueImage && (
@@ -285,18 +270,18 @@ function ChapterModal({ chapter, isOpen, onClose }: ChapterModalProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="glass-card p-6 rounded-2xl space-y-2">
-                            <Calendar className="text-gold" size={20} />
+                            <AppIcon name="calendar_month" className="text-gold" size={20} />
                             <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Established</p>
                             <p className="text-2xl font-black">{chapter.established}</p>
                         </div>
                         <div className="glass-card p-6 rounded-2xl space-y-2">
-                            <Church className="text-gold" size={20} />
+                            <AppIcon name="church" className="text-gold" size={20} />
                             <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Primary Venue</p>
                             <p className="text-sm font-bold">{chapter.venue}</p>
                         </div>
                         {chapter.capacity && (
                             <div className="glass-card p-6 rounded-2xl space-y-2">
-                                <Users className="text-gold" size={20} />
+                                <AppIcon name="groups" className="text-gold" size={20} />
                                 <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Capacity</p>
                                 <p className="text-2xl font-black">{chapter.capacity}</p>
                             </div>
@@ -316,7 +301,7 @@ function ChapterModal({ chapter, isOpen, onClose }: ChapterModalProps) {
                                         target="_blank"
                                         className="px-6 py-3 rounded-full bg-gold text-brown text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2"
                                     >
-                                        Register <ArrowRight size={14} />
+                                        Register <AppIcon name="arrow_forward" size={14} />
                                     </Link>
                                 )}
                             </div>
@@ -329,14 +314,14 @@ function ChapterModal({ chapter, isOpen, onClose }: ChapterModalProps) {
                             target="_blank"
                             className="flex-1 min-w-[200px] inline-flex items-center justify-center gap-3 px-8 py-4 glass-card hover:bg-gold hover:text-brown transition-all rounded-full font-black text-[10px] uppercase tracking-widest"
                         >
-                            <Globe size={16} /> Visit Chapter Page
+                            <AppIcon name="public" size={16} /> Visit Chapter Page
                         </Link>
                         {chapter.contactPhone && (
                             <Link
                                 href={`tel:${chapter.contactPhone}`}
                                 className="inline-flex items-center justify-center gap-3 px-8 py-4 glass-card hover:bg-white/10 transition-all rounded-full font-black text-[10px] uppercase tracking-widest"
                             >
-                                <Phone size={16} /> Call
+                                <AppIcon name="call" size={16} /> Call
                             </Link>
                         )}
                         {chapter.contactEmail && (
@@ -344,7 +329,7 @@ function ChapterModal({ chapter, isOpen, onClose }: ChapterModalProps) {
                                 href={`mailto:${chapter.contactEmail}`}
                                 className="inline-flex items-center justify-center gap-3 px-8 py-4 glass-card hover:bg-white/10 transition-all rounded-full font-black text-[10px] uppercase tracking-widest"
                             >
-                                <Mail size={16} /> Email
+                                <AppIcon name="mail" size={16} /> Email
                             </Link>
                         )}
                     </div>
@@ -396,7 +381,7 @@ function QrModal({ chapter, isOpen, onClose }: QrModalProps) {
                     onClick={onClose}
                     className="absolute top-4 right-4 p-2 rounded-full glass-card hover:bg-white/10 transition-colors"
                 >
-                    <X size={16} />
+                    <AppIcon name="close" size={16} />
                 </button>
 
                 <div className="space-y-6">
@@ -420,7 +405,7 @@ function QrModal({ chapter, isOpen, onClose }: QrModalProps) {
                         </div>
                         <div className="absolute inset-0 flex items-center justify-center">
                             <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-lg">
-                                <Music className="text-gold" size={24} />
+                                <AppIcon name="music_note" className="text-gold" size={24} />
                             </div>
                         </div>
                     </div>
@@ -524,7 +509,7 @@ export default function ChaptersSection() {
                 <div className="chapter-header flex flex-col md:flex-row justify-between items-end gap-12 mb-20">
                     <div className="max-w-2xl space-y-6">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                            <MapPin size={12} /> The Prophetic House
+                            <AppIcon name="location_on" size={12} /> The Prophetic House
                         </div>
                         <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9]">
                             CHAPTERS OF <br /><span className="text-gold">IDENTITY</span>
@@ -535,7 +520,7 @@ export default function ChaptersSection() {
                             A continental network of worship, uniting 10+ major hubs across East Africa.
                         </p>
                         <Link href="https://whatsapp.com/channel/AFLEWO" className="press-scale inline-flex items-center gap-2 text-gold font-black uppercase tracking-widest text-[10px] hover:gap-4 transition-all justify-end">
-                            Join our WhatsApp Channel <MessageCircle size={14} />
+                            Join our WhatsApp Channel <AppIcon name="forum" size={14} />
                         </Link>
                     </div>
                 </div>
@@ -545,7 +530,7 @@ export default function ChaptersSection() {
                         <div
                             key={i}
                             ref={(el) => { cardsRef.current[i] = el; }}
-                            className={`chapter-card bento-card glass-card-elevated p-8 md:p-10 flex flex-col justify-between group cursor-pointer transition-all duration-700 relative overflow-hidden min-h-[280px] rounded-lg ${getGridClasses(chapter.size)}`}
+                            className={`chapter-card bento-card glass-card-elevated p-8 md:p-10 flex flex-col justify-between group cursor-pointer relative overflow-hidden min-h-[280px] rounded-lg ${getGridClasses(chapter.size)}`}
                             onMouseMove={(e) => handleMouseMove(e, i)}
                             onMouseLeave={() => handleMouseLeave(i)}
                             onClick={() => setSelectedChapter(chapter)}
@@ -567,7 +552,7 @@ export default function ChaptersSection() {
                                             </span>
                                             {chapter.hasPrayerCircle && (
                                                 <span className="flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-red-400 bg-red-500/20 px-2 py-0.5 rounded-full">
-                                                    <Radio size={8} className="animate-pulse" /> Live
+                                                    <AppIcon name="radio" size={8} className="animate-pulse" /> Live
                                                 </span>
                                             )}
                                         </div>
@@ -585,7 +570,7 @@ export default function ChaptersSection() {
                                             }}
                                             className="p-3 glass-card bg-gold/10 border-gold/30 rounded-lg text-gold hover:bg-gold hover:text-brown transition-all"
                                         >
-                                            <QrCode size={20} />
+                                            <AppIcon name="qr_code_2" size={20} />
                                         </button>
                                     )}
                                 </div>
@@ -597,16 +582,16 @@ export default function ChaptersSection() {
                             <div className="pt-6 border-t border-white/5 relative z-10 space-y-4">
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
-                                        <Calendar size={14} className="text-gold" />
+                                        <AppIcon name="calendar_month" size={14} className="text-gold" />
                                         <span>EST. {chapter.established}</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
-                                        <MapPin size={14} className="text-gold" />
+                                        <AppIcon name="location_on" size={14} className="text-gold" />
                                         <span className="truncate">{chapter.venue.split(",")[0]}</span>
                                     </div>
                                     {chapter.capacity && (
                                         <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
-                                            <Users size={14} className="text-gold" />
+                                            <AppIcon name="groups" size={14} className="text-gold" />
                                             <span>{chapter.capacity} Souls</span>
                                         </div>
                                     )}
@@ -618,7 +603,7 @@ export default function ChaptersSection() {
                                         onClick={(e) => e.stopPropagation()}
                                         className="press-scale flex-1 inline-flex items-center justify-between px-5 py-3 glass-card group-hover:bg-gold group-hover:text-brown transition-all duration-500 rounded-full font-black text-[9px] uppercase tracking-widest"
                                     >
-                                        Explore Chapter <ArrowRight size={12} />
+                                        Explore Chapter <AppIcon name="arrow_forward" size={12} />
                                     </Link>
                                     {chapter.registrationOpen && (
                                         <span className="px-3 py-1 rounded-full bg-emerald/20 text-emerald text-[8px] font-black uppercase tracking-widest">
@@ -637,7 +622,7 @@ export default function ChaptersSection() {
                     <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 blur-[100px] -z-10" />
                     <div className="flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
                         <div className="p-5 rounded-lg bg-gold/10 text-gold border border-gold/20 shadow-glow">
-                            <Globe size={40} />
+                            <AppIcon name="public" size={40} />
                         </div>
                         <div className="space-y-3">
                             <h4 className="text-3xl font-black tracking-tighter text-white">Central Administration</h4>
@@ -652,13 +637,13 @@ export default function ChaptersSection() {
                             target="_blank"
                             className="flex-1 sm:flex-none px-10 py-5 glass-card-elevated hover:bg-white/10 rounded-lg font-black text-[11px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 border-white/10"
                         >
-                            aflewo.org <ExternalLink size={14} className="text-gold" />
+                            aflewo.org <AppIcon name="open_in_new" size={14} className="text-gold" />
                         </Link>
                         <Link
                             href="tel:*456*819867#"
                             className="flex-1 sm:flex-none px-10 py-5 bg-gold text-brown rounded-lg font-black text-[11px] uppercase tracking-[0.2em] hover:brightness-110 transition-all flex items-center justify-center gap-3 shadow-glow"
                         >
-                            M-Pesa: 819867 <Phone size={14} />
+                            M-Pesa: 819867 <AppIcon name="call" size={14} />
                         </Link>
                     </div>
                 </div>

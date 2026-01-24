@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
-import { Play, ArrowRight, Calendar, MapPin, Eye } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -65,10 +65,10 @@ const mediaItems: MediaItem[] = [
 
 export default function MediaPreview() {
     const sectionRef = useRef<HTMLDivElement>(null);
-    const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+    const itemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
     const magneticRefs = useRef<{ x: gsap.QuickToFunc; y: gsap.QuickToFunc }[]>([]);
 
-    const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>, index: number) => {
+    const handleMouseMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>, index: number) => {
         if (!magneticRefs.current[index]) return;
         const item = itemsRef.current[index];
         if (!item) return;
@@ -77,8 +77,8 @@ export default function MediaPreview() {
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
 
-        magneticRefs.current[index].x(x * 0.03);
-        magneticRefs.current[index].y(y * 0.03);
+        magneticRefs.current[index].x(x * 0.05);
+        magneticRefs.current[index].y(y * 0.05);
     }, []);
 
     const handleMouseLeave = useCallback((index: number) => {
@@ -114,7 +114,7 @@ export default function MediaPreview() {
                     trigger: sectionRef.current,
                     start: "top 70%",
                 },
-                scale: 0.9,
+                scale: 0.95,
                 opacity: 0,
                 stagger: 0.1,
                 duration: 1,
@@ -125,11 +125,12 @@ export default function MediaPreview() {
         return () => ctx.revert();
     }, []);
 
-    const getTypeIcon = (type: string) => {
+    const getTypeIcon = (type: string, size: "large" | "medium" | "small") => {
+        const iconSize = size === "large" ? 32 : size === "medium" ? 24 : 16;
         if (type === "video" || type === "documentary") {
-            return <Play size={24} fill="currentColor" stroke="none" />;
+            return <AppIcon name="play_arrow" size={iconSize} />;
         }
-        return <Eye size={24} />;
+        return <AppIcon name="visibility" size={iconSize} />;
     };
 
     return (
@@ -142,21 +143,21 @@ export default function MediaPreview() {
                 <div className="media-header flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-16">
                     <div className="space-y-6">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                            <Calendar size={12} /> The Archive
+                            <AppIcon name="calendar_month" size={12} /> The Archive
                         </div>
                         <h2 className="text-5xl md:text-7xl font-black tracking-tighter">
                             THE SOUND <br />
                             <span className="text-gold">OF HEAVEN</span>
                         </h2>
                         <p className="text-foreground/50 max-w-md font-medium">
-                            20 years of worship captured. From the first gathering to today's continental movement.
+                            20 years of worship captured. From the first gathering to today{"'"}s continental movement.
                         </p>
                     </div>
                     <Link
                         href="/media"
                         className="press-scale flex items-center gap-3 px-6 py-3 glass-card rounded-full text-gold font-black uppercase tracking-widest text-xs hover:bg-gold hover:text-brown transition-all"
                     >
-                        Explore Gallery <ArrowRight size={16} />
+                        Explore Gallery <AppIcon name="arrow_forward" size={16} />
                     </Link>
                 </div>
 
@@ -165,6 +166,9 @@ export default function MediaPreview() {
                         <Link
                             href="/media"
                             key={i}
+                            ref={(el) => { itemsRef.current[i] = el; }}
+                            onMouseMove={(e) => handleMouseMove(e, i)}
+                            onMouseLeave={() => handleMouseLeave(i)}
                             className={`bento-item relative rounded-lg overflow-hidden glass-card border-white/5 group cursor-pointer
                                 ${item.size === "large" ? "md:col-span-2 md:row-span-2" : ""}
                                 ${item.size === "medium" ? "md:col-span-2 md:row-span-1" : ""}
@@ -187,13 +191,13 @@ export default function MediaPreview() {
                                         </span>
                                         {item.chapter && (
                                             <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white/70 text-[9px] font-black uppercase tracking-widest flex items-center gap-1">
-                                                <MapPin size={10} /> {item.chapter}
+                                                <AppIcon name="location_on" size={10} /> {item.chapter}
                                             </span>
                                         )}
                                     </div>
                                     {item.views && (
                                         <span className="flex items-center gap-1 text-white/50 text-[10px] font-black">
-                                            <Eye size={12} /> {item.views}
+                                            <AppIcon name="visibility" size={12} /> {item.views}
                                         </span>
                                     )}
                                 </div>
@@ -201,15 +205,15 @@ export default function MediaPreview() {
                                 <div className="space-y-4">
                                     <div className="translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                                         <span className="text-gold text-[10px] font-black uppercase tracking-widest">{item.year}</span>
-                                        <h3 className={`font-black text-white mt-1 ${item.size === "large" ? "text-3xl md:text-4xl" : "text-xl md:text-2xl"
+                                        <h3 className={`font-black text-white mt-1 leading-tight ${item.size === "large" ? "text-3xl md:text-4xl" : "text-xl md:text-2xl"
                                             }`}>
                                             {item.title}
                                         </h3>
                                     </div>
 
                                     <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                                        <button className="p-4 bg-gold rounded-full text-brown flex items-center justify-center hover:scale-110 transition-transform">
-                                            {getTypeIcon(item.type)}
+                                        <button className={`bg-gold rounded-full text-brown flex items-center justify-center hover:scale-110 transition-transform ${item.size === "small" ? "p-2" : "p-4"}`}>
+                                            {getTypeIcon(item.type, item.size)}
                                         </button>
                                     </div>
                                 </div>
@@ -222,13 +226,13 @@ export default function MediaPreview() {
 
                 <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
-                        { label: "Photos", value: "5,000+", icon: Eye },
-                        { label: "Videos", value: "200+", icon: Play },
-                        { label: "Years Archived", value: "20", icon: Calendar },
-                        { label: "Chapters", value: "10", icon: MapPin }
+                        { label: "Photos", value: "5,000+", icon: "visibility" },
+                        { label: "Videos", value: "200+", icon: "play_arrow" },
+                        { label: "Years Archived", value: "20", icon: "calendar_month" },
+                        { label: "Chapters", value: "10", icon: "location_on" }
                     ].map((stat, i) => (
                         <div key={i} className="glass-card p-6 rounded-2xl text-center group hover:border-gold/20 transition-colors">
-                            <stat.icon className="mx-auto text-gold mb-3 group-hover:scale-110 transition-transform" size={24} />
+                            <AppIcon name={stat.icon} size={24} className="mx-auto text-gold mb-3 group-hover:scale-110 transition-transform" />
                             <div className="text-2xl font-black text-white">{stat.value}</div>
                             <div className="text-[10px] font-black uppercase tracking-widest text-white/40">{stat.label}</div>
                         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Play, Share2, Download, Music as MusicIcon } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 import { cn } from "@/lib/utils";
 
 const tracks = [
@@ -28,17 +28,17 @@ export default function MusicSection() {
 
                 <div className="grid lg:grid-cols-2 gap-8">
                     {/* Featured Player Card */}
-                    <div className="glass-card p-8 md:p-12 relative overflow-hidden group">
+                    <div className="glass-card p-8 md:p-12 relative overflow-hidden group rounded-[2rem]">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald/20 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
 
                         <div className="flex flex-col h-full justify-between gap-12 relative z-10">
                             <div className="flex justify-between items-start">
-                                <div className="p-4 bg-gold/10 rounded-ios text-gold">
-                                    <MusicIcon size={32} />
+                                <div className="p-4 bg-gold/10 rounded-3xl text-gold flex items-center justify-center">
+                                    <AppIcon name="music_note" size={32} />
                                 </div>
                                 <div className="flex gap-2">
-                                    <button className="p-3 glass-card rounded-full hover:bg-gold/20 transition-all"><Share2 size={20} /></button>
-                                    <button className="p-3 glass-card rounded-full hover:bg-gold/20 transition-all"><Download size={20} /></button>
+                                    <button className="p-3 glass-card rounded-full hover:bg-gold/20 transition-all flex items-center justify-center"><AppIcon name="share" size={20} /></button>
+                                    <button className="p-3 glass-card rounded-full hover:bg-gold/20 transition-all flex items-center justify-center"><AppIcon name="download" size={20} /></button>
                                 </div>
                             </div>
 
@@ -49,7 +49,7 @@ export default function MusicSection() {
 
                                 <div className="flex items-center gap-6">
                                     <button className="w-20 h-20 bg-gold rounded-full flex items-center justify-center text-brown shadow-glow press-scale">
-                                        <Play fill="currentColor" size={32} />
+                                        <AppIcon name="play_arrow" size={32} />
                                     </button>
                                     <div className="flex-1 space-y-2">
                                         <div className="h-1.5 bg-gold/10 rounded-full w-full relative overflow-hidden">
@@ -68,10 +68,10 @@ export default function MusicSection() {
                     {/* Track List */}
                     <div className="space-y-4">
                         {tracks.map((track) => (
-                            <div key={track.id} className="group glass-card p-6 flex items-center justify-between hover:bg-gold/5 transition-all cursor-pointer border-transparent hover:border-gold/20">
+                            <div key={track.id} className="group glass-card p-6 flex items-center justify-between hover:bg-gold/5 transition-all cursor-pointer border-transparent hover:border-gold/20 rounded-2xl">
                                 <div className="flex items-center gap-6">
-                                    <div className="w-12 h-12 bg-brown/40 rounded-ios flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-brown transition-all">
-                                        <Play size={20} className={track.id === 1 ? "fill-current" : ""} />
+                                    <div className="w-12 h-12 bg-brown/40 rounded-2xl flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-brown transition-all">
+                                        <AppIcon name="play_arrow" size={20} />
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-lg text-foreground">{track.title}</h4>

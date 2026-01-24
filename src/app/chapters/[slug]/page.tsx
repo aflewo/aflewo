@@ -1,12 +1,12 @@
 "use client";
 
 import { useParams, notFound } from "next/navigation";
-import { chapters, getChapter } from "@/lib/chapters";
+import { getChapter } from "@/lib/chapters";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Calendar, Users, ArrowLeft, Phone, Mail, Globe, ExternalLink } from "lucide-react";
+import AppIcon from "@/components/ui/AppIcon";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
@@ -48,7 +48,7 @@ export default function ChapterPage() {
 
                 <div className="max-container relative z-10 space-y-4 px-6">
                     <Link href="/#chapters" className="inline-flex items-center gap-2 text-gold text-[10px] font-black uppercase tracking-widest hover:gap-4 transition-all mb-4">
-                        <ArrowLeft size={14} /> Back to Chapters
+                        <AppIcon name="arrow_back" size={14} /> Back to Chapters
                     </Link>
                     <div className="animate-up">
                         <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-gradient-to-r ${chapter.color} text-white`}>
@@ -74,12 +74,12 @@ export default function ChapterPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="glass-card p-8 rounded-lg space-y-3">
-                                <Calendar className="text-gold" size={24} />
+                                <AppIcon name="calendar_month" className="text-gold" size={24} />
                                 <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Established</p>
                                 <p className="text-xl font-black">{chapter.established}</p>
                             </div>
                             <div className="glass-card p-8 rounded-lg space-y-3">
-                                <MapPin className="text-gold" size={24} />
+                                <AppIcon name="location_on" className="text-gold" size={24} />
                                 <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Primary Venue</p>
                                 <p className="text-xl font-black">{chapter.venue}</p>
                             </div>
@@ -106,18 +106,18 @@ export default function ChapterPage() {
                             <div className="space-y-4">
                                 {chapter.contactPhone && (
                                     <Link href={`tel:${chapter.contactPhone}`} className="flex items-center gap-4 text-white/60 hover:text-white transition-colors">
-                                        <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center"><Phone size={18} /></div>
+                                        <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center"><AppIcon name="call" size={18} /></div>
                                         <span className="text-sm font-bold">Call Us</span>
                                     </Link>
                                 )}
                                 {chapter.contactEmail && (
                                     <Link href={`mailto:${chapter.contactEmail}`} className="flex items-center gap-4 text-white/60 hover:text-white transition-colors">
-                                        <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center"><Mail size={18} /></div>
+                                        <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center"><AppIcon name="mail" size={18} /></div>
                                         <span className="text-sm font-bold">Email Us</span>
                                     </Link>
                                 )}
                                 <Link href="#" className="flex items-center gap-4 text-white/60 hover:text-white transition-colors">
-                                    <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center"><Globe size={18} /></div>
+                                    <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center"><AppIcon name="public" size={18} /></div>
                                     <span className="text-sm font-bold">WhatsApp Group</span>
                                 </Link>
                             </div>
