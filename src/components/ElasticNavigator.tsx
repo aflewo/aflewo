@@ -59,15 +59,16 @@ export default function ElasticNavigator() {
 
     const [activeIndex, setActiveIndex] = useState(0);
 
-    // Track active index reactively
     useMotionValueEvent(value, "change", (latest) => {
         const index = getClosestSectionIndex(latest);
-        setActiveIndex(index);
+        if (index !== activeIndex) {
+            setActiveIndex(index);
+        }
     });
 
-    // Brand Colors (Standard)
-    const GOLD = "#f5a623";
-    const GOLD_MUTED = "rgba(245, 166, 35, 0.2)";
+    // Brand Colors for Framer Motion (Standard RGBA)
+    const GOLD = "rgba(245, 166, 35, 1)";
+    const GOLD_MUTED = "rgba(245, 166, 35, 0.3)";
 
     const rangeHeight = useTransform(value, (v) => `${v}%`);
     const predictiveValue = useMotionValue(0);
@@ -242,35 +243,45 @@ export default function ElasticNavigator() {
     return (
         <div className={cn(
             "fixed right-6 bottom-8 z-[100] transition-all duration-700",
-            isVisible ? "translate-x-0" : "translate-x-32"
+            isVisible ? "translate-x-0" : "translate-x-32",
+            isIdle && !isExpanded ? "opacity-20 scale-90" : "opacity-100 scale-100"
         )}>
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 {!isExpanded ? (
                     <motion.button
                         key="fab"
-                        layoutId="nav-container"
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.5 }}
+                        initial={{ scale: 0, rotate: -45 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        exit={{ scale: 0, rotate: 45 }}
                         onClick={() => setIsExpanded(true)}
                         className="fab-trigger"
                         whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileTap={{ scale: 0.9 }}
                     >
                         <AppIcon name="navigation" size={24} />
                     </motion.button>
                 ) : (
                     <motion.div
                         key="slider"
-                        layoutId="nav-container"
-                        initial={{ opacity: 0, scale: 0.8, height: 56, width: 56 }}
-                        animate={{ opacity: 1, scale: 1, height: 420, width: 48 }}
-                        exit={{ opacity: 0, scale: 0.8, height: 56, width: 56 }}
-                        className="slider-container"
+                        initial={{ height: 56, width: 56, borderRadius: 20 }}
+                        animate={{
+                            height: 400,
+                            width: 32,
+                            borderRadius: 16,
+                            transition: { type: "spring", stiffness: 300, damping: 25 }
+                        }}
+                        exit={{
+                            height: 56,
+                            width: 56,
+                            borderRadius: 20,
+                            transition: { duration: 0.2 }
+                        }}
+                        className="bg-brown/40 backdrop-blur-3xl border border-white/10 flex flex-col items-center py-6 relative shadow-2xl rounded-3xl"
+                        style={{ transformOrigin: "bottom right" }}
                     >
                         <motion.button
                             onClick={() => setIsExpanded(false)}
-                            className="text-gold/50 hover:text-gold mb-4 p-2"
+                            className="text-gold/50 hover:text-gold mb-2 transition-colors"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                         >
@@ -284,65 +295,84 @@ export default function ElasticNavigator() {
                             onPan={handleDrag}
                             onPanEnd={handleDragEnd}
                             style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
                             <motion.div
                                 ref={trackRef}
                                 style={{
-                                    scaleY: springScaleY,
                                     scaleX: springScaleX,
+                                    scaleY: springScaleY,
                                     transformOrigin,
                                 }}
                                 className="slider-track"
                             >
-                                <motion.div className="slider-fill" style={{ height: rangeHeight }} />
-                                <motion.div className="predictive-fill" style={{ height: predictiveHeight }} />
+                                <motion.div className="slider-range" style={{ height: rangeHeight }} />
+
+                                <div className="predictive-track">
+                                    <motion.div
+                                        className="predictive-range"
+                                        style={{
+                                            height: predictiveHeight
+                                        }}
+                                    />
+                                </div>
 
                                 {sections.map((section, i) => {
                                     const nodePos = (i / (sections.length - 1)) * 100;
                                     const isActive = activeIndex === i;
 
                                     return (
-                                        <motion.div
+                                        <motion.button
                                             key={section.id}
-                                            className={cn("section-node", isActive && "active")}
+                                            className={cn(
+                                                "section-node",
+                                                isActive && "active",
+                                                "touch-none select-none"
+                                            )}
                                             style={{ top: `${nodePos}%` }}
                                             animate={{
-                                                scale: isActive ? 1.5 : 1,
+                                                scale: isActive ? 1.3 : 1,
                                                 backgroundColor: isActive ? GOLD : GOLD_MUTED
                                             }}
+                                            whileHover={{ scale: 1.4 }}
+                                            whileTap={{ scale: 0.9 }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 15 }}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleNodeClick(i);
                                             }}
+                                            onPointerDown={(e) => e.stopPropagation()}
                                         >
-                                            <AnimatePresence>
-                                                {isActive && (
-                                                    <motion.div
-                                                        className="value-indicator"
-                                                        initial={{ opacity: 0, x: 10 }}
-                                                        animate={{ opacity: 1, x: 0 }}
-                                                        exit={{ opacity: 0, x: 10 }}
-                                                    >
-                                                        {section.label}
-                                                    </motion.div>
-                                                )}
-                                            </AnimatePresence>
+                                            {isActive && (
+                                                <motion.div
+                                                    className="value-indicator"
+                                                    initial={{ opacity: 0, y: -20 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -20 }}
+                                                >
+                                                    {section.label}
+                                                </motion.div>
+                                            )}
                                             <div className="node-hit-area" />
-                                        </motion.div>
+                                        </motion.button>
                                     );
                                 })}
                             </motion.div>
                         </motion.div>
 
                         <motion.div
-                            className="nav-arrow"
+                            className="mt-2 text-gold"
                             animate={{
-                                y: region === 'bottom' ? [0, 5, 0] : region === 'top' ? [0, -5, 0] : 0,
-                                opacity: activeIndex === sections.length - 1 ? 0.3 : 1
+                                scale: region === 'bottom' ? 1.2 : region === 'top' ? 1.2 : 1,
+                                opacity: value.get() > 99 ? 0.3 : 1
                             }}
-                            transition={{ repeat: region !== 'middle' ? Infinity : 0, duration: 1 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
                         >
-                            <AppIcon name={region === 'top' ? "expand_less" : "expand_more"} size={20} />
+                            <AppIcon
+                                name={region === 'top' ? "keyboard_double_arrow_up" : "keyboard_double_arrow_down"}
+                                size={20}
+                            />
                         </motion.div>
                     </motion.div>
                 )}
