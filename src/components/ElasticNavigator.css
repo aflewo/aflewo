@@ -113,3 +113,118 @@
 .fab-trigger:active {
     transform: scale(0.9);
 }
+
+/* ElasticNavigator.css */
+
+.fab-trigger {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.fab-trigger::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(180, 83, 9, 0.1));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.fab-trigger:hover::before {
+    opacity: 1;
+}
+
+.slider-root {
+    cursor: grab;
+    user-select: none;
+}
+
+.slider-root:active {
+    cursor: grabbing;
+}
+
+.slider-track {
+    transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.slider-range {
+    will-change: height;
+    contain: strict;
+}
+
+.section-node {
+    will-change: transform, opacity, background-color, border-color;
+    z-index: 2;
+    transition-property: transform, background-color, border-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-node:hover {
+    z-index: 3;
+}
+
+.value-indicator {
+    will-change: transform, opacity;
+    z-index: 10;
+    pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Prevent flash of unstyled content */
+.slider-root * {
+    box-sizing: border-box;
+}
+
+/* Smooth scrolling for the entire page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for better visual feedback */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(180, 83, 9, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, rgba(245, 158, 11, 0.4), rgba(180, 83, 9, 0.4));
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, rgba(245, 158, 11, 0.6), rgba(180, 83, 9, 0.6));
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+
+    .slider-root,
+    .slider-track,
+    .slider-range,
+    .section-node,
+    .value-indicator {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .section-node {
+        min-width: 16px;
+        min-height: 16px;
+    }
+
+    .slider-root {
+        -webkit-tap-highlight-color: transparent;
+    }
+}
