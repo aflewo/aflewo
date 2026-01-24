@@ -350,8 +350,8 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
                     <div className="text-[10px] font-black text-white/30 uppercase tracking-widest">
                         {progress}%
                     </div>
-                    <div className="text-[8px] font-medium text-white/20 uppercase tracking-widest">
-                        Loading the sound of heaven
+                    <div className="text-[10px] font-medium text-white/20 uppercase tracking-widest">
+                        Loading AFLEWO
                     </div>
                 </div>
             </div>
