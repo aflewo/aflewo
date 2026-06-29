@@ -6,174 +6,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AppIcon from "@/components/ui/AppIcon";
 import Link from "next/link";
 import Image from "next/image";
+import { chapters, type Chapter } from "@/lib/chapters";
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface Chapter {
-    name: string;
-    status: string;
-    established: string;
-    venue: string;
-    capacity?: string;
-    highlight: string;
-    size: "hero" | "featured" | "standard";
-    link: string;
-    color: string;
-    hasQr?: boolean;
-    hasPrayerCircle?: boolean;
-    country: string;
-    description: string;
-    upcomingEvent?: string;
-    registrationOpen?: boolean;
-    venueImage?: string;
-    contactPhone?: string;
-    contactEmail?: string;
-    socialLinks?: { platform: string; url: string }[];
-}
 
-const chapters: Chapter[] = [
-    {
-        name: "Nairobi",
-        status: "Mother Chapter",
-        established: "2004",
-        venue: "Winners' Chapel International, Likoni Road",
-        capacity: "15,000+",
-        highlight: "Latest: Grace for Wholeness (Oct 2025)",
-        size: "hero",
-        link: "https://aflewo.org",
-        color: "from-gold/20 to-gold/5",
-        country: "Kenya",
-        description: "The inaugural chapter coordinating the movement's prophetic 22nd year. The flagship location where AFLEWO began its journey of continental worship.",
-        upcomingEvent: "April 10, 2026 - Pre-Launch",
-        venueImage: "/archival-1.jpg",
-        registrationOpen: true,
-        contactPhone: "+254 700 000 000",
-        contactEmail: "nairobi@aflewo.org",
-        socialLinks: [
-            { platform: "Facebook", url: "https://facebook.com/aflewoke" },
-            { platform: "Instagram", url: "https://instagram.com/aflewoke" }
-        ]
-    },
-    {
-        name: "Tanzania",
-        status: "Dar es Salaam",
-        established: "2010",
-        venue: "CCC Upanga Church",
-        highlight: "4,000+ Participants",
-        size: "featured",
-        link: "https://facebook.com/aflewotanzania",
-        color: "from-emerald/20 to-emerald/5",
-        country: "Tanzania",
-        description: "The movement's first international chapter, a major hub for AFLEWO's expansion in East Africa drawing over 4,000 people per event.",
-        upcomingEvent: "TBA 2026",
-        venueImage: "/archival-2.jpg"
-    },
-    {
-        name: "Rwanda",
-        status: "Kigali Chapter",
-        established: "2011",
-        venue: "Christian Life Assembly, Nyarutarama",
-        highlight: "NYE 2026 Ushered",
-        size: "featured",
-        link: "https://facebook.com/afleworwanda",
-        color: "from-blue-500/20 to-blue-500/5",
-        country: "Rwanda",
-        description: "Held a massive event in March 2014 for the 20th genocide commemoration with the theme 'Healing and Reconciliation'.",
-        upcomingEvent: "March 2026 - Commemoration Service"
-    },
-    {
-        name: "Nakuru",
-        status: "Registration Open",
-        established: "2013",
-        venue: "Deliverance Church, Nakuru",
-        highlight: "2026 Season Registration Active",
-        size: "standard",
-        link: "https://facebook.com/aflewonakuru",
-        color: "from-orange-500/20 to-orange-500/5",
-        hasQr: true,
-        country: "Kenya",
-        description: "Birthed during the 1,000-voice national choir event. Registration is currently open for the 2026 season.",
-        upcomingEvent: "Mar 02, 2026 - Rehearsals",
-        registrationOpen: true
-    },
-    {
-        name: "Eldoret",
-        status: "Auditions Active",
-        established: "2025",
-        venue: "Regional Hub",
-        highlight: "Choir, Band, Media & Dance",
-        size: "standard",
-        link: "https://facebook.com/aflewoeldoret",
-        color: "from-purple-500/20 to-purple-500/5",
-        hasQr: true,
-        country: "Kenya",
-        description: "Highly active chapter with auditions for Choir, Band, Media, Ushering, Security, and Dancing categories.",
-        upcomingEvent: "Feb 15, 2026 - Auditions",
-        registrationOpen: true
-    },
-    {
-        name: "Mombasa",
-        status: "Prayer Circle",
-        established: "2009",
-        venue: "JCC Bamburi Centre",
-        highlight: "Nightly Zoom Prayer Circle",
-        size: "standard",
-        link: "https://facebook.com/aflewomombasa",
-        color: "from-cyan-500/20 to-cyan-500/5",
-        hasPrayerCircle: true,
-        country: "Kenya",
-        description: "Known for its 'Prayer Circle' that meets nightly via Zoom. Latest event was September 27, 2025.",
-        upcomingEvent: "Every Night - Prayer Circle"
-    },
-    {
-        name: "Nyeri",
-        status: "Mt. Kenya Hub",
-        established: "2010",
-        venue: "PCEA Nyamachaki",
-        highlight: "Pastors' Fellowship Support",
-        size: "standard",
-        link: "https://aflewo.org",
-        color: "from-green-600/20 to-green-600/5",
-        country: "Kenya",
-        description: "Historically held at PCEA Nyamachaki, supported by the Nyeri Pastors' Fellowship."
-    },
-    {
-        name: "Meru",
-        status: "Active Chapter",
-        established: "2012",
-        venue: "KEMU Chapel",
-        highlight: "Expansion Vision Active",
-        size: "standard",
-        link: "https://aflewo.org",
-        color: "from-lime-500/20 to-lime-500/5",
-        country: "Kenya",
-        description: "Historically held at Gikumene High School and KEMU Chapel."
-    },
-    {
-        name: "Machakos",
-        status: "Emerging",
-        established: "2026",
-        venue: "Community Center",
-        highlight: "Birthed from the Eastern Choir",
-        size: "standard",
-        link: "https://aflewo.org",
-        color: "from-amber-500/20 to-amber-500/5",
-        country: "Kenya",
-        description: "An emerging chapter birthed from the Eastern Choir movement."
-    },
-    {
-        name: "Kisumu",
-        status: "Lake Hub",
-        established: "2026",
-        venue: "Jomo Kenyatta Ground",
-        highlight: "Expansion Vision Active",
-        size: "standard",
-        link: "https://aflewo.org",
-        color: "from-teal-500/20 to-teal-500/5",
-        country: "Kenya",
-        description: "Part of the long-term expansion vision for the movement."
-    }
-];
+
 
 interface ChapterModalProps {
     chapter: Chapter | null;
@@ -297,8 +135,8 @@ function ChapterModal({ chapter, isOpen, onClose }: ChapterModalProps) {
                                 </div>
                                 {chapter.registrationOpen && (
                                     <Link
-                                        href={chapter.link}
-                                        target="_blank"
+                                        href={chapter.link || `/chapters/${chapter.slug}`}
+                                        target={chapter.link ? "_blank" : undefined}
                                         className="px-6 py-3 rounded-full bg-gold text-brown text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2"
                                     >
                                         Register <AppIcon name="arrow_forward" size={14} />
@@ -310,11 +148,11 @@ function ChapterModal({ chapter, isOpen, onClose }: ChapterModalProps) {
 
                     <div className="flex flex-wrap gap-4">
                         <Link
-                            href={chapter.link}
-                            target="_blank"
-                            className="flex-1 min-w-[200px] inline-flex items-center justify-center gap-3 px-8 py-4 glass-card hover:bg-gold hover:text-brown transition-all rounded-full font-black text-[10px] uppercase tracking-widest"
+                            href={`/chapters/${chapter.slug}`}
+                            onClick={onClose}
+                            className="flex-1 min-w-[200px] inline-flex items-center justify-center gap-3 px-8 py-4 bg-gold text-brown hover:brightness-110 transition-all rounded-full font-black text-[10px] uppercase tracking-widest"
                         >
-                            <AppIcon name="public" size={16} /> Visit Chapter Page
+                            <AppIcon name="arrow_forward" size={16} /> Open Full Page
                         </Link>
                         {chapter.contactPhone && (
                             <Link
@@ -395,13 +233,17 @@ function QrModal({ chapter, isOpen, onClose }: QrModalProps) {
                     <div className="relative mx-auto w-48 h-48 bg-white rounded-2xl p-4 flex items-center justify-center">
                         <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-transparent rounded-2xl" />
                         <div className="relative grid grid-cols-5 gap-1">
-                            {Array.from({ length: 25 }).map((_, i) => (
-                                <div
-                                    key={i}
-                                    className={`w-6 h-6 rounded-sm ${Math.random() > 0.5 ? "bg-brown" : "bg-transparent"
-                                        }`}
-                                />
-                            ))}
+                            {Array.from({ length: 25 }).map((_, i) => {
+                                // Deterministic pattern seeded by chapter name + position
+                                const seed = chapter.name.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+                                const filled = ((seed * (i + 1) * 37) % 97) > 45;
+                                return (
+                                    <div
+                                        key={i}
+                                        className={`w-6 h-6 rounded-sm ${filled ? "bg-brown" : "bg-transparent"}`}
+                                    />
+                                );
+                            })}
                         </div>
                         <div className="absolute inset-0 flex items-center justify-center">
                             <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-lg">
@@ -411,7 +253,7 @@ function QrModal({ chapter, isOpen, onClose }: QrModalProps) {
                     </div>
 
                     <Link
-                        href={chapter.link}
+                        href={chapter.link || "/join"}
                         target="_blank"
                         className="block w-full py-4 rounded-full bg-gold text-brown font-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all"
                     >
@@ -428,34 +270,43 @@ export default function ChaptersSection() {
     const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
     const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
     const [qrChapter, setQrChapter] = useState<Chapter | null>(null);
-    const magneticRefs = useRef<{ x: gsap.QuickToFunc; y: gsap.QuickToFunc }[]>([]);
+    // iOS-style 3D tilt: rotateX/rotateY on each card via GSAP quickTo
+    const tiltRefs = useRef<{ rx: gsap.QuickToFunc; ry: gsap.QuickToFunc; scale: gsap.QuickToFunc }[]>([]);
 
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>, index: number) => {
-        if (!magneticRefs.current[index]) return;
         const card = cardsRef.current[index];
-        if (!card) return;
+        const tilt = tiltRefs.current[index];
+        if (!card || !tilt) return;
 
         const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+        // Normalized -1 to +1 within the card
+        const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
 
-        magneticRefs.current[index].x(x * 0.1);
-        magneticRefs.current[index].y(y * 0.1);
+        // Tilt up to ±6deg, invert Y so top-hover tilts card back naturally
+        tilt.ry(nx * 6);
+        tilt.rx(-ny * 4);
+        tilt.scale(1.025);
     }, []);
 
     const handleMouseLeave = useCallback((index: number) => {
-        if (!magneticRefs.current[index]) return;
-        magneticRefs.current[index].x(0);
-        magneticRefs.current[index].y(0);
+        const tilt = tiltRefs.current[index];
+        if (!tilt) return;
+        tilt.rx(0);
+        tilt.ry(0);
+        tilt.scale(1);
     }, []);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
             cardsRef.current.forEach((card, index) => {
                 if (card) {
-                    magneticRefs.current[index] = {
-                        x: gsap.quickTo(card, "x", { duration: 0.5, ease: "power3.out" }),
-                        y: gsap.quickTo(card, "y", { duration: 0.5, ease: "power3.out" })
+                    // iOS spring tilt — no positional shift, only perspective rotation + scale
+                    gsap.set(card, { transformPerspective: 800, transformOrigin: "center center" });
+                    tiltRefs.current[index] = {
+                        rx: gsap.quickTo(card, "rotationX", { duration: 0.4, ease: "power2.out" }),
+                        ry: gsap.quickTo(card, "rotationY", { duration: 0.4, ease: "power2.out" }),
+                        scale: gsap.quickTo(card, "scale", { duration: 0.35, ease: "power2.out" })
                     };
                 }
             });
@@ -530,7 +381,7 @@ export default function ChaptersSection() {
                         <div
                             key={i}
                             ref={(el) => { cardsRef.current[i] = el; }}
-                            className={`chapter-card bento-card glass-card-elevated p-8 md:p-10 flex flex-col justify-between group cursor-pointer relative overflow-hidden min-h-[280px] rounded-lg ${getGridClasses(chapter.size)}`}
+                            className={`chapter-card bento-card glass-card-elevated p-8 md:p-10 flex flex-col justify-between group cursor-pointer relative overflow-hidden min-h-[280px] rounded-lg ${getGridClasses(chapter.size || "standard")}`}
                             onMouseMove={(e) => handleMouseMove(e, i)}
                             onMouseLeave={() => handleMouseLeave(i)}
                             onClick={() => setSelectedChapter(chapter)}
@@ -556,8 +407,9 @@ export default function ChaptersSection() {
                                                 </span>
                                             )}
                                         </div>
-                                        <h3 className={`font-black tracking-tighter group-hover:text-gold transition-colors ${chapter.size === "hero" ? "text-5xl md:text-6xl" :
-                                            chapter.size === "featured" ? "text-4xl" : "text-3xl"
+                                        <h3 className={`font-black tracking-tighter group-hover:text-gold transition-colors ${
+                                            (chapter.size || "standard") === "hero" ? "text-5xl md:text-6xl" :
+                                            (chapter.size || "standard") === "featured" ? "text-4xl" : "text-3xl"
                                             }`}>
                                             {chapter.name}
                                         </h3>
@@ -583,7 +435,7 @@ export default function ChaptersSection() {
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
                                         <AppIcon name="calendar_month" size={14} className="text-gold" />
-                                        <span>EST. {chapter.established}</span>
+                                        <span>AFLEWO {chapter.established}</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
                                         <AppIcon name="location_on" size={14} className="text-gold" />
@@ -599,7 +451,7 @@ export default function ChaptersSection() {
 
                                 <div className="flex items-center justify-between gap-4">
                                     <Link
-                                        href={`/chapters/${chapter.name.toLowerCase()}`}
+                                        href={`/chapters/${chapter.slug}`}
                                         onClick={(e) => e.stopPropagation()}
                                         className="press-scale flex-1 inline-flex items-center justify-between px-5 py-3 glass-card group-hover:bg-gold group-hover:text-brown transition-all duration-500 rounded-full font-black text-[9px] uppercase tracking-widest"
                                     >

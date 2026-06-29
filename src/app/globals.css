@@ -538,9 +538,8 @@
 }
 
 .bento-card:hover {
-  transform: translateY(-4px);
   box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.4),
-    0 0 30px -10px hsla(42, 92%, 56%, 0.15);
+    0 0 30px -10px hsla(42, 92%, 56%, 0.2);
 }
 
 .bento-card-hero {
@@ -823,3 +822,37 @@
     display: none !important;
   }
 }
+
+/* ─────────────────────────────────────────────
+   BubbleMenu / Pill Overlay Extras
+   ───────────────────────────────────────────── */
+
+/* On mobile, stack pills full-width */
+@media (max-width: 767px) {
+  .pill-mobile-full {
+    grid-column: span 2 / span 2;
+  }
+}
+
+/* Hamburger short-line pull-right */
+.menu-line-short {
+  align-self: flex-end;
+  margin-right: 4px;
+}
+
+/* press-scale — tactile button click feel */
+.press-scale {
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1);
+}
+.press-scale:active {
+  transform: scale(0.95) !important;
+}
+
+/* hide-scrollbar — used in EventHub filters */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

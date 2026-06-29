@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import AppIcon from "@/components/ui/AppIcon";
+import { motion, AnimatePresence } from "framer-motion";
+import { getIslandDisplayItems } from "@/lib/events";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const dynamicItems = getIslandDisplayItems();
 
 export default function HeroSection() {
     const sectionRef = useRef<HTMLDivElement>(null);
@@ -52,6 +56,13 @@ export default function HeroSection() {
         return () => ctx.revert();
     }, []);
 
+    const [eventIndex, setEventIndex] = useState(0);
+
+    const nextEvent = () => setEventIndex((prev: number) => (prev + 1) % dynamicItems.length);
+    const prevEvent = () => setEventIndex((prev: number) => (prev - 1 + dynamicItems.length) % dynamicItems.length);
+
+    const currentItem = dynamicItems[eventIndex];
+
     return (
         <section
             ref={sectionRef}
@@ -74,13 +85,52 @@ export default function HeroSection() {
             </div>
 
             {/* Premium Typography Layer */}
-            <div ref={contentRef} className="relative z-10 text-center px-6 max-w-6xl">
-                <div className="inline-flex items-center gap-3 px-4 py-2 glass-card rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-gold mb-8 animate-breathe">
-                    <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
-                    </span>
-                    Live from Winners{"'"} Chapel
+            <div ref={contentRef} className="relative z-10 text-center px-6 max-w-6xl mt-20">
+                <div className="mb-8 flex justify-center">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentItem.id}
+                            drag="x"
+                            dragConstraints={{ left: 0, right: 0 }}
+                            onDragEnd={(e, { offset, velocity }) => {
+                                if (offset.x > 50 || velocity.x > 300) prevEvent();
+                                else if (offset.x < -50 || velocity.x < -300) nextEvent();
+                            }}
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            className="group relative cursor-pointer active:cursor-grabbing"
+                        >
+                            <Link
+                                href={currentItem.url}
+                                target={currentItem.isExternal ? "_blank" : undefined}
+                                className="inline-flex items-center gap-3 px-6 py-3 glass-card rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-white hover:text-gold transition-colors animate-breathe"
+                            >
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
+                                </span>
+                                {currentItem.title}
+                            </Link>
+
+                            {/* Navigation Arrows (Visible on hover) */}
+                            <div className="absolute inset-0 flex items-center justify-between px-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                <button
+                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); prevEvent(); }}
+                                    className="pointer-events-auto p-1 text-white/40 hover:text-white transition-colors"
+                                >
+                                    <AppIcon name="chevron_left" size={16} />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); nextEvent(); }}
+                                    className="pointer-events-auto p-1 text-white/40 hover:text-white transition-colors"
+                                >
+                                    <AppIcon name="chevron_right" size={16} />
+                                </button>
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
 
                 <h1 className="hero-title text-7xl md:text-9xl font-black tracking-tighter text-white leading-[0.85] perspective-1000 mb-8">

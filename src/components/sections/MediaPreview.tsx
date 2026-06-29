@@ -229,7 +229,7 @@ export default function MediaPreview() {
                         { label: "Photos", value: "5,000+", icon: "visibility" },
                         { label: "Videos", value: "200+", icon: "play_arrow" },
                         { label: "Years Archived", value: "20", icon: "calendar_month" },
-                        { label: "Chapters", value: "10", icon: "location_on" }
+                        { label: "Chapters", value: "11", icon: "location_on" }
                     ].map((stat, i) => (
                         <div key={i} className="glass-card p-6 rounded-2xl text-center group hover:border-gold/20 transition-colors">
                             <AppIcon name={stat.icon} size={24} className="mx-auto text-gold mb-3 group-hover:scale-110 transition-transform" />

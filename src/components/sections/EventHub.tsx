@@ -8,117 +8,7 @@ import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface Event {
-    id: string;
-    title: string;
-    date: string;
-    start: string;
-    end: string;
-    time: string;
-    type: string;
-    chapter: string;
-    location: string;
-    description?: string;
-}
-
-const events: Event[] = [
-    {
-        id: "1",
-        title: "Eldoret Auditions",
-        date: "Feb 15, 2026",
-        start: "20260215T090000",
-        end: "20260215T170000",
-        time: "09:00 AM",
-        type: "Audition",
-        chapter: "Eldoret",
-        location: "Eldoret Regional Hub",
-        description: "Auditions for Choir, Band, Media, Ushering, Security, and Dancing categories."
-    },
-    {
-        id: "2",
-        title: "Nakuru Rehearsals",
-        date: "Mar 02, 2026",
-        start: "20260302T170000",
-        end: "20260302T200000",
-        time: "05:00 PM",
-        type: "Rehearsal",
-        chapter: "Nakuru",
-        location: "Deliverance Church, Nakuru",
-        description: "2026 season rehearsals for registered choir members."
-    },
-    {
-        id: "3",
-        title: "Mombasa Prayer Circle",
-        date: "Every Night",
-        start: "20260123T210000",
-        end: "20260123T220000",
-        time: "09:00 PM",
-        type: "Zoom",
-        chapter: "Mombasa",
-        location: "Zoom Virtual Altar",
-        description: "Nightly prayer circle gathering via Zoom."
-    },
-    {
-        id: "4",
-        title: "Nairobi Pre-Launch",
-        date: "Apr 10, 2026",
-        start: "20260410T180000",
-        end: "20260410T220000",
-        time: "06:00 PM",
-        type: "Event",
-        chapter: "Nairobi",
-        location: "Winners' Chapel International",
-        description: "Pre-launch event for the 2026 main gathering."
-    },
-    {
-        id: "5",
-        title: "Tanzania Worship Night",
-        date: "Mar 21, 2026",
-        start: "20260321T190000",
-        end: "20260321T230000",
-        time: "07:00 PM",
-        type: "Event",
-        chapter: "Tanzania",
-        location: "CCC Upanga Church, Dar es Salaam",
-        description: "An evening of worship and praise."
-    },
-    {
-        id: "6",
-        title: "Rwanda Commemoration",
-        date: "Apr 07, 2026",
-        start: "20260407T100000",
-        end: "20260407T160000",
-        time: "10:00 AM",
-        type: "Event",
-        chapter: "Rwanda",
-        location: "Christian Life Assembly, Kigali",
-        description: "Annual commemoration service for healing and reconciliation."
-    },
-    {
-        id: "7",
-        title: "Nyeri Regional Gathering",
-        date: "May 15, 2026",
-        start: "20260515T140000",
-        end: "20260515T200000",
-        time: "02:00 PM",
-        type: "Event",
-        chapter: "Nyeri",
-        location: "PCEA Nyamachaki",
-        description: "Mt. Kenya regional worship gathering."
-    },
-    {
-        id: "8",
-        title: "Main Nairobi Event",
-        date: "Oct 03, 2026",
-        start: "20261003T180000",
-        end: "20261004T060000",
-        time: "06:00 PM",
-        type: "Main Event",
-        chapter: "Nairobi",
-        location: "Winners' Chapel International",
-        description: "The flagship all-night worship experience."
-    }
-];
+import { events, parseEventDate, type AFLEWOEvent } from "@/lib/events";
 
 const chapterColors: Record<string, { bg: string; text: string; border: string }> = {
     Nairobi: { bg: "bg-gold/20", text: "text-gold", border: "border-gold/30" },
@@ -132,21 +22,10 @@ const chapterColors: Record<string, { bg: string; text: string; border: string }
 };
 
 const chapters = Object.keys(chapterColors);
-
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-function parseEventDate(dateStr: string): Date | null {
-    if (dateStr === "Every Night") return null;
-    const parts = dateStr.replace(",", "").split(" ");
-    const monthIndex = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(parts[0]);
-    const day = parseInt(parts[1]);
-    const year = parseInt(parts[2]);
-    if (monthIndex === -1 || isNaN(day) || isNaN(year)) return null;
-    return new Date(year, monthIndex, day);
-}
-
-function getNextAFLEWOEvent(): Event | null {
+function getNextAFLEWOEvent(): AFLEWOEvent | null {
     const now = new Date();
     const futureEvents = events
         .filter(e => {
@@ -223,7 +102,7 @@ function FlipDigit({ value, label }: FlipDigitProps) {
 
 export default function EventHub() {
     const sectionRef = useRef<HTMLDivElement>(null);
-    const [currentMonth, setCurrentMonth] = useState(new Date(2026, 0, 1));
+    const [currentMonth, setCurrentMonth] = useState(() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); });
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(false);

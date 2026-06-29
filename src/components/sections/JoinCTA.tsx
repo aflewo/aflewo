@@ -13,7 +13,7 @@ const opportunities = [
         title: "Volunteer",
         desc: "Join production, music, or hospitality teams. Be part of the 1,000+ volunteers that make AFLEWO happen.",
         icon: "groups",
-        href: "/join?tab=volunteer",
+        href: "/join?tab=hospitality",
         stat: "1,000+ Volunteers",
         color: "from-gold/20 to-gold/5"
     },
@@ -21,7 +21,7 @@ const opportunities = [
         title: "Partner",
         desc: "Support the vision technically or financially. Become a pillar of continental worship.",
         icon: "handshake",
-        href: "/join?tab=partner",
+        href: "/join?tab=partners",
         stat: "50+ Partners",
         color: "from-emerald/20 to-emerald/5"
     },
@@ -29,7 +29,7 @@ const opportunities = [
         title: "Testify",
         desc: "Share your AFLEWO story with the world. Let your testimony ignite hope in others.",
         icon: "chat_bubble",
-        href: "/join?tab=testify",
+        href: "/stories",
         stat: "∞ Stories",
         color: "from-purple-500/20 to-purple-500/5"
     }
