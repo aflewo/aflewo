@@ -2,7 +2,6 @@
 
 import { useParams, notFound } from "next/navigation";
 import { getChapter } from "@/lib/chapters";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
@@ -109,7 +108,6 @@ export default function ChapterPage() {
 
     return (
         <main ref={containerRef} className="bg-background min-h-screen">
-            <Navbar />
             {showRegister && (
                 <RegisterModal
                     chapterName={chapter.name}

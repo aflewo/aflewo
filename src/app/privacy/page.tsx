@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AppIcon from "@/components/ui/AppIcon";
 import Link from "next/link";
@@ -8,7 +7,6 @@ import Link from "next/link";
 export default function PrivacyPolicyPage() {
     return (
         <main className="bg-background min-h-screen">
-            <Navbar />
             <section className="pt-40 pb-24 px-6">
                 <div className="max-container max-w-3xl space-y-12">
                     <div className="space-y-4">

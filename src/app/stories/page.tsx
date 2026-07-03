@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -178,7 +177,6 @@ export default function StoriesPage() {
 
     return (
         <main ref={containerRef} className="bg-background min-h-screen">
-            <Navbar />
             {showModal && <StorySubmitModal onClose={() => setShowModal(false)} />}
 
             {/* Hero */}

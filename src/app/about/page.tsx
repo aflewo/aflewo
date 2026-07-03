@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -197,7 +196,6 @@ export default function AboutPage() {
 
     return (
         <main ref={containerRef} className="bg-background min-h-screen">
-            <Navbar />
             {showAlumniModal && <AlumniUpdateModal onClose={() => setShowAlumniModal(false)} />}
 
             {/* Hero */}

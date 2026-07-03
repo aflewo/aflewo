@@ -48,6 +48,10 @@ export default function Navbar() {
 
     if (!mounted) return null;
 
+    // Do not render navbar on certain routes (they have their own layouts)
+    const hideNavbarRoutes = ["/auth", "/portal", "/admin"];
+    if (hideNavbarRoutes.some((route) => pathname.startsWith(route))) return null;
+
     const authLink = isSignedIn
         ? { name: "Portal",  href: "/portal" }
         : { name: "Sign In", href: "/auth"   };

@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -33,7 +32,6 @@ export default function MusicPage() {
 
     return (
         <main ref={containerRef} className="bg-background min-h-screen relative overflow-hidden">
-            <Navbar />
 
             {/* Background elements */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/5 blur-[150px] -z-10 rounded-full" />

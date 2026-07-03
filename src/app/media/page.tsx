@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -97,7 +96,6 @@ export default function MediaPage() {
 
     return (
         <main className="bg-background min-h-screen">
-            <Navbar />
             <Lightbox item={lightboxItem} onClose={() => setLightboxItem(null)} />
 
             <section className="pt-40 pb-20 px-6">

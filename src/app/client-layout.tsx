@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Preloader from "@/components/Preloader";
+import Navbar from "@/components/Navbar";
 
 /**
  * ClientLayout — wraps children with the preloader animation.
@@ -21,6 +22,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             : "opacity-100 visible transition-all duration-1000 ease-out"
         }
       >
+        <Navbar />
         {children}
       </div>
     </>

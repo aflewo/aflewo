@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import AppIcon from "@/components/ui/AppIcon";
@@ -42,7 +41,6 @@ export default function AlumniPage() {
 
     return (
         <main ref={containerRef} className="bg-background min-h-screen">
-            <Navbar />
 
             {/* Hero */}
             <section className="pt-40 pb-24 px-6 relative overflow-hidden text-center">

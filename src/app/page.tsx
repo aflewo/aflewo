@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import ChaptersSection from "@/components/sections/ChaptersSection";
@@ -21,7 +20,6 @@ export default function Home() {
 
   return (
     <main className="relative bg-background opacity-0">
-      <Navbar />
 
       <HeroSection />
 

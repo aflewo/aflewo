@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -150,7 +149,6 @@ export default function JoinPage() {
 
     return (
         <main ref={containerRef} className="bg-background min-h-screen">
-            <Navbar />
 
             {/* Hero */}
             <section className="pt-40 pb-24 px-6 relative overflow-hidden">
