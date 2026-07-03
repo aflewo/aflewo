@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import MenuToggle from "@/components/ui/MenuToggle";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 const links = [
     { name: "About",    href: "/about"    },
@@ -119,17 +120,19 @@ export default function Navbar() {
                         {/* Connect CTA — desktop only */}
                         <Link
                             href="/join"
-                            className="hidden sm:flex press-scale items-center bg-white text-brown px-6 py-2.5 rounded-full font-black text-[9px] uppercase tracking-widest shadow-glow hover:bg-gold transition-all duration-300"
+                            aria-label="Connect"
+                            className="hidden sm:flex press-scale items-center justify-center bg-white text-brown w-9 h-9 md:w-10 md:h-10 rounded-full shadow-glow hover:bg-gold hover:text-white transition-all duration-300"
                         >
-                            Connect
+                            <SvgIcon name="user_add" size={20} />
                         </Link>
 
                         {/* Auth link — desktop only */}
                         <Link
                             href={authLink.href}
-                            className="hidden md:flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-gold hover:border-gold/30 transition-all duration-200"
+                            aria-label={authLink.name}
+                            className="hidden md:flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full border border-white/10 bg-white/5 text-white/60 hover:text-gold hover:border-gold/30 transition-all duration-200"
                         >
-                            {authLink.name}
+                            <SvgIcon name={isSignedIn ? "user" : "login"} size={18} />
                         </Link>
 
                         {/* Mobile menu toggle */}
