@@ -390,8 +390,8 @@ export default function ChaptersSection() {
                             <div className={`absolute inset-0 bg-gradient-to-br ${chapter.color} opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
 
                             <div className="absolute -right-8 -top-8 w-32 h-32 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700 pointer-events-none">
-                                <svg viewBox="0 0 200 200" className="w-full h-full fill-current">
-                                    <path d="M100,10 L120,90 L200,100 L120,110 L100,190 L80,110 L0,100 L80,90 Z" />
+                                <svg viewBox="0 0 32 32" className="w-full h-full fill-current">
+                                    <path d="M5.979 10.974v5.021h7.041v11.99h5.042v-11.99h6.958v-5.021h-6.958v-6.958h-5.042v6.958h-7.041z" />
                                 </svg>
                             </div>
 
