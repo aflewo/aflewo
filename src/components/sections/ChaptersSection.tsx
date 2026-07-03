@@ -435,7 +435,7 @@ export default function ChaptersSection() {
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
                                         <SvgIcon name="calendar" size={14} className="text-gold" />
-                                        <span>Est. {chapter.established}</span>
+                                        <span>HOME {chapter.established}</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/50">
                                         <SvgIcon name="location" size={14} className="text-gold" />

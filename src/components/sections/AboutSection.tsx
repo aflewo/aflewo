@@ -55,15 +55,18 @@ export default function AboutSection() {
             });
 
             // Parallax on image containers
-            gsap.to(".parallax-img", {
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: 1,
-                },
-                y: -100
-            });
+            gsap.fromTo(".parallax-img",
+                { yPercent: -10 },
+                {
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1,
+                    },
+                    yPercent: 10
+                }
+            );
         }, containerRef);
 
         return () => ctx.revert();
@@ -105,7 +108,7 @@ export default function AboutSection() {
                                         src={event.image}
                                         alt={event.title}
                                         fill
-                                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 parallax-img scale-110"
+                                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 parallax-img scale-[1.25]"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                                 </div>
@@ -117,7 +120,7 @@ export default function AboutSection() {
 
             {/* Background Decorative Text */}
             <div className="absolute -left-20 top-1/4 opacity-[0.02] pointer-events-none rotate-90 origin-left">
-                <span className="text-[20rem] font-black uppercase tracking-tighter">EST. 2004</span>
+                <span className="text-[20rem] font-black uppercase tracking-tighter">Est. 2004</span>
             </div>
         </section>
     );
