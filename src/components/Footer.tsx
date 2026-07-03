@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import { useState } from "react";
 
 export default function Footer() {
@@ -45,19 +45,19 @@ export default function Footer() {
                         <div className="flex gap-4">
                             <a href="https://aflewo.org" target="_blank" rel="noopener noreferrer" aria-label="AFLEWO Website"
                                 className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all">
-                                <AppIcon name="language" size={20} />
+                                <SvgIcon name="globe" size={20} className="text-gold" />
                             </a>
                             <a href="https://chat.whatsapp.com/AflewoNairobi" target="_blank" rel="noopener noreferrer" aria-label="AFLEWO WhatsApp"
                                 className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all">
-                                <AppIcon name="group" size={20} />
+                                <SvgIcon name="whatsapp" size={20} className="text-gold" />
                             </a>
                             <a href="https://youtube.com/@aflewo" target="_blank" rel="noopener noreferrer" aria-label="AFLEWO YouTube"
                                 className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all">
-                                <AppIcon name="play_arrow" size={20} />
+                                <SvgIcon name="youtube" size={20} className="text-gold" />
                             </a>
                             <a href="mailto:nairobi@aflewo.org" aria-label="Email AFLEWO"
                                 className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all">
-                                <AppIcon name="mail" size={20} />
+                                <SvgIcon name="mail" size={20} className="text-gold" />
                             </a>
                         </div>
                     </div>
@@ -96,12 +96,12 @@ export default function Footer() {
                                 <p className="text-[10px] text-white/30 font-black uppercase tracking-widest leading-relaxed">
                                     Join 15K+ worshippers in the movement.
                                 </p>
-                                {subState === "done" ? (
+                                    {subState === "done" ? (
                                     <div className="flex items-center gap-2 text-gold text-[10px] font-black uppercase tracking-widest">
-                                        <AppIcon name="check_circle" size={16} /> Subscribed!
+                                        <SvgIcon name="check" size={16} className="text-gold" /> Subscribed!
                                     </div>
-                                ) : (
-                                    <form onSubmit={handleSubscribe} className="relative">
+                                    ) : (
+                                        <form onSubmit={handleSubscribe} className="relative">
                                         <input
                                             type="email"
                                             value={email}
@@ -115,12 +115,12 @@ export default function Footer() {
                                             className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-gold text-brown rounded-full hover:scale-110 transition-transform flex items-center justify-center disabled:opacity-50"
                                         >
                                             {subState === "sending"
-                                                ? <AppIcon name="autorenew" size={16} className="animate-spin" />
-                                                : <AppIcon name="arrow_outward" size={16} />
+                                                ? <SvgIcon name="spin" size={16} className="animate-spin" />
+                                                : <SvgIcon name="arrow_forward" size={16} />
                                             }
                                         </button>
                                     </form>
-                                )}
+                                    )}
                                 <div className="space-y-2 pt-2">
                                     <p className="text-[9px] text-white/20 font-black uppercase tracking-widest">M-Pesa Support</p>
                                     <p className="text-white/50 text-[10px] font-black">Paybill: <span className="text-gold">819867</span></p>
@@ -133,7 +133,7 @@ export default function Footer() {
 
                 {/* Bottom Bar */}
                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/20">
-                    <div>© {currentYear} AFLEWO Digital • Prophetic House</div>
+                    <div>© {currentYear} Africa Let's Worship</div>
                     <div className="flex gap-8">
                         <Link href="/privacy" className="hover:text-gold transition-colors">Privacy Policy</Link>
                         <a href="tel:*456*819867#" className="hover:text-gold transition-colors">M-Pesa: *456*819867#</a>

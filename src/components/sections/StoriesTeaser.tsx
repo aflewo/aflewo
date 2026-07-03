@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 import Link from "next/link";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -130,10 +130,12 @@ export default function StoriesTeaser() {
         const cards = cardsRef.current;
         if (!cards.length) return;
 
-        // Set initial positions
-        gsap.set(cards, { xPercent: 100, opacity: 0 });
-        gsap.set(cards[0], { xPercent: 0, opacity: 1 });
-        currentIndexRef.current = 0;
+        // rAF ensures DOM is painted before GSAP reads positions
+        const raf = requestAnimationFrame(() => {
+            gsap.set(cards, { xPercent: 100, opacity: 0 });
+            gsap.set(cards[0], { xPercent: 0, opacity: 1 });
+            currentIndexRef.current = 0;
+        });
 
         const ctx = gsap.context(() => {
             gsap.from(".stories-header", {
@@ -148,7 +150,10 @@ export default function StoriesTeaser() {
             });
         }, sectionRef);
 
-        return () => ctx.revert();
+        return () => {
+            cancelAnimationFrame(raf);
+            ctx.revert();
+        };
     }, []);
 
     return (
@@ -163,7 +168,7 @@ export default function StoriesTeaser() {
                     {/* Left — sticky header + controls */}
                     <div className="stories-header flex-1 space-y-8 lg:sticky lg:top-32">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                            <AppIcon name="auto_awesome" size={14} /> The AFLEWO Spirit
+                            <SvgIcon name="star" size={14} /> Stories
                         </div>
                         <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9]">
                             HEIRS OF <br />
@@ -180,7 +185,7 @@ export default function StoriesTeaser() {
                                 aria-label="Previous story"
                                 className="p-4 rounded-full glass-card hover:bg-white/10 transition-colors active:scale-95"
                             >
-                                <AppIcon name="arrow_back_ios" size={20} className="translate-x-1" />
+                                <SvgIcon name="arrow_back" size={20} />
                             </button>
                             <div className="flex gap-2">
                                 {stories.map((_, i) => (
@@ -199,7 +204,7 @@ export default function StoriesTeaser() {
                                 aria-label="Next story"
                                 className="p-4 rounded-full glass-card hover:bg-white/10 transition-colors active:scale-95"
                             >
-                                <AppIcon name="arrow_forward_ios" size={20} />
+                                <SvgIcon name="arrow_forward" size={20} />
                             </button>
                         </div>
 
@@ -207,7 +212,7 @@ export default function StoriesTeaser() {
                             href="/stories"
                             className="press-scale inline-flex items-center gap-4 bg-gold text-brown px-10 py-5 rounded-lg font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
                         >
-                            Read All Stories <AppIcon name="arrow_forward" size={20} />
+                            Read All Stories <SvgIcon name="arrow_forward" size={20} />
                         </Link>
                     </div>
 
@@ -221,7 +226,7 @@ export default function StoriesTeaser() {
                                 style={{ willChange: "transform, opacity" }}
                             >
                                 <div className="glass-card-elevated p-10 md:p-12 relative overflow-hidden group rounded-[2rem] border-white/5 bg-brown/40 backdrop-blur-3xl shadow-2xl w-full max-w-[420px]">
-                                    <AppIcon name="format_quote" size={80} className="absolute top-8 right-8 text-gold/10 group-hover:text-gold/20 transition-colors duration-500" />
+                                    <SvgIcon name="quote" size={80} className="absolute top-8 right-8 text-gold/10 group-hover:text-gold/20 transition-colors duration-500" />
 
                                     <div className="relative z-10 space-y-8">
                                         <div className="flex items-center gap-3">
@@ -251,7 +256,7 @@ export default function StoriesTeaser() {
                                                 </p>
                                             </div>
                                             <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-gold/10">
-                                                <AppIcon name="favorite" size={16} className="text-gold" />
+                                                <SvgIcon name="heart" size={16} className="text-gold" />
                                                 <span className="text-xs font-black text-gold">{story.stat}</span>
                                             </div>
                                         </div>

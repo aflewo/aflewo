@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import { motion, AnimatePresence } from "framer-motion";
 import { getIslandDisplayItems } from "@/lib/events";
 
@@ -120,13 +120,13 @@ export default function HeroSection() {
                                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); prevEvent(); }}
                                     className="pointer-events-auto p-1 text-white/40 hover:text-white transition-colors"
                                 >
-                                    <AppIcon name="chevron_left" size={16} />
+                                    <SvgIcon name="arrow_left" size={16} />
                                 </button>
                                 <button
                                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); nextEvent(); }}
                                     className="pointer-events-auto p-1 text-white/40 hover:text-white transition-colors"
                                 >
-                                    <AppIcon name="chevron_right" size={16} />
+                                    <SvgIcon name="arrow_right" size={16} />
                                 </button>
                             </div>
                         </motion.div>
@@ -145,7 +145,7 @@ export default function HeroSection() {
 
                 <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
                     <Link href="/media" className="hero-btn press-scale bg-white text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter flex items-center gap-3 group hover:bg-gold transition-all">
-                        <AppIcon name="play_arrow" size={20} className="group-hover:scale-110 transition-transform" />
+                        <SvgIcon name="play" size={20} className="group-hover:scale-110 transition-transform" />
                         Watch Archive
                     </Link>
                     <Link href="#about" className="hero-btn press-scale glass-card-elevated px-12 py-5 rounded-full font-black uppercase tracking-tighter text-white hover:bg-white/10 transition-all border-white/20">
@@ -154,9 +154,9 @@ export default function HeroSection() {
                 </div>
             </div>
 
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-30">
-                <span className="text-[10px] font-black tracking-widest uppercase">Scroll to Discover</span>
+            {/* Scroll Indicator — below content layer (z-0) so it never overlaps CTA buttons */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-30 z-0 pointer-events-none">
+                <span className="text-[10px] font-black tracking-widest uppercase">Scroll</span>
                 <div className="w-[2px] h-12 bg-gradient-to-b from-white to-transparent" />
             </div>
         </section>

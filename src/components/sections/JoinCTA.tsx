@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,26 +12,26 @@ const opportunities = [
     {
         title: "Volunteer",
         desc: "Join production, music, or hospitality teams. Be part of the 1,000+ volunteers that make AFLEWO happen.",
-        icon: "groups",
-        href: "/join?tab=hospitality",
+        icon: "people" as const,
+        href: "/join?tab=volunteer",
         stat: "1,000+ Volunteers",
         color: "from-gold/20 to-gold/5"
     },
     {
         title: "Partner",
-        desc: "Support the vision technically or financially. Become a pillar of continental worship.",
-        icon: "handshake",
+        desc: "Support the vision financially or in kind. Become a pillar of continental worship.",
+        icon: "handshake" as const,
         href: "/join?tab=partners",
         stat: "50+ Partners",
-        color: "from-emerald/20 to-emerald/5"
+        color: "from-gold/15 to-gold/5"
     },
     {
-        title: "Testify",
-        desc: "Share your AFLEWO story with the world. Let your testimony ignite hope in others.",
-        icon: "chat_bubble",
+        title: "Share Your Story",
+        desc: "Share your AFLEWO experience. Let your story connect others to the movement.",
+        icon: "chat" as const,
         href: "/stories",
-        stat: "∞ Stories",
-        color: "from-purple-500/20 to-purple-500/5"
+        stat: "Your Voice Matters",
+        color: "from-gold/10 to-gold/5"
     }
 ];
 
@@ -98,7 +98,7 @@ export default function JoinCTA() {
             <div className="max-container relative z-10">
                 <div className="join-header text-center space-y-8 mb-20">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                        <AppIcon name="favorite" size={14} /> Join the Movement
+                        <SvgIcon name="heart" size={14} /> Join the Movement
                     </div>
                     <h2 className="text-6xl md:text-8xl font-black tracking-tighter">
                         BE THE <span className="text-gradient-gold">VOICE.</span>
@@ -124,10 +124,10 @@ export default function JoinCTA() {
                                 <div className="relative z-10 h-full flex flex-col">
                                     <div className="flex justify-between items-start mb-8">
                                         <div className="card-icon p-4 rounded-2xl bg-gold/10 text-gold flex items-center justify-center">
-                                            <AppIcon name={item.icon} size={32} />
+                                            <SvgIcon name={item.icon} size={32} className="text-gold" />
                                         </div>
                                         <div className="card-stat text-right opacity-60">
-                                            <AppIcon name="auto_awesome" size={16} className="text-gold mb-1 ml-auto" />
+                                            <SvgIcon name="star" size={16} className="text-gold mb-1 ml-auto" />
                                             <span className="text-[10px] font-black uppercase tracking-widest text-gold/80">
                                                 {item.stat}
                                             </span>
@@ -143,8 +143,8 @@ export default function JoinCTA() {
 
                                     <div className="mt-8 pt-6 border-t border-white/5">
                                         <span className="text-gold font-black uppercase tracking-widest text-[10px] flex items-center gap-3">
-                                            Reveal Opportunity
-                                            <AppIcon name="arrow_forward" size={16} className="card-arrow" />
+                                            Get Involved
+                                            <SvgIcon name="arrow_forward" size={16} className="card-arrow" />
                                         </span>
                                     </div>
                                 </div>
@@ -158,7 +158,7 @@ export default function JoinCTA() {
                         href="/join"
                         className="press-scale inline-flex items-center gap-4 bg-gold text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
                     >
-                        View All Opportunities <AppIcon name="arrow_forward" size={20} />
+                        See All Ways to Join <SvgIcon name="arrow_forward" size={20} />
                     </Link>
                 </div>
             </div>

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -191,7 +191,7 @@ export default function EventHub() {
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-12">
                         <div className="space-y-4">
                             <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                                <AppIcon name="calendar_month" size={12} /> Events & Calendar
+                                <SvgIcon name="calendar" size={12} /> Events & Calendar
                             </div>
                             <h2 className="text-5xl md:text-7xl font-black tracking-tighter">
                                 THE <span className="text-gold">CALENDAR</span>
@@ -201,7 +201,7 @@ export default function EventHub() {
                             onClick={downloadAllICS}
                             className="press-scale px-8 py-4 bg-gold text-brown rounded-lg font-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-3"
                         >
-                            <AppIcon name="download" size={16} /> Sync All 2026 Events
+                            <SvgIcon name="download" size={16} /> Download 2026 Calendar (.ics)
                         </button>
                     </div>
                 </div>
@@ -210,9 +210,9 @@ export default function EventHub() {
                     <div className="lg:col-span-5 hub-panel space-y-6">
                         <div className="glass-card-elevated p-6 md:p-8 rounded-lg border-white/5">
                             <div className="flex items-center justify-between mb-6">
-                                <button onClick={() => navigateMonth(-1)} className="p-3 rounded-lg glass-card hover:bg-white/10 flex items-center justify-center"><AppIcon name="arrow_back_ios" size={16} /></button>
+                        <button onClick={() => navigateMonth(-1)} className="p-3 rounded-lg glass-card hover:bg-white/10 flex items-center justify-center"><SvgIcon name="arrow_left" size={18} /></button>
                                 <h3 className="text-xl font-black tracking-tight">{months[currentMonth.getMonth()]} {currentMonth.getFullYear()}</h3>
-                                <button onClick={() => navigateMonth(1)} className="p-3 rounded-lg glass-card hover:bg-white/10 flex items-center justify-center"><AppIcon name="arrow_forward_ios" size={16} /></button>
+                                <button onClick={() => navigateMonth(1)} className="p-3 rounded-lg glass-card hover:bg-white/10 flex items-center justify-center"><SvgIcon name="arrow_right" size={18} /></button>
                             </div>
                             <div className="grid grid-cols-7 gap-1 mb-2">
                                 {weekDays.map(day => <div key={day} className="text-center text-[10px] font-black uppercase tracking-widest text-white/30 py-2">{day}</div>)}
@@ -231,17 +231,17 @@ export default function EventHub() {
                                     );
                                 })}
                             </div>
-                            {selectedDate && <button onClick={() => setSelectedDate(null)} className="mt-4 w-full py-3 glass-card rounded-lg text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white flex items-center justify-center gap-2"><AppIcon name="close" size={14} /> Clear Selection</button>}
+                            {selectedDate && <button onClick={() => setSelectedDate(null)} className="mt-4 w-full py-3 glass-card rounded-lg text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white flex items-center justify-center gap-2"><SvgIcon name="close" size={14} /> Clear Selection</button>}
                         </div>
 
                         <div className="glass-card p-6 rounded-lg border-white/5">
                             <div className="flex items-center justify-between mb-4">
                                 <h4 className="text-sm font-black uppercase tracking-widest">Filter by Chapter</h4>
-                                <button onClick={() => setShowFilters(!showFilters)} className={`p-2 rounded-lg transition-colors ${showFilters ? "bg-gold text-brown" : "glass-card"}`}><AppIcon name="filter_list" size={16} /></button>
+                                <button onClick={() => setShowFilters(!showFilters)} className={`p-2 rounded-lg transition-colors ${showFilters ? "bg-gold text-brown" : "glass-card"}`}><SvgIcon name="filter" size={16} /></button>
                             </div>
                             {showFilters && (
                                 <div className="flex flex-wrap gap-2">
-                                    {chapters.map((c: string) => <button key={c} onClick={() => toggleFilter(c)} className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeFilters.includes(c) ? "bg-gold/20 text-gold border border-gold/30" : "glass-card text-white/50"}`}>{activeFilters.includes(c) && <AppIcon name="check" size={12} />}{c}</button>)}
+                                    {chapters.map((c: string) => <button key={c} onClick={() => toggleFilter(c)} className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeFilters.includes(c) ? "bg-gold/20 text-gold border border-gold/30" : "glass-card text-white/50"}`}>{activeFilters.includes(c) && <SvgIcon name="check" size={12} />}{c}</button>)}
                                 </div>
                             )}
                         </div>
@@ -264,14 +264,14 @@ export default function EventHub() {
                                             <div>
                                                 <h4 className="font-bold text-white group-hover:text-gold transition-colors">{e.title}</h4>
                                                 <div className="flex items-center gap-3 text-[10px] font-black uppercase text-white/40 mt-1">
-                                                    <span className="flex items-center gap-1"><AppIcon name="schedule" size={12} /> {e.time}</span>
+                                                    <span className="flex items-center gap-1"><SvgIcon name="schedule" size={12} /> {e.time}</span>
                                                     <span className="bg-gold/10 text-gold px-2 py-0.5 rounded-full">{e.chapter}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="flex gap-2 mt-4 md:mt-0">
-                                            <button className="p-2 border border-white/10 rounded-lg hover:bg-white/5 transition-colors"><AppIcon name="calendar_month" size={16} /></button>
-                                            <Link href={`https://maps.google.com/?q=${encodeURIComponent(e.location)}`} target="_blank" className="p-2 bg-gold text-brown rounded-lg hover:brightness-110"><AppIcon name="location_on" size={16} /></Link>
+                                            <button className="p-2 border border-white/10 rounded-lg hover:bg-white/5 transition-colors"><SvgIcon name="calendar" size={16} /></button>
+                                            <Link href={`https://maps.google.com/?q=${encodeURIComponent(e.location)}`} target="_blank" className="p-2 bg-gold text-brown rounded-lg hover:brightness-110"><SvgIcon name="location" size={16} /></Link>
                                         </div>
                                     </div>
                                 ))}
@@ -279,11 +279,11 @@ export default function EventHub() {
                         </div>
 
                         <div className="glass-card-elevated p-8 md:p-10 rounded-lg border-white/5 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-6"><AppIcon name="auto_awesome" className="text-gold animate-pulse" /></div>
+                            <div className="absolute top-0 right-0 p-6"><SvgIcon name="star" className="text-gold animate-pulse" size={20} /></div>
                             <div className="space-y-8 relative z-10">
                                 <div className="text-center space-y-3">
-                                    <span className="text-gold font-black uppercase tracking-[0.4em] text-xs">Prophetic Countdown</span>
-                                    <h2 className="text-3xl font-black tracking-tighter">{nextEvent?.title || "THE NEXT ALTAR"}</h2>
+                                    <span className="text-gold font-black uppercase tracking-[0.4em] text-xs">Next Event Countdown</span>
+                                    <h2 className="text-3xl font-black tracking-tighter">{nextEvent?.title || "THE NEXT EVENT"}</h2>
                                     <p className="text-white/40 text-xs">{nextEvent ? `${nextEvent.chapter} • ${nextEvent.date}` : ""}</p>
                                 </div>
                                 <div className="flex justify-center gap-2 md:gap-4">
@@ -292,7 +292,10 @@ export default function EventHub() {
                                     <FlipDigit value={timeLeft.mins} label="Mins" />
                                     <FlipDigit value={timeLeft.secs} label="Secs" />
                                 </div>
-                                <button className="press-scale w-full py-4 rounded-lg bg-white text-brown font-black uppercase tracking-tighter hover:bg-gold transition-all shadow-lg">Register Now</button>
+                                <button
+                                    onClick={() => { window.location.href = nextEvent?.url || '/join'; }}
+                                    className="press-scale w-full py-4 rounded-lg bg-white text-brown font-black uppercase tracking-tighter hover:bg-gold transition-all shadow-lg"
+                                >Register Now</button>
                             </div>
                             <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
                         </div>
