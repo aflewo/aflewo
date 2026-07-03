@@ -389,7 +389,7 @@ export default function ChaptersSection() {
                         >
                             <div className={`absolute inset-0 bg-gradient-to-br ${chapter.color} opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
 
-                            <div className="absolute -right-8 -top-8 w-32 h-32 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700 pointer-events-none">
+                            <div className="absolute -right-8 -top-4 w-32 h-32 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700 pointer-events-none">
                                 <svg viewBox="0 0 32 32" className="w-full h-full fill-current">
                                     <path d="M5.979 10.974v5.021h7.041v11.99h5.042v-11.99h6.958v-5.021h-6.958v-6.958h-5.042v6.958h-7.041z" />
                                 </svg>
@@ -408,8 +408,7 @@ export default function ChaptersSection() {
                                                 </span>
                                             )}
                                         </div>
-                                        <h3 className={`font-black tracking-tighter group-hover:text-gold transition-colors ${
-                                            (chapter.size || "standard") === "hero" ? "text-5xl md:text-6xl" :
+                                        <h3 className={`font-black tracking-tighter group-hover:text-gold transition-colors ${(chapter.size || "standard") === "hero" ? "text-5xl md:text-6xl" :
                                             (chapter.size || "standard") === "featured" ? "text-4xl" : "text-3xl"
                                             }`}>
                                             {chapter.name}
