@@ -54,19 +54,23 @@ export default function AboutSection() {
                 });
             });
 
-            // Parallax on image containers
-            gsap.fromTo(".parallax-img",
-                { yPercent: -10 },
-                {
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: 1,
-                    },
-                    yPercent: 10
-                }
-            );
+            // Parallax on image containers - rock solid isolated triggers
+            const parallaxWrappers = gsap.utils.toArray<HTMLElement>(".parallax-wrapper");
+            parallaxWrappers.forEach((wrapper) => {
+                gsap.fromTo(wrapper,
+                    { y: "-15%" },
+                    {
+                        y: "15%",
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: wrapper.parentElement, // The container itself
+                            start: "top bottom",
+                            end: "bottom top",
+                            scrub: true,
+                        }
+                    }
+                );
+            });
         }, containerRef);
 
         return () => ctx.revert();
@@ -104,13 +108,15 @@ export default function AboutSection() {
 
                                 {/* Image Content */}
                                 <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden glass-card-elevated border-white/10 group relative">
-                                    <Image
-                                        src={event.image}
-                                        alt={event.title}
-                                        fill
-                                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 parallax-img scale-[1.25]"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                                    <div className="absolute -top-[20%] -bottom-[20%] left-0 right-0 parallax-wrapper">
+                                        <Image
+                                            src={event.image}
+                                            alt={event.title}
+                                            fill
+                                            className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                        />
+                                    </div>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
                                 </div>
                             </div>
                         ))}
