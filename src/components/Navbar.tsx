@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import MenuToggle from "@/components/ui/MenuToggle";
 import SvgIcon from "@/components/ui/SvgIcon";
+import { motion } from "framer-motion";
 
 const links = [
     { name: "About",    href: "/about"    },
@@ -100,16 +101,20 @@ export default function Navbar() {
                                 <Link
                                     key={link.name}
                                     href={link.href}
-                                    className={`relative px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.18em] transition-all duration-200 ${
+                                    className={`relative px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.18em] transition-colors duration-200 ${
                                         isActive
-                                            ? "text-gold bg-gold/10"
-                                            : "text-white/60 hover:text-white hover:bg-white/5"
+                                            ? "text-gold"
+                                            : "text-white/60 hover:text-white"
                                     }`}
                                 >
-                                    {link.name}
                                     {isActive && (
-                                        <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-gold rounded-full" />
+                                        <motion.div
+                                            layoutId="nav-pill"
+                                            className="absolute inset-0 bg-gold/10 rounded-full"
+                                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                        />
                                     )}
+                                    <span className="relative z-10">{link.name}</span>
                                 </Link>
                             );
                         })}
