@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import gsap from "gsap";
@@ -9,7 +9,7 @@ import Link from "next/link";
 
 type AuthMode = "login" | "register";
 
-export default function AuthPage() {
+function AuthContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -294,5 +294,22 @@ export default function AuthPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
+        <div className="text-center space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto animate-pulse">
+            <span className="text-gold font-black text-2xl">A</span>
+          </div>
+          <p className="text-xs text-white/30 tracking-widest uppercase font-black">Loading...</p>
+        </div>
+      </main>
+    }>
+      <AuthContent />
+    </Suspense>
   );
 }
