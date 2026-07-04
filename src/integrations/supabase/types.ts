@@ -347,6 +347,65 @@ export type Database = {
           },
         ]
       }
+      gallery_images: {
+        Row: {
+          id: string
+          created_at: string
+          title: string
+          chapter: string
+          year: number
+          category: string
+          description: string | null
+          image_url: string
+          public_id: string | null
+          width: number | null
+          height: number | null
+          is_wide: boolean | null
+          uploaded_by: string | null
+          is_active: boolean | null
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          title: string
+          chapter: string
+          year: number
+          category: string
+          description?: string | null
+          image_url: string
+          public_id?: string | null
+          width?: number | null
+          height?: number | null
+          is_wide?: boolean | null
+          uploaded_by?: string | null
+          is_active?: boolean | null
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          title?: string
+          chapter?: string
+          year?: number
+          category?: string
+          description?: string | null
+          image_url?: string
+          public_id?: string | null
+          width?: number | null
+          height?: number | null
+          is_wide?: boolean | null
+          uploaded_by?: string | null
+          is_active?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_images_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
