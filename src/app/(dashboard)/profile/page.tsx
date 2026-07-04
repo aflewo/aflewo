@@ -41,28 +41,12 @@ export default function PortalHomePage() {
   const [loading, setLoading] = useState(true);
   const [launchingSaems, setLaunchingSaems] = useState(false);
 
-  const handleSaemsTunesLaunch = async () => {
+  const handleSaemsTunesLaunch = () => {
     setLaunchingSaems(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch("/api/auth/saems-bridge", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${session?.access_token}`
-        }
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.open(data.url, "_blank", "noopener,noreferrer");
-      } else {
-        throw new Error(data.error || "Failed to generate handshake");
-      }
-    } catch (err) {
-      console.error("[portal] Saems Tunes launch error:", err);
-      alert("Failed to connect to Saem's Tunes. Please try again.");
-    } finally {
+    setTimeout(() => {
+      window.open(`https://saemstunes.com/auth-bridge?source=aflewo&role=${profile?.role}`, "_blank", "noopener,noreferrer");
       setLaunchingSaems(false);
-    }
+    }, 500);
   };
 
   useEffect(() => {
@@ -175,7 +159,7 @@ export default function PortalHomePage() {
               </p>
             </div>
             <Link
-              href="/portal/auditions"
+              href="/profile/auditions"
               className="shrink-0 px-6 py-3 bg-gold text-brown rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all"
             >
               Apply Now →
@@ -253,7 +237,7 @@ export default function PortalHomePage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-black tracking-tighter">Recent Resources</h2>
-            <Link href="/portal/resources" className="text-gold text-xs font-black hover:brightness-125">
+            <Link href="/profile/resources" className="text-gold text-xs font-black hover:brightness-125">
               View All →
             </Link>
           </div>
@@ -286,9 +270,9 @@ export default function PortalHomePage() {
 
       {/* Saem's Tunes module */}
       {!isApplicant && (
-        <div className="rounded-2xl bg-gradient-to-br from-indigo-900/60 to-purple-950/60 border border-indigo-500/20 p-6 flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between">
+        <div className="rounded-2xl bg-gradient-to-br from-[#A67C00]/20 to-[#4a3400]/20 border border-gold/20 p-6 flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between">
           <div>
-            <span className="text-[9px] font-black tracking-widest text-indigo-400 uppercase bg-indigo-400/10 px-2 py-0.5 rounded-full">Partner Platform</span>
+            <span className="text-[9px] font-black tracking-widest text-gold/80 uppercase bg-gold/10 px-2 py-0.5 rounded-full">Partner Platform</span>
             <h3 className="text-lg font-black tracking-tighter mt-2">Sharpen Your Worship Skills</h3>
             <p className="text-white/40 text-sm mt-1 max-w-md">
               Access specialized masterclasses and music education modules tailored for worship teams, curated by Saem&apos;s Tunes.
@@ -297,7 +281,7 @@ export default function PortalHomePage() {
           <button
             onClick={handleSaemsTunesLaunch}
             disabled={launchingSaems}
-            className="shrink-0 px-6 py-3 bg-white text-zinc-950 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-zinc-100 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="shrink-0 px-6 py-3 bg-gold text-brown rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {launchingSaems ? <AppIcon name="autorenew" size={16} className="animate-spin" /> : null}
             {launchingSaems ? "Connecting..." : "Explore Modules →"}

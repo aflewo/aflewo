@@ -53,7 +53,7 @@ function CallbackInner() {
       }
 
       // Step 3: Redirect to the intended destination
-      const redirect = searchParams.get("redirect") || "/portal";
+      const redirect = searchParams.get("redirect") || "/profile";
       router.replace(redirect);
     };
 

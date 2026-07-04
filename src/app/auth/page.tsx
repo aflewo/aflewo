@@ -38,7 +38,7 @@ function AuthContent() {
         .single();
 
       if (profile) {
-        const redirect = searchParams.get("redirect") || "/portal";
+        const redirect = searchParams.get("redirect") || "/profile";
         router.replace(redirect);
         return;
       }
@@ -58,7 +58,7 @@ function AuthContent() {
         { onConflict: "id", ignoreDuplicates: true }
       );
       setLoading(false);
-      const redirect = searchParams.get("redirect") || "/portal";
+      const redirect = searchParams.get("redirect") || "/profile";
       router.replace(redirect);
     });
   }, [router, searchParams]);
@@ -72,7 +72,7 @@ function AuthContent() {
   // Google OAuth
   const handleGoogleSignIn = async () => {
     setLoading(true);
-    const redirect = searchParams.get("redirect") || "/portal";
+    const redirect = searchParams.get("redirect") || "/profile";
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -86,7 +86,7 @@ function AuthContent() {
   // GitHub OAuth
   const handleGitHubSignIn = async () => {
     setLoading(true);
-    const redirect = searchParams.get("redirect") || "/portal";
+    const redirect = searchParams.get("redirect") || "/profile";
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {
@@ -106,7 +106,7 @@ function AuthContent() {
       password: form.password,
     });
     if (error) { setError(error.message); setLoading(false); return; }
-    router.push(searchParams.get("redirect") || "/portal");
+    router.push(searchParams.get("redirect") || "/profile");
   };
 
   // Email register

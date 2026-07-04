@@ -80,18 +80,18 @@ export default function ResourceVaultPage() {
         <p className="text-white/40 text-sm leading-relaxed">
           The Resource Vault is available once your audition has been reviewed and you are accepted as a choir or band member.
         </p>
-        <Link href="/portal/auditions" className="inline-flex items-center gap-2 px-6 py-3 bg-gold text-brown rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all">
+        <Link href="/profile/auditions" className="inline-flex items-center gap-2 px-6 py-3 bg-gold text-brown rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all">
           <AppIcon name="mic" size={16} />
           Submit Your Audition
         </Link>
         {/* Saem's Tunes upsell for applicants */}
-        <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-indigo-900/40 to-purple-900/30 border border-indigo-500/20">
+        <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-[#A67C00]/20 to-[#4a3400]/20 border border-gold/20">
           <p className="text-white/60 text-sm">While you wait, prepare your skills on</p>
           <a
-            href="https://saemstunes.com?source=aflewo_vault_locked"
+            href="https://saemstunes.com/auth-bridge?source=aflewo_vault_locked"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block mt-2 text-indigo-300 font-black hover:text-indigo-200 transition-colors"
+            className="inline-block mt-2 text-gold font-black hover:text-gold/80 transition-colors"
           >
             Saem&apos;s Tunes →
           </a>
@@ -192,17 +192,17 @@ export default function ResourceVaultPage() {
           })}
 
           {/* Saem's Tunes contextual module */}
-          <div className="rounded-2xl bg-gradient-to-br from-indigo-900/50 to-purple-950/50 border border-indigo-500/20 p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="rounded-2xl bg-gradient-to-br from-[#A67C00]/20 to-[#4a3400]/20 border border-gold/20 p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div>
-              <p className="text-[9px] text-indigo-400 uppercase tracking-widest font-black">Partner Platform</p>
+              <p className="text-[9px] text-gold/80 uppercase tracking-widest font-black">Partner Platform</p>
               <p className="text-white font-black mt-1">Want deeper training on these songs?</p>
               <p className="text-white/40 text-xs mt-1">Get vocal coaching, theory breakdowns and instrument-specific tutorials on Saem&apos;s Tunes.</p>
             </div>
             <a
-              href={`https://saemstunes.com/auth-bridge?source=aflewo_vault&uid=${profile?.id}`}
+              href={`https://saemstunes.com/auth-bridge?source=aflewo_vault&role=${profile?.role}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="shrink-0 px-5 py-2.5 bg-white text-zinc-950 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-zinc-100 transition-colors whitespace-nowrap"
+              className="shrink-0 px-5 py-2.5 bg-gold text-brown rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-colors whitespace-nowrap"
             >
               Explore →
             </a>

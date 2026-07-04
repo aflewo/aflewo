@@ -11,11 +11,11 @@ import { AuthContext } from "./AuthContext";
 
 // ─── Dashboard Navigation ─────────────────────────────────────
 const navItems = [
-  { href: "/portal", icon: "home", label: "Home" },
-  { href: "/portal/auditions", icon: "mic", label: "My Audition" },
-  { href: "/portal/resources", icon: "library_music", label: "Resource Vault" },
-  { href: "/portal/schedule", icon: "calendar_month", label: "Schedule" },
-  { href: "/portal/attendance", icon: "fact_check", label: "My Attendance" },
+  { href: "/profile", icon: "home", label: "Home" },
+  { href: "/profile/auditions", icon: "mic", label: "My Audition" },
+  { href: "/profile/resources", icon: "library_music", label: "Resource Vault" },
+  { href: "/profile/schedule", icon: "calendar_month", label: "Schedule" },
+  { href: "/profile/attendance", icon: "fact_check", label: "My Attendance" },
 ];
 
 const adminNavItems = [
@@ -148,10 +148,10 @@ export default function DashboardLayout({
               href={`https://saemstunes.com/auth-bridge?source=aflewo&role=${profile?.role}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="block p-3 rounded-xl bg-gradient-to-br from-indigo-900/60 to-purple-900/40 border border-indigo-500/20 hover:border-indigo-400/40 transition-all group"
+              className="block p-3 rounded-xl bg-gradient-to-br from-[#A67C00]/20 to-[#4a3400]/20 border border-gold/20 hover:border-gold/40 transition-all group"
             >
-              <p className="text-[9px] text-indigo-400 uppercase tracking-widest font-black">Partner Platform</p>
-              <p className="text-white text-xs font-bold mt-1 group-hover:text-indigo-200 transition-colors">Saem&apos;s Tunes →</p>
+              <p className="text-[9px] text-gold/80 uppercase tracking-widest font-black">Partner Platform</p>
+              <p className="text-white text-xs font-bold mt-1 group-hover:text-gold transition-colors">Saem&apos;s Tunes →</p>
               <p className="text-white/30 text-[10px] mt-0.5">Advance your worship skills</p>
             </a>
           </div>
