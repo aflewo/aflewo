@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../AuthContext";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
 
 interface AdminStats {
@@ -20,18 +20,18 @@ interface AdminStats {
 }
 
 const statCards = [
-  { key: "totalAuditions",   label: "Total Auditions",   icon: "mic",              color: "text-gold",       href: "/admin/auditions" },
-  { key: "pendingAuditions", label: "Pending Review",    icon: "hourglass_empty",  color: "text-yellow-400", href: "/admin/auditions" },
-  { key: "acceptedMembers",  label: "Active Members",    icon: "group",            color: "text-emerald",    href: "/admin/members" },
-  { key: "totalEvents",      label: "Scheduled Events",  icon: "event",            color: "text-blue-400",   href: "/admin/events" },
-  { key: "totalResources",   label: "Resources Uploaded",icon: "upload_file",      color: "text-purple-400", href: "/admin/resources" },
+  { key: "totalAuditions",   label: "Total Auditions",   icon: "mic" as const,          color: "text-gold",       href: "/admin/auditions" },
+  { key: "pendingAuditions", label: "Pending Review",    icon: "hourglass" as const,    color: "text-yellow-400", href: "/admin/auditions" },
+  { key: "acceptedMembers",  label: "Active Members",    icon: "people" as const,       color: "text-emerald",    href: "/admin/members" },
+  { key: "totalEvents",      label: "Scheduled Events",  icon: "calendar" as const,     color: "text-blue-400",   href: "/admin/events" },
+  { key: "totalResources",   label: "Resources Uploaded",icon: "upload" as const,       color: "text-purple-400", href: "/admin/resources" },
 ];
 
 const quickActions = [
-  { label: "Review Auditions",  href: "/admin/auditions",  icon: "how_to_reg",        color: "bg-gold/10 border-gold/20 hover:border-gold/40" },
-  { label: "Check-In Desk",     href: "/admin/attendance", icon: "qr_code_scanner",   color: "bg-blue-500/10 border-blue-500/20 hover:border-blue-400/40" },
-  { label: "Upload Resources",  href: "/admin/resources",  icon: "upload_file",       color: "bg-purple-500/10 border-purple-500/20 hover:border-purple-400/40" },
-  { label: "View Members",      href: "/admin/members",    icon: "group",             color: "bg-emerald/10 border-emerald/20 hover:border-emerald/40" },
+  { label: "Review Auditions",  href: "/admin/auditions",  icon: "check_circle" as const,    color: "bg-gold/10 border-gold/20 hover:border-gold/40" },
+  { label: "Check-In Desk",     href: "/admin/attendance", icon: "qr" as const,              color: "bg-blue-500/10 border-blue-500/20 hover:border-blue-400/40" },
+  { label: "Upload Resources",  href: "/admin/resources",  icon: "upload" as const,          color: "bg-purple-500/10 border-purple-500/20 hover:border-purple-400/40" },
+  { label: "View Members",      href: "/admin/members",    icon: "people" as const,          color: "bg-emerald/10 border-emerald/20 hover:border-emerald/40" },
 ];
 
 export default function AdminOverviewPage() {
@@ -102,7 +102,7 @@ export default function AdminOverviewPage() {
   if (!isAdmin) {
     return (
       <div className="text-center py-24 space-y-3">
-        <AppIcon name="admin_panel_settings" size={48} className="text-white/10 mx-auto" />
+        <SvgIcon name="lock" size={48} className="text-white/10 mx-auto" />
         <p className="text-white/30 font-bold">Admin access required.</p>
       </div>
     );
@@ -128,7 +128,7 @@ export default function AdminOverviewPage() {
             href={href}
             className="glass-card rounded-2xl p-5 space-y-3 hover:border-white/10 transition-all group"
           >
-            <AppIcon name={icon} size={20} className={`${color} group-hover:scale-110 transition-transform`} />
+            <SvgIcon name={icon as any} size={20} className={`${color} group-hover:scale-110 transition-transform`} />
             <div>
               <p className={`text-2xl font-black ${color}`}>
                 {loading ? "—" : stats[key as keyof Omit<AdminStats, "recentAuditLogs">]}
@@ -149,7 +149,7 @@ export default function AdminOverviewPage() {
               href={action.href}
               className={`flex flex-col items-center justify-center gap-3 p-5 rounded-2xl border transition-all ${action.color}`}
             >
-              <AppIcon name={action.icon} size={24} className="text-current" />
+              <SvgIcon name={action.icon} size={24} className="text-current" />
               <span className="text-xs font-black uppercase tracking-widest text-center leading-tight">{action.label}</span>
             </Link>
           ))}
@@ -161,7 +161,7 @@ export default function AdminOverviewPage() {
         <div className="flex items-center justify-between p-5 rounded-2xl bg-yellow-400/5 border border-yellow-400/20">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-yellow-400/10 flex items-center justify-center">
-              <AppIcon name="hourglass_empty" size={20} className="text-yellow-400" />
+              <SvgIcon name="hourglass" size={20} className="text-yellow-400" />
             </div>
             <div>
               <p className="font-black text-yellow-400">

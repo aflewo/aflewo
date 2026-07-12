@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
 import type { Profile, UserRole } from "@/integrations/supabase/types";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 const roleColors: Record<UserRole, string> = {
   super_admin:   "text-red-400 bg-red-400/10 border-red-400/20",
@@ -75,7 +75,7 @@ export default function AdminMembersPage() {
   if (!isAdmin) {
     return (
       <div className="text-center py-24">
-        <AppIcon name="block" size={48} className="text-white/10 mx-auto" />
+        <SvgIcon name="block" size={48} className="text-white/10 mx-auto" />
         <p className="text-white/30 font-bold mt-4">Admin access required.</p>
       </div>
     );
@@ -93,7 +93,7 @@ export default function AdminMembersPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <AppIcon name="search" size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+          <SvgIcon name="search" size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
           <input
             type="text"
             placeholder="Search name, email or phone..."
@@ -124,7 +124,7 @@ export default function AdminMembersPage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-24 space-y-3">
-          <AppIcon name="group_off" size={48} className="text-white/10 mx-auto" />
+          <SvgIcon name="people" size={48} className="text-white/10 mx-auto" />
           <p className="text-white/30 font-bold">No members match your search.</p>
         </div>
       ) : (
@@ -175,7 +175,7 @@ export default function AdminMembersPage() {
                   </select>
                 )}
                 {updating === member.id && (
-                  <AppIcon name="autorenew" size={16} className="text-gold animate-spin" />
+                  <SvgIcon name="loader" size={16} className="text-gold animate-spin" />
                 )}
               </div>
             </div>

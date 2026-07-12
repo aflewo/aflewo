@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
 import type { Registration } from "@/integrations/supabase/types";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 interface CheckInResult {
   success?: boolean;
@@ -183,7 +183,7 @@ export default function AdminAttendancePage() {
   if (!isAdmin) {
     return (
       <div className="text-center py-24 space-y-3">
-        <AppIcon name="block" size={48} className="text-white/10 mx-auto" />
+        <SvgIcon name="block" size={48} className="text-white/10 mx-auto" />
         <p className="text-white/30 font-bold">Admin access required.</p>
       </div>
     );
@@ -210,7 +210,7 @@ export default function AdminAttendancePage() {
       {pendingOffline > 0 && (
         <div className="flex items-center justify-between p-4 rounded-xl bg-yellow-400/10 border border-yellow-400/20">
           <div className="flex items-center gap-3 text-yellow-400">
-            <AppIcon name="cloud_off" size={20} />
+            <SvgIcon name="warning" size={20} />
             <span className="text-sm font-bold">{pendingOffline} check-in{pendingOffline > 1 ? "s" : ""} pending sync</span>
           </div>
           <button
@@ -258,7 +258,7 @@ export default function AdminAttendancePage() {
             disabled={loading || !query.trim() || !eventId}
             className="px-6 bg-gold text-brown rounded-xl font-black text-sm uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2"
           >
-            {loading ? <AppIcon name="autorenew" size={18} className="animate-spin" /> : <AppIcon name="how_to_reg" size={18} />}
+            {loading ? <SvgIcon name="loader" size={18} className="animate-spin" /> : <SvgIcon name="check_circle" size={18} />}
             {loading ? "" : "Check In"}
           </button>
         </div>
@@ -272,8 +272,8 @@ export default function AdminAttendancePage() {
               ? "bg-yellow-400/10 border-yellow-400/20 text-yellow-400"
               : "bg-red-500/10 border-red-500/20 text-red-400"
           }`}>
-            <AppIcon
-              name={result.success ? "check_circle" : result.error?.includes("Already") ? "info" : "error"}
+            <SvgIcon
+              name={result.success ? "check_circle" : result.error?.includes("Already") ? "info" : "error_circle"}
               size={20}
             />
             <span>{result.success ? `✓ ${result.name} checked in!` : result.error}</span>

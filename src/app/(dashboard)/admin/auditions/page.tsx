@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
 import type { Audition, AuditionStatus, Profile, Chapter } from "@/integrations/supabase/types";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 type AuditionWithProfile = Audition & {
   profiles: Pick<Profile, "full_name" | "email" | "phone_number">;
@@ -113,7 +113,7 @@ export default function AdminAuditionsPage() {
   if (!isAdmin) {
     return (
       <div className="text-center py-24 space-y-3">
-        <AppIcon name="admin_panel_settings" size={48} className="text-white/10 mx-auto" />
+        <SvgIcon name="lock" size={48} className="text-white/10 mx-auto" />
         <p className="text-white/30 font-bold">Admin access required.</p>
       </div>
     );
@@ -151,7 +151,7 @@ export default function AdminAuditionsPage() {
         </div>
       ) : auditions.length === 0 ? (
         <div className="text-center py-24 space-y-3">
-          <AppIcon name="inbox" size={48} className="text-white/10 mx-auto" />
+          <SvgIcon name="docs" size={48} className="text-white/10 mx-auto" />
           <p className="text-white/30 font-bold">No {filterStatus === "all" ? "" : filterStatus} auditions found.</p>
         </div>
       ) : (
@@ -187,7 +187,7 @@ export default function AdminAuditionsPage() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-gold hover:border-gold/20 transition-all"
                     >
-                      <AppIcon name="play_circle" size={14} /> Play
+                      <SvgIcon name="play_circle" size={14} /> Play
                     </a>
                   )}
 
@@ -199,7 +199,7 @@ export default function AdminAuditionsPage() {
                     onClick={() => setExpandedId(expandedId === audition.id ? null : audition.id)}
                     className="text-white/30 hover:text-gold transition-colors"
                   >
-                    <AppIcon name={expandedId === audition.id ? "expand_less" : "expand_more"} size={20} />
+                    <SvgIcon name={expandedId === audition.id ? "expand_less" : "expand_more"} size={20} />
                   </button>
                 </div>
               </div>

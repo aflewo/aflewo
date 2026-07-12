@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
 import type { Resource, ResourceType } from "@/integrations/supabase/types";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 const resourceTypes: { value: ResourceType; label: string }[] = [
   { value: "lyrics_pdf",          label: "Lyrics PDF" },
@@ -195,7 +195,7 @@ export default function AdminResourcesPage() {
   if (!isAdmin) {
     return (
       <div className="text-center py-24">
-        <AppIcon name="block" size={48} className="text-white/10 mx-auto" />
+        <SvgIcon name="block" size={48} className="text-white/10 mx-auto" />
         <p className="text-white/30 font-bold mt-4">Admin access required.</p>
       </div>
     );
@@ -214,12 +214,12 @@ export default function AdminResourcesPage() {
 
         {success && (
           <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald/10 border border-emerald/20 text-emerald text-sm font-bold">
-            <AppIcon name="check_circle" size={18} /> {success}
+            <SvgIcon name="check_circle" size={18} /> {success}
           </div>
         )}
         {error && (
           <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold">
-            <AppIcon name="error" size={18} /> {error}
+            <SvgIcon name="error_circle" size={18} /> {error}
           </div>
         )}
 
@@ -288,7 +288,7 @@ export default function AdminResourcesPage() {
           >
             {form.file ? (
               <div className="flex items-center justify-center gap-3 text-gold">
-                <AppIcon name="attach_file" size={24} />
+                <SvgIcon name="upload" size={24} />
                 <div className="text-left">
                   <p className="text-sm font-bold">{form.file.name}</p>
                   <p className="text-xs text-white/30">{(form.file.size / 1024 / 1024).toFixed(2)} MB</p>
@@ -296,7 +296,7 @@ export default function AdminResourcesPage() {
               </div>
             ) : (
               <div className="space-y-2">
-                <AppIcon name="cloud_upload" size={32} className="text-white/20 mx-auto" />
+                <SvgIcon name="upload_cloud" size={32} className="text-white/20 mx-auto" />
                 <p className="text-white/40 text-sm">Click to select a file</p>
                 <p className="text-white/20 text-xs">PDF, MP3, M4A, WAV, MP4 supported</p>
               </div>
@@ -319,9 +319,9 @@ export default function AdminResourcesPage() {
             className="w-full py-4 bg-gold text-brown rounded-xl font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
           >
             {uploading ? (
-              <><AppIcon name="autorenew" size={18} className="animate-spin" /> {uploadStatus || "Uploading..."}</>
+              <><SvgIcon name="loader" size={18} className="animate-spin" /> {uploadStatus || "Uploading..."}</>
             ) : (
-              <><AppIcon name="upload_file" size={18} /> Upload Resource</>
+              <><SvgIcon name="upload" size={18} /> Upload Resource</>
             )}
           </button>
         </form>
@@ -353,7 +353,7 @@ export default function AdminResourcesPage() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <a href={resource.file_url} target="_blank" rel="noopener noreferrer" className="text-white/30 hover:text-gold transition-colors" title="Open file">
-                    <AppIcon name="open_in_new" size={16} />
+                    <SvgIcon name="external" size={16} />
                   </a>
                   <button
                     onClick={() => toggleActive(resource)}
