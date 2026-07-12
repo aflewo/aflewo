@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
 import type { Audition, AuditionCategory } from "@/integrations/supabase/types";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 // ─── Category display metadata ─────────────────────────────────
 const categoryMeta: Record<AuditionCategory, { label: string; section: string; icon: string }> = {
@@ -223,7 +223,7 @@ export default function AuditionsPage() {
                       className="text-white/30 hover:text-gold transition-colors"
                       title="Play sample"
                     >
-                      <AppIcon name="play_circle" size={20} />
+                      <SvgIcon name="play_circle" size={20} />
                     </a>
                   )}
                   <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${status.color}`}>
@@ -245,13 +245,13 @@ export default function AuditionsPage() {
 
         {success && (
           <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald/10 border border-emerald/20 text-emerald text-sm font-bold">
-            <AppIcon name="check_circle" size={20} />
+            <SvgIcon name="check_circle" size={20} />
             {success}
           </div>
         )}
         {error && (
           <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold">
-            <AppIcon name="error" size={20} />
+            <SvgIcon name="error_circle" size={20} />
             {error}
           </div>
         )}
@@ -290,12 +290,12 @@ export default function AuditionsPage() {
             >
               {form.audioFile ? (
                 <div className="flex items-center justify-center gap-3 text-gold">
-                  <AppIcon name="audio_file" size={24} />
+                  <SvgIcon name="music" size={24} />
                   <span className="text-sm font-bold">{form.audioFile.name}</span>
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <AppIcon name="cloud_upload" size={32} className="text-white/20 mx-auto" />
+                  <SvgIcon name="cloud_upload" size={32} className="text-white/20 mx-auto" />
                   <p className="text-white/40 text-sm">Click to upload your audio sample</p>
                   <p className="text-white/20 text-xs">Or record a WhatsApp voice note and save as MP3</p>
                 </div>
@@ -329,12 +329,12 @@ export default function AuditionsPage() {
           >
             {submitting ? (
               <>
-                <AppIcon name="autorenew" size={20} className="animate-spin" />
+                <SvgIcon name="loader" size={20} className="animate-spin" />
                 {uploadProgress || "Submitting..."}
               </>
             ) : (
               <>
-                <AppIcon name="send" size={20} />
+                <SvgIcon name="send" size={20} />
                 Submit Audition
               </>
             )}

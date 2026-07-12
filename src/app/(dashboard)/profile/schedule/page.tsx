@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
 import type { ChapterEvent } from "@/integrations/supabase/types";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 const eventTypeColors: Record<string, string> = {
   main_event:    "text-gold bg-gold/10 border-gold/20",
@@ -58,8 +58,9 @@ export default function PortalSchedulePage() {
       </div>
 
       {!profile?.chapter_id && (
-        <div className="text-center py-16 space-y-3">
-          <AppIcon name="location_off" size={48} className="text-white/10 mx-auto" />
+        <div className="text-center py-20 space-y-4">
+          <SvgIcon name="location" size={48} className="text-white/10 mx-auto" />
+          <h2 className="text-xl font-black">Join a Chapter</h2>
           <p className="text-white/30 font-bold">You are not assigned to a chapter yet.</p>
           <p className="text-white/20 text-sm">Contact your coordinator to be added to a chapter.</p>
         </div>
@@ -72,9 +73,9 @@ export default function PortalSchedulePage() {
       )}
 
       {profile?.chapter_id && !loading && Object.keys(grouped).length === 0 && (
-        <div className="text-center py-16 space-y-3">
-          <AppIcon name="event_busy" size={48} className="text-white/10 mx-auto" />
-          <p className="text-white/30 font-bold">No upcoming events scheduled.</p>
+        <div className="text-center py-20 space-y-4">
+          <SvgIcon name="calendar" size={48} className="text-white/10 mx-auto" />
+          <h2 className="text-xl font-black">No Events Scheduled</h2>
           <p className="text-white/20 text-sm">Your coordinator will add events here. Check back soon.</p>
         </div>
       )}
@@ -115,13 +116,13 @@ export default function PortalSchedulePage() {
 
                   <div className="flex flex-wrap gap-x-4 gap-y-1">
                     <div className="flex items-center gap-1.5 text-white/40 text-xs">
-                      <AppIcon name="schedule" size={12} />
+                      <SvgIcon name="schedule" size={12} />
                       {start.toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}
                       {end && ` – ${end.toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}`}
                     </div>
                     {event.location && (
                       <div className="flex items-center gap-1.5 text-white/40 text-xs">
-                        <AppIcon name="location_on" size={12} />
+                        <SvgIcon name="location" size={12} />
                         {event.location}
                       </div>
                     )}
@@ -132,7 +133,7 @@ export default function PortalSchedulePage() {
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 text-blue-400 text-xs hover:text-blue-300 transition-colors"
                       >
-                        <AppIcon name="video_call" size={12} />
+                        <SvgIcon name="video" size={12} />
                         Join Online
                       </a>
                     )}

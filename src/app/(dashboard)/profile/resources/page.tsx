@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
 import type { Resource, ResourceType } from "@/integrations/supabase/types";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
 
 const resourceTypeMeta: Record<ResourceType, { label: string; icon: string; color: string }> = {
@@ -75,13 +75,13 @@ export default function ResourceVaultPage() {
   if (isApplicant) {
     return (
       <div className="max-w-lg mx-auto text-center py-24 space-y-6">
-        <AppIcon name="lock" size={48} className="text-white/20 mx-auto" />
+        <SvgIcon name="lock" size={48} className="text-white/20 mx-auto" />
         <h2 className="text-2xl font-black tracking-tighter">Resource Vault Locked</h2>
         <p className="text-white/40 text-sm leading-relaxed">
           The Resource Vault is available once your audition has been reviewed and you are accepted as a choir or band member.
         </p>
         <Link href="/profile/auditions" className="inline-flex items-center gap-2 px-6 py-3 bg-gold text-brown rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all">
-          <AppIcon name="mic" size={16} />
+          <SvgIcon name="mic" size={16} />
           Submit Your Audition
         </Link>
         {/* Saem's Tunes upsell for applicants */}
@@ -114,7 +114,7 @@ export default function ResourceVaultPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <AppIcon name="search" size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+          <SvgIcon name="search" size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
           <input
             type="text"
             placeholder="Search files, songs..."
@@ -146,7 +146,7 @@ export default function ResourceVaultPage() {
         </div>
       ) : Object.keys(grouped).length === 0 ? (
         <div className="text-center py-24 space-y-3">
-          <AppIcon name="library_music" size={48} className="text-white/10 mx-auto" />
+          <SvgIcon name="music" size={48} className="text-white/10 mx-auto" />
           <p className="text-white/30 font-bold">
             {search ? "No resources match your search." : "No resources uploaded yet. Check back soon."}
           </p>
@@ -158,7 +158,7 @@ export default function ResourceVaultPage() {
             return (
               <div key={type} className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <AppIcon name={meta.icon} size={16} className={meta.color} />
+                  <SvgIcon name={meta.icon as any} size={16} className={meta.color} />
                   <h2 className="text-sm font-black uppercase tracking-widest text-white/40">{meta.label}</h2>
                   <span className="text-[10px] text-white/20 font-bold">{items.length}</span>
                 </div>
@@ -172,7 +172,7 @@ export default function ResourceVaultPage() {
                       className="glass-card rounded-xl p-4 flex items-start gap-3 hover:border-gold/20 transition-all group cursor-pointer"
                     >
                       <div className={`w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-white/10 transition-colors`}>
-                        <AppIcon name={meta.icon} size={16} className={meta.color} />
+                        <SvgIcon name={meta.icon as any} size={16} className={meta.color} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-black truncate group-hover:text-gold transition-colors">{resource.title}</p>
@@ -183,7 +183,7 @@ export default function ResourceVaultPage() {
                           <p className="text-[10px] text-white/20">{formatBytes(resource.file_size_bytes)}</p>
                         )}
                       </div>
-                      <AppIcon name="download" size={14} className="text-white/20 group-hover:text-gold transition-colors shrink-0 mt-0.5" />
+                      <SvgIcon name="download" size={14} className="text-white/20 group-hover:text-gold transition-colors shrink-0 mt-0.5" />
                     </a>
                   ))}
                 </div>

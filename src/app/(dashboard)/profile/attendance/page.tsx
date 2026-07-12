@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
 import type { Attendance, ChapterEvent } from "@/integrations/supabase/types";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 type AttendanceWithEvent = Attendance & {
   chapter_events: Pick<ChapterEvent, "title" | "starts_at" | "event_type">;
@@ -106,9 +106,9 @@ export default function PortalAttendancePage() {
           {[1,2,3,4,5].map(i => <div key={i} className="h-16 bg-white/5 rounded-xl" />)}
         </div>
       ) : records.length === 0 ? (
-        <div className="text-center py-16 space-y-3">
-          <AppIcon name="event_available" size={48} className="text-white/10 mx-auto" />
-          <p className="text-white/30 font-bold">No attendance records yet.</p>
+        <div className="text-center py-24 space-y-4 glass-card rounded-3xl border-white/5">
+          <SvgIcon name="calendar" size={48} className="text-white/10 mx-auto" />
+          <h2 className="text-xl font-black">No Attendance Records yet.</h2>
           <p className="text-white/20 text-sm">Records appear here once your coordinator logs rehearsal attendance.</p>
         </div>
       ) : (
@@ -118,7 +118,7 @@ export default function PortalAttendancePage() {
             const event = record.chapter_events;
             return (
               <div key={record.id} className="glass-card rounded-xl px-5 py-4 flex items-center gap-4">
-                <AppIcon name={meta.icon} size={20} className={`${meta.color} shrink-0`} />
+                <SvgIcon name={meta.icon as any} size={20} className={`${meta.color} shrink-0`} />
                 <div className="flex-1 min-w-0">
                   <p className="font-black text-sm truncate">{event?.title || "Event"}</p>
                   <p className="text-xs text-white/30">

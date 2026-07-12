@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../AuthContext";
 import type { Audition, ChapterEvent, Resource, Attendance } from "@/integrations/supabase/types";
-import AppIcon from "@/components/ui/AppIcon";
 import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
 
@@ -25,11 +24,11 @@ const roleLabels: Record<string, { label: string; color: string; dot: string }> 
   applicant:     { label: "Applicant",      color: "text-white/50 bg-white/5 border-white/10",               dot: "bg-white/30" },
 };
 
-const auditionStatusMeta: Record<string, { label: string; icon: string; color: string }> = {
-  pending:     { label: "Under Review",   icon: "hourglass_empty", color: "text-yellow-400" },
-  shortlisted: { label: "Shortlisted",    icon: "star",            color: "text-orange-400" },
-  accepted:    { label: "Accepted",       icon: "check_circle",    color: "text-emerald" },
-  rejected:    { label: "Not Selected",   icon: "cancel",          color: "text-red-400" },
+const auditionStatusMeta: Record<string, { label: string; icon: any; color: string }> = {
+  pending:     { label: "Under Review",   icon: "hourglass", color: "text-yellow-400" },
+  shortlisted: { label: "Shortlisted",    icon: "star",      color: "text-orange-400" },
+  accepted:    { label: "Accepted",       icon: "check_circle", color: "text-emerald" },
+  rejected:    { label: "Not Selected",   icon: "close",     color: "text-red-400" },
 };
 
 const eventTypeLabel: Record<string, string> = {
@@ -207,14 +206,14 @@ export default function PortalHomePage() {
               className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-gold hover:border-gold/30 transition-all"
               title="Schedule"
             >
-              <AppIcon name="calendar_month" size={18} />
+              <SvgIcon name="calendar" size={18} />
             </Link>
             <Link
               href="/profile/resources"
               className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-gold hover:border-gold/30 transition-all"
               title="Resources"
             >
-              <AppIcon name="library_music" size={18} />
+              <SvgIcon name="music" size={18} />
             </Link>
           </div>
         </div>
@@ -249,7 +248,7 @@ export default function PortalHomePage() {
           <p className="text-[10px] text-white/30 uppercase tracking-widest font-black relative z-10">Audition</p>
           {auditionMeta ? (
             <div className={`flex items-center gap-2 relative z-10 ${auditionMeta.color}`}>
-              <AppIcon name={auditionMeta.icon} size={20} />
+              <SvgIcon name={auditionMeta.icon} size={20} />
               <span className="font-black text-sm">{auditionMeta.label}</span>
             </div>
           ) : (
@@ -295,7 +294,7 @@ export default function PortalHomePage() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-black tracking-tighter">Upcoming Events</h2>
             <Link href="/profile/schedule" className="text-gold text-xs font-black hover:brightness-125 flex items-center gap-1">
-              View All <AppIcon name="arrow_forward" size={14} />
+              View All <SvgIcon name="arrow_forward" size={14} />
             </Link>
           </div>
           <div className="space-y-3">
@@ -333,7 +332,7 @@ export default function PortalHomePage() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-black tracking-tighter">Recent Resources</h2>
             <Link href="/profile/resources" className="text-gold text-xs font-black hover:brightness-125 flex items-center gap-1">
-              View All <AppIcon name="arrow_forward" size={14} />
+              View All <SvgIcon name="arrow_forward" size={14} />
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -341,7 +340,7 @@ export default function PortalHomePage() {
               const isAudio = resource.resource_type.includes("audio");
               const isPdf = resource.resource_type.includes("pdf");
               const isVideo = resource.resource_type.includes("video");
-              const icon = isAudio ? "headphones" : isVideo ? "videocam" : isPdf ? "picture_as_pdf" : "description";
+              const icon = isAudio ? "music" : isVideo ? "video" : isPdf ? "docs" : "docs";
               return (
                 <a
                   key={resource.id}
@@ -351,7 +350,7 @@ export default function PortalHomePage() {
                   className="glass-card rounded-xl p-4 flex items-center gap-3 hover:border-gold/20 transition-all group"
                 >
                   <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/10 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-colors">
-                    <AppIcon name={icon} size={18} className="text-gold/60 group-hover:text-gold transition-colors" />
+                    <SvgIcon name={icon as any} size={18} className="text-gold/60 group-hover:text-gold transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-black truncate">{resource.title}</p>
@@ -359,7 +358,7 @@ export default function PortalHomePage() {
                       {resource.resource_type.replace(/_/g, " ")}
                     </p>
                   </div>
-                  <AppIcon name="download" size={16} className="text-white/20 group-hover:text-gold/60 transition-colors shrink-0" />
+                  <SvgIcon name="download" size={16} className="text-white/20 group-hover:text-gold/60 transition-colors shrink-0" />
                 </a>
               );
             })}
@@ -387,7 +386,7 @@ export default function PortalHomePage() {
               disabled={launchingSaems}
               className="shrink-0 px-6 py-3 bg-gold text-brown rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              {launchingSaems ? <AppIcon name="autorenew" size={16} className="animate-spin" /> : null}
+              {launchingSaems ? <SvgIcon name="loader" size={16} className="animate-spin" /> : null}
               {launchingSaems ? "Connecting..." : "Explore Modules"}
             </button>
           </div>

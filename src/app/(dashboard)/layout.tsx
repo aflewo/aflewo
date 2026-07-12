@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import type { Profile } from "@/integrations/supabase/types";
 import Link from "next/link";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 import { AuthContext } from "./AuthContext";
 
@@ -13,18 +13,18 @@ import { AuthContext } from "./AuthContext";
 const navItems = [
   { href: "/profile", icon: "home", label: "Home" },
   { href: "/profile/auditions", icon: "mic", label: "My Audition" },
-  { href: "/profile/resources", icon: "library_music", label: "Resource Vault" },
-  { href: "/profile/schedule", icon: "calendar_month", label: "Schedule" },
-  { href: "/profile/attendance", icon: "fact_check", label: "My Attendance" },
+  { href: "/profile/resources", icon: "music", label: "Resource Vault" },
+  { href: "/profile/schedule", icon: "calendar", label: "Schedule" },
+  { href: "/profile/attendance", icon: "check_circle", label: "My Attendance" },
 ];
 
 const adminNavItems = [
-  { href: "/admin", icon: "dashboard", label: "Overview" },
-  { href: "/admin/auditions", icon: "how_to_reg", label: "Auditions" },
-  { href: "/admin/attendance", icon: "qr_code_scanner", label: "Check-In" },
-  { href: "/admin/resources", icon: "upload_file", label: "Upload Resources" },
+  { href: "/admin", icon: "chart", label: "Overview" },
+  { href: "/admin/auditions", icon: "user_check", label: "Auditions" },
+  { href: "/admin/attendance", icon: "scan", label: "Check-In" },
+  { href: "/admin/resources", icon: "upload", label: "Upload Resources" },
   { href: "/admin/gallery", icon: "image", label: "Gallery Manager" },
-  { href: "/admin/members", icon: "group", label: "Members" },
+  { href: "/admin/members", icon: "people", label: "Members" },
 ];
 
 // ─── Layout Component ─────────────────────────────────────────
@@ -34,7 +34,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -91,7 +90,6 @@ export default function DashboardLayout({
   }
 
   const isAdmin = profile && ["super_admin", "chapter_admin"].includes(profile.role);
-  const currentNav = isAdmin ? [...navItems, ...adminNavItems] : navItems;
 
   return (
     <AuthContext.Provider value={{ profile, loading, signOut }}>
@@ -134,7 +132,7 @@ export default function DashboardLayout({
             {isAdmin && (
               <>
                 <p className="text-[9px] text-gold/40 uppercase tracking-widest font-black px-3 py-2 mt-4 flex items-center gap-1">
-                  <AppIcon name="admin_panel_settings" size={10} /> Admin
+                  <SvgIcon name="secure" size={10} /> Admin
                 </p>
                 {adminNavItems.map((item) => (
                   <NavLink key={item.href} {...item} isAdmin />
@@ -175,7 +173,7 @@ export default function DashboardLayout({
                 className="text-white/30 hover:text-white/60 transition-colors"
                 title="Sign out"
               >
-                <AppIcon name="logout" size={16} />
+                <SvgIcon name="logout" size={16} />
               </button>
             </div>
           </div>
@@ -189,7 +187,7 @@ export default function DashboardLayout({
               onClick={() => setSidebarOpen(true)}
               className="text-white/60 hover:text-white transition-colors"
             >
-              <AppIcon name="menu" size={24} />
+              <SvgIcon name="menu" size={24} />
             </button>
             <span className="text-gold font-black text-xs uppercase tracking-widest">AFLEWO Portal</span>
             <div className="w-6" />
@@ -212,7 +210,7 @@ function NavLink({
   isAdmin = false,
 }: {
   href: string;
-  icon: string;
+  icon: any;
   label: string;
   isAdmin?: boolean;
 }) {
@@ -237,7 +235,7 @@ function NavLink({
           isAdmin ? "bg-gold" : "bg-white"
         }`} />
       )}
-      <AppIcon name={icon} size={16} className={`shrink-0 transition-transform ${isActive ? "" : "group-hover:scale-110"}`} />
+      <SvgIcon name={icon} size={16} className={`shrink-0 transition-transform ${isActive ? "" : "group-hover:scale-110"}`} />
       {label}
     </Link>
   );
