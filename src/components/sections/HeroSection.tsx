@@ -145,7 +145,7 @@ export default function HeroSection() {
                             <button
                                 onClick={prevEvent}
                                 aria-label="Previous announcement"
-                                className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full bg-white/8 border border-white/10 text-white/40 hover:text-white hover:bg-white/15 transition-all duration-200 backdrop-blur-sm"
+                                className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-white/40 hover:text-white transition-all duration-200"
                             >
                                 <SvgIcon name="arrow_left" size={14} />
                             </button>
@@ -219,7 +219,7 @@ export default function HeroSection() {
                             <button
                                 onClick={nextEvent}
                                 aria-label="Next announcement"
-                                className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full bg-white/8 border border-white/10 text-white/40 hover:text-white hover:bg-white/15 transition-all duration-200 backdrop-blur-sm"
+                                className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-white/40 hover:text-white transition-all duration-200"
                             >
                                 <SvgIcon name="arrow_right" size={14} />
                             </button>

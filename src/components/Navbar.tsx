@@ -12,23 +12,23 @@ import { StaggeredMenu } from "@/components/StaggeredMenu";
 import { motion } from "framer-motion";
 
 const links = [
-    { name: "About",        href: "/about"        },
-    { name: "Media",        href: "/media"        },
-    { name: "Testimonies",  href: "/testimonies"  },
-    { name: "Join",         href: "/join"         },
+    { name: "About", href: "/about" },
+    { name: "Media", href: "/media" },
+    { name: "Testimonies", href: "/testimonies" },
+    { name: "Join", href: "/join" },
 ];
 
 const socialItems = [
-    { label: "YouTube",   link: "https://youtube.com/@aflewo"    },
-    { label: "Instagram", link: "https://instagram.com/aflewo"   },
-    { label: "Facebook",  link: "https://facebook.com/aflewo"    },
+    { label: "YouTube", link: "https://youtube.com/@aflewo" },
+    { label: "Instagram", link: "https://instagram.com/aflewo" },
+    { label: "Facebook", link: "https://facebook.com/aflewo" },
 ];
 
 export default function Navbar() {
-    const [isScrolled,       setIsScrolled]       = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isSignedIn,       setIsSignedIn]       = useState(false);
-    const [mounted,          setMounted]          = useState(false);
+    const [isSignedIn, setIsSignedIn] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
 
@@ -60,8 +60,8 @@ export default function Navbar() {
     if (hideNavbarRoutes.some((route) => pathname.startsWith(route))) return null;
 
     const authLink = isSignedIn
-        ? { name: "Profile",  href: "/profile" }
-        : { name: "Sign In",  href: "/auth"    };
+        ? { name: "Profile", href: "/profile" }
+        : { name: "Sign In", href: "/auth" };
 
     const allLinks = [...links, authLink];
 
@@ -140,15 +140,13 @@ export default function Navbar() {
 
             {/* ── TABLET + MOBILE (< lg: 1280px): Pill nav bar ── */}
             <nav
-                className={`fixed top-0 left-0 right-0 z-[200] transition-all duration-500 px-4 md:px-6 lg:hidden ${
-                    isScrolled ? "mt-2 md:mt-4" : "mt-0"
-                }`}
+                className={`fixed top-0 left-0 right-0 z-[200] transition-all duration-500 px-4 md:px-6 lg:hidden ${isScrolled ? "mt-2 md:mt-4" : "mt-0"
+                    }`}
                 aria-label="Main navigation"
             >
                 <div
-                    className={`max-w-6xl mx-auto rounded-full transition-all duration-700 flex items-center justify-between px-5 py-3 md:px-8 md:py-3.5 ${
-                        isScrolled ? "" : "bg-transparent border-transparent"
-                    }`}
+                    className={`max-w-6xl mx-auto rounded-full transition-all duration-700 flex items-center justify-between px-5 py-3 md:px-8 md:py-3.5 border ${isScrolled ? "border-white/10 shadow-[0_8px_32px_rgba(212,175,55,0.15)]" : "bg-transparent border-transparent"
+                        } relative`}
                     style={isScrolled ? {} : {}}
                 >
                     {isScrolled ? (
@@ -159,7 +157,7 @@ export default function Navbar() {
                             borderWidth={0.07}
                             brightness={50}
                             opacity={0.93}
-                            blur={11}
+                            blur={16}
                             backgroundOpacity={0.1}
                             saturation={1}
                             displace={0.5}
@@ -171,6 +169,10 @@ export default function Navbar() {
                             style={{ position: 'absolute', inset: 0, borderRadius: '50px', zIndex: 0 }}
                         />
                     ) : null}
+
+                    {isScrolled && (
+                        <div className="absolute inset-0.5 rounded-full bg-gradient-to-br from-white/20 to-transparent z-0 pointer-events-none" />
+                    )}
 
                     {/* Brand Logo */}
                     <div className="relative z-10">
@@ -185,11 +187,10 @@ export default function Navbar() {
                                 <Link
                                     key={link.name}
                                     href={link.href}
-                                    className={`relative px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.18em] transition-colors duration-200 ${
-                                        isActive
+                                    className={`relative px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.18em] transition-colors duration-200 ${isActive
                                             ? "text-gold"
                                             : "text-white/60 hover:text-white"
-                                    }`}
+                                        }`}
                                 >
                                     {isActive && (
                                         <motion.div
@@ -225,7 +226,7 @@ export default function Navbar() {
                         </Link>
 
                         {/* Mobile menu toggle (< md: 768px) */}
-                        <div className="md:hidden w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:border-gold/30 transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
+                        <div className="md:hidden flex items-center justify-center">
                             <MenuToggle isOpen={isMobileMenuOpen} onToggle={toggleMenu} />
                         </div>
                     </div>
@@ -234,9 +235,8 @@ export default function Navbar() {
 
             {/* ── MOBILE full-screen overlay (< md: 768px) ── */}
             <div
-                className={`fixed inset-0 bg-background/95 backdrop-blur-2xl z-[190] flex flex-col items-center justify-center gap-7 transition-all duration-300 md:hidden ${
-                    isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                }`}
+                className={`fixed inset-0 bg-background/95 backdrop-blur-2xl z-[190] flex flex-col items-center justify-center gap-7 transition-all duration-300 md:hidden ${isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
                 onClick={(e) => { if (e.target === e.currentTarget) setIsMobileMenuOpen(false); }}
             >
                 {allLinks.map((link) => {
@@ -246,9 +246,8 @@ export default function Navbar() {
                             key={link.name}
                             href={link.href}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className={`text-3xl font-black uppercase tracking-[0.25em] transition-all duration-200 hover:scale-105 ${
-                                isActive ? "text-gold scale-105" : "text-white/60 hover:text-gold"
-                            }`}
+                            className={`text-3xl font-black uppercase tracking-[0.25em] transition-all duration-200 hover:scale-105 ${isActive ? "text-gold scale-105" : "text-white/60 hover:text-gold"
+                                }`}
                         >
                             {link.name}
                         </Link>

@@ -244,7 +244,12 @@ export default function ElasticNavigator() {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.7, y: 16 }}
                         transition={{ type: "spring", stiffness: 420, damping: 28 }}
-                        className="fab-trigger"
+                        className="w-16 h-16 rounded-full flex items-center justify-center shadow-[0_8px_32px_rgba(255,255,255,0.1)] border border-white/10 hover:border-white/30 cursor-pointer overflow-hidden transition-all duration-300 group"
+                        style={{
+                            background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%)",
+                            backdropFilter: "blur(24px)",
+                            WebkitBackdropFilter: "blur(24px)"
+                        }}
                         onClick={() => {
                             setIsExpanded(true);
                             setTimeout(updateThumbPosition, 50);
@@ -253,9 +258,15 @@ export default function ElasticNavigator() {
                         whileTap={{ scale: 0.93 }}
                         aria-label="Open page navigator"
                     >
-                        {/* Navigation cursor/send icon - nudged for visual center */}
-                        <div className="flex items-center justify-center transform translate-x-[2px] translate-y-[2px]">
-                            <SvgIcon name="navigation" size={26} className="text-white" />
+                        {/* Premium Glossy Inset Ring */}
+                        <div className="absolute inset-0.5 rounded-full bg-gradient-to-br from-white/20 to-transparent z-10 pointer-events-none" />
+
+                        {/* Hover Ping Glow */}
+                        <div className="absolute inset-0 rounded-full bg-white transition-all duration-1000 ease-out opacity-0 group-hover:opacity-20 group-hover:animate-ping z-0 pointer-events-none" />
+
+                        {/* Centered Icon */}
+                        <div className="relative z-20 flex items-center justify-center">
+                            <SvgIcon name="navigation" size={26} className="text-white drop-shadow-[0_2px_8px_rgba(255,255,255,0.2)]" />
                         </div>
                     </motion.button>
                 ) : (

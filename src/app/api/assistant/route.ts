@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+// ─── Whitelisted routing config ──────────────────────────────────────────────
+const SITE_ROUTES = [
+    { path: "/", name: "Home", description: "Main landing page" },
+    { path: "/about", name: "About", description: "Vision, history, leadership" },
+    { path: "/media", name: "Media", description: "Worship archive, recordings, videos" },
+    { path: "/testimonies", name: "Testimonies", description: "Community stories" },
+    { path: "/join", name: "Join / Connect", description: "Audition registration, choir, band, media team, usher, security, dance" },
+    { path: "/stories", name: "Stories", description: "Echo testimonies" },
+    { path: "/alumni", name: "Alumni", description: "Past members and alumni network" },
+    { path: "/chapters", name: "Chapters detail", description: "Detailed chapter information" },
+    { path: "/auth", name: "Sign In / Register", description: "Authentication portal" },
+    { path: "/profile", name: "Profile", description: "User dashboard and settings" }
+];
+
 // ─── AFLEWO Site Knowledge Base ───────────────────────────────────────────────
 // This is the static knowledge injected into every system context window.
 // Augmented by dynamic Supabase RAG retrieval at query time.
@@ -24,15 +38,7 @@ CHAPTERS (7 total):
 - Rwanda — Christian Life Assembly, Kigali (reconciliation focus)
 
 SITE PAGES & PATHS:
-- Home: /
-- About: /about (vision, history, leadership)
-- Media: /media (worship archive, recordings, videos)
-- Testimonies: /testimonies (community stories)
-- Join / Connect: /join (audition registration, choir, band, media team, usher, security, dance)
-- Stories: /stories
-- Alumni: /alumni
-- Chapters detail: /chapters
-- Sign In / Profile: /auth, /profile
+${SITE_ROUTES.map(r => `- ${r.name}: ${r.path} (${r.description})`).join("\n")}
 
 NAVIGATION SECTIONS (home page scroll):
 - #hero — landing video section, main headline
@@ -74,10 +80,11 @@ RESPONSE GUIDELINES:
 - For joining/registration: always direct to /join.
 - For event details: give date, location, and brief description.
 - Never fabricate dates, locations, or names not in this document.
+- ALWAYS format references to site pages as Markdown hyperlinks using exact paths. Example: [Media page](/media) or [Join us](/join). Do not output plain text page names.
 `;
 
 // ─── Whitelisted navigation actions ──────────────────────────────────────────
-const ALLOWED_ROUTES = ["/", "/about", "/media", "/testimonies", "/join", "/stories", "/alumni", "/chapters", "/auth", "/profile"];
+const ALLOWED_ROUTES = SITE_ROUTES.map(r => r.path);
 const ALLOWED_ANCHORS = ["hero", "about", "chapters", "events", "media", "stories", "join"];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
