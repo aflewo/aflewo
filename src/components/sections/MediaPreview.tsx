@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -128,9 +128,9 @@ export default function MediaPreview() {
     const getTypeIcon = (type: string, size: "large" | "medium" | "small") => {
         const iconSize = size === "large" ? 32 : size === "medium" ? 24 : 16;
         if (type === "video" || type === "documentary") {
-            return <AppIcon name="play_arrow" size={iconSize} />;
+            return <SvgIcon name="play_arrow" size={iconSize} />;
         }
-        return <AppIcon name="visibility" size={iconSize} />;
+        return <SvgIcon name="visibility" size={iconSize} />;
     };
 
     return (
@@ -143,7 +143,7 @@ export default function MediaPreview() {
                 <div className="media-header flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-16">
                     <div className="space-y-6">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
-                            <AppIcon name="calendar_month" size={12} /> The Archive
+                            <SvgIcon name="calendar" size={12} /> The Archive
                         </div>
                         <h2 className="text-5xl md:text-7xl font-black tracking-tighter">
                             THE SOUND <br />
@@ -157,7 +157,7 @@ export default function MediaPreview() {
                         href="/media"
                         className="press-scale flex items-center gap-3 px-6 py-3 glass-card rounded-full text-gold font-black uppercase tracking-widest text-xs hover:bg-gold hover:text-brown transition-all"
                     >
-                        Explore Gallery <AppIcon name="arrow_forward" size={16} />
+                        Explore Gallery <SvgIcon name="arrow_forward" size={16} />
                     </Link>
                 </div>
 
@@ -191,13 +191,13 @@ export default function MediaPreview() {
                                         </span>
                                         {item.chapter && (
                                             <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm text-white/70 text-[9px] font-black uppercase tracking-widest flex items-center gap-1">
-                                                <AppIcon name="location_on" size={10} /> {item.chapter}
+                                                <SvgIcon name="location" size={10} /> {item.chapter}
                                             </span>
                                         )}
                                     </div>
                                     {item.views && (
                                         <span className="flex items-center gap-1 text-white/50 text-[10px] font-black">
-                                            <AppIcon name="visibility" size={12} /> {item.views}
+                                            <SvgIcon name="visibility" size={12} /> {item.views}
                                         </span>
                                     )}
                                 </div>
@@ -232,7 +232,7 @@ export default function MediaPreview() {
                         { label: "Chapters", value: "11", icon: "location_on" }
                     ].map((stat, i) => (
                         <div key={i} className="glass-card p-6 rounded-2xl text-center group hover:border-gold/20 transition-colors">
-                            <AppIcon name={stat.icon} size={24} className="mx-auto text-gold mb-3 group-hover:scale-110 transition-transform" />
+                            <SvgIcon name={stat.icon} size={24} className="mx-auto text-gold mb-3 group-hover:scale-110 transition-transform" />
                             <div className="text-2xl font-black text-white">{stat.value}</div>
                             <div className="text-[10px] font-black uppercase tracking-widest text-white/40">{stat.label}</div>
                         </div>

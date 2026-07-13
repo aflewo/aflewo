@@ -860,3 +860,49 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ─────────────────────────────────────────────
+   Hero Title — prevent gradient text clipping
+   at trailing letters (S, P, R, etc.)
+   ───────────────────────────────────────────── */
+.hero-title {
+  /* Extra padding inside the text box so gradient clip doesn't cut glyphs */
+  padding: 0.08em 0.12em;
+  overflow: visible;
+  /* Ensure the bg-clip region covers the full padded area */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.hero-title .text-gradient-gold {
+  display: inline-block;
+  padding: 0.06em 0.12em;
+  overflow: visible;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* ─────────────────────────────────────────────
+   Staggered menu — ensure it overlays correctly
+   on desktop (lg: 1280px+)
+   ───────────────────────────────────────────── */
+.fixed-wrapper {
+  pointer-events: none;
+}
+
+.fixed-wrapper .staggered-menu-header,
+.fixed-wrapper .staggered-menu-panel {
+  pointer-events: auto;
+}
+
+/* ─────────────────────────────────────────────
+   AI Assistant — chat textarea auto-resize feel
+   ───────────────────────────────────────────── */
+.ai-chat-input {
+  field-sizing: content;
+}
+
+/* shadow-glow utility referenced in Navbar */
+.shadow-glow {
+  box-shadow: var(--shadow-glow, 0 0 40px -10px hsla(42, 92%, 56%, 0.3));
+}

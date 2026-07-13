@@ -1,7 +1,7 @@
 "use client";
 
 import Footer from "@/components/Footer";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
 
 export default function PrivacyPolicyPage() {
@@ -19,7 +19,7 @@ export default function PrivacyPolicyPage() {
 
                     <div className="space-y-10 text-white/70 font-medium leading-relaxed text-base">
                         <div className="glass-card p-8 rounded-2xl space-y-4 border-gold/10">
-                            <h2 className="text-xl font-black text-white flex items-center gap-3"><AppIcon name="info" size={20} className="text-gold" /> Overview</h2>
+                            <h2 className="text-xl font-black text-white flex items-center gap-3"><SvgIcon name="info" size={20} className="text-gold" /> Overview</h2>
                             <p>
                                 Africa Let&apos;s Worship (AFLEWO) is a worship and prayer movement operating across East Africa since 2004.
                                 This Privacy Policy describes how we collect, use, and protect information submitted through our website at aflewo.vercel.app
@@ -39,7 +39,7 @@ export default function PrivacyPolicyPage() {
                                     "Email addresses submitted to our newsletter or stay-connected form",
                                 ].map((item, i) => (
                                     <li key={i} className="flex items-start gap-3">
-                                        <AppIcon name="check_circle" size={16} className="text-gold mt-0.5 shrink-0" />
+                                        <SvgIcon name="check_circle" size={16} className="text-gold mt-0.5 shrink-0" />
                                         <span>{item}</span>
                                     </li>
                                 ))}
@@ -58,7 +58,7 @@ export default function PrivacyPolicyPage() {
                                     "Improving our digital platforms and user experience",
                                 ].map((item, i) => (
                                     <li key={i} className="flex items-start gap-3">
-                                        <AppIcon name="check_circle" size={16} className="text-gold mt-0.5 shrink-0" />
+                                        <SvgIcon name="check_circle" size={16} className="text-gold mt-0.5 shrink-0" />
                                         <span>{item}</span>
                                     </li>
                                 ))}
@@ -105,7 +105,7 @@ export default function PrivacyPolicyPage() {
                                     "Lodge a complaint with the Kenya Office of the Data Protection Commissioner",
                                 ].map((item, i) => (
                                     <li key={i} className="flex items-start gap-3">
-                                        <AppIcon name="check_circle" size={16} className="text-gold mt-0.5 shrink-0" />
+                                        <SvgIcon name="check_circle" size={16} className="text-gold mt-0.5 shrink-0" />
                                         <span>{item}</span>
                                     </li>
                                 ))}
@@ -116,17 +116,17 @@ export default function PrivacyPolicyPage() {
                             <h2 className="text-xl font-black text-white">7. Contact</h2>
                             <p>For any data protection enquiries, contact us at:</p>
                             <div className="glass-card p-6 rounded-xl space-y-3 border-gold/10">
-                                <p className="flex items-center gap-3"><AppIcon name="mail" size={16} className="text-gold" /> <a href="mailto:nairobi@aflewo.org" className="text-gold hover:underline">nairobi@aflewo.org</a></p>
-                                <p className="flex items-center gap-3"><AppIcon name="location_on" size={16} className="text-gold" /> AFLEWO National Office, Nairobi, Kenya</p>
+                                <p className="flex items-center gap-3"><SvgIcon name="mail" size={16} className="text-gold" /> <a href="mailto:nairobi@aflewo.org" className="text-gold hover:underline">nairobi@aflewo.org</a></p>
+                                <p className="flex items-center gap-3"><SvgIcon name="location" size={16} className="text-gold" /> AFLEWO National Office, Nairobi, Kenya</p>
                             </div>
                         </div>
 
                         <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row gap-4">
                             <Link href="/" className="press-scale inline-flex items-center gap-2 px-8 py-4 glass-card rounded-lg font-black text-[10px] uppercase tracking-widest hover:text-gold transition-all">
-                                <AppIcon name="arrow_back" size={14} /> Back to Home
+                                <SvgIcon name="arrow_back" size={14} /> Back to Home
                             </Link>
                             <Link href="/join" className="press-scale inline-flex items-center gap-2 px-8 py-4 bg-gold text-brown rounded-lg font-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all">
-                                <AppIcon name="group_add" size={14} /> Join the Movement
+                                <SvgIcon name="group_add" size={14} /> Join the Movement
                             </Link>
                         </div>
                     </div>

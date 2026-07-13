@@ -2,7 +2,7 @@
 
 import Footer from "@/components/Footer";
 import Image from "next/image";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -60,7 +60,7 @@ export default function AlumniPage() {
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gold/5 blur-[120px] -z-10" />
                 <div className="max-container space-y-8">
                     <div className="animate-fade inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.3em]">
-                        <AppIcon name="star" size={14} /> The Legacy Circle
+                        <SvgIcon name="star" size={14} /> The Legacy Circle
                     </div>
                     <h1 className="animate-fade text-7xl md:text-9xl font-black tracking-tighter leading-[0.85]">
                         ALUMNI <br /><span className="text-gold">SOCIETY</span>
@@ -90,12 +90,12 @@ export default function AlumniPage() {
                         </div>
                         <div className="flex flex-wrap gap-4">
                             <div className="glass-card p-6 rounded-lg space-y-2 flex-1 min-w-[200px]">
-                                <AppIcon name="explore" className="text-gold" size={24} />
+                                <SvgIcon name="explore" className="text-gold" size={24} />
                                 <h4 className="font-black text-white text-sm">Visionaries</h4>
                                 <p className="text-white/40 text-xs">Sing Africa Alumni — Daystar University</p>
                             </div>
                             <div className="glass-card p-6 rounded-lg space-y-2 flex-1 min-w-[200px]">
-                                <AppIcon name="favorite" className="text-gold" size={24} />
+                                <SvgIcon name="favorite" className="text-gold" size={24} />
                                 <h4 className="font-black text-white text-sm">Founding Venue</h4>
                                 <p className="text-white/40 text-xs">CITAM Karen, Nairobi — October 2004</p>
                             </div>
@@ -144,14 +144,14 @@ export default function AlumniPage() {
                                     onClick={() => setShowForm(!showForm)}
                                     className="inline-flex items-center gap-2 mt-2 text-gold text-[10px] font-black uppercase tracking-widest hover:gap-4 transition-all"
                                 >
-                                    {showForm ? "Hide Form" : "Open Registration Form"} <AppIcon name="arrow_forward" size={14} />
+                                    {showForm ? "Hide Form" : "Open Registration Form"} <SvgIcon name="arrow_forward" size={14} />
                                 </button>
                             </div>
 
                             {showForm && (
                                 submitted ? (
                                     <div className="text-center py-12 space-y-4">
-                                        <AppIcon name="verified" size={56} className="text-gold mx-auto" />
+                                        <SvgIcon name="verified" size={56} className="text-gold mx-auto" />
                                         <h4 className="text-xl font-black">Welcome back, {form.name}!</h4>
                                         <p className="text-white/50 text-sm">We&apos;ll reach you at {form.email} within 48 hours.</p>
                                     </div>
@@ -198,7 +198,7 @@ export default function AlumniPage() {
                                         )}
                                         <button type="submit" disabled={submitting}
                                             className="w-full py-5 bg-gold text-brown rounded-lg font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-glow disabled:opacity-50 flex items-center justify-center gap-3">
-                                            {submitting ? <><AppIcon name="autorenew" size={20} className="animate-spin" /> Submitting...</> : <><AppIcon name="how_to_reg" size={20} /> Register as Alumni</>}
+                                            {submitting ? <><SvgIcon name="loader" size={20} className="animate-spin" /> Submitting...</> : <><SvgIcon name="check_circle" size={20} /> Register as Alumni</>}
                                         </button>
                                     </form>
                                 )
@@ -206,10 +206,10 @@ export default function AlumniPage() {
 
                             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                                 <Link href="/join" className="press-scale inline-flex items-center gap-2 px-8 py-4 glass-card rounded-lg font-black text-[10px] uppercase tracking-widest text-gold hover:border-gold/30 transition-all">
-                                    <AppIcon name="group_add" size={16} /> Join 2026 Team
+                                    <SvgIcon name="group_add" size={16} /> Join 2026 Team
                                 </Link>
                                 <Link href="/testimonies" className="press-scale inline-flex items-center gap-2 px-8 py-4 glass-card rounded-lg font-black text-[10px] uppercase tracking-widest hover:text-gold hover:border-gold/30 transition-all">
-                                    <AppIcon name="format_quote" size={16} /> Share Your Testimony
+                                    <SvgIcon name="format_quote" size={16} /> Share Your Testimony
                                 </Link>
                             </div>
                         </div>

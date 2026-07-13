@@ -1,6 +1,6 @@
 "use client";
 
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import { cn } from "@/lib/utils";
 
 const tracks = [
@@ -34,11 +34,11 @@ export default function MusicSection() {
                         <div className="flex flex-col h-full justify-between gap-12 relative z-10">
                             <div className="flex justify-between items-start">
                                 <div className="p-4 bg-gold/10 rounded-3xl text-gold flex items-center justify-center">
-                                    <AppIcon name="music_note" size={32} />
+                                    <SvgIcon name="music_note" size={32} />
                                 </div>
                                 <div className="flex gap-2">
-                                    <button className="p-3 glass-card rounded-full hover:bg-gold/20 transition-all flex items-center justify-center"><AppIcon name="share" size={20} /></button>
-                                    <button className="p-3 glass-card rounded-full hover:bg-gold/20 transition-all flex items-center justify-center"><AppIcon name="download" size={20} /></button>
+                                    <button className="p-3 glass-card rounded-full hover:bg-gold/20 transition-all flex items-center justify-center"><SvgIcon name="share" size={20} /></button>
+                                    <button className="p-3 glass-card rounded-full hover:bg-gold/20 transition-all flex items-center justify-center"><SvgIcon name="download" size={20} /></button>
                                 </div>
                             </div>
 
@@ -49,7 +49,7 @@ export default function MusicSection() {
 
                                 <div className="flex items-center gap-6">
                                     <button className="w-20 h-20 bg-gold rounded-full flex items-center justify-center text-brown shadow-glow press-scale">
-                                        <AppIcon name="play_arrow" size={32} />
+                                        <SvgIcon name="play_arrow" size={32} />
                                     </button>
                                     <div className="flex-1 space-y-2">
                                         <div className="h-1.5 bg-gold/10 rounded-full w-full relative overflow-hidden">
@@ -71,7 +71,7 @@ export default function MusicSection() {
                             <div key={track.id} className="group glass-card p-6 flex items-center justify-between hover:bg-gold/5 transition-all cursor-pointer border-transparent hover:border-gold/20 rounded-2xl">
                                 <div className="flex items-center gap-6">
                                     <div className="w-12 h-12 bg-brown/40 rounded-2xl flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-brown transition-all">
-                                        <AppIcon name="play_arrow" size={20} />
+                                        <SvgIcon name="play_arrow" size={20} />
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-lg text-foreground">{track.title}</h4>

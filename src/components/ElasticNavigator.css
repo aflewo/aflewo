@@ -1,16 +1,13 @@
 /* ElasticNavigator.css - Clean, Standardized Implementation */
 
 .fab-container {
-    position: fixed;
-    right: 1.5rem;
-    bottom: 2rem;
     z-index: 100;
 }
 
 .fab-trigger {
     width: 64px;
     height: 64px;
-    border-radius: 24px;
+    border-radius: 9999px; /* Make it perfectly circular to match AI Assistant FAB */
     background: hsla(0, 0%, 100%, 0.1);
     border: none;
     backdrop-filter: blur(24px) saturate(180%);

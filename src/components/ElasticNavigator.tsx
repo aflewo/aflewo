@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import { motion, animate, useMotionValue, useMotionValueEvent, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import './ElasticNavigator.css';
 
@@ -106,7 +106,8 @@ export default function ElasticNavigator() {
             if (docHeight <= 0) return;
             const scrollPercent = (window.scrollY / docHeight) * 100;
             value.set(scrollPercent);
-            setIsVisible(window.scrollY > window.innerHeight * 0.5);
+            // Show after just 80px scroll — visible much sooner
+            setIsVisible(window.scrollY > 80);
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
@@ -222,7 +223,7 @@ export default function ElasticNavigator() {
     return (
         <div
             className={cn(
-                "fixed right-6 bottom-8 z-[100] transition-all duration-1000 cubic-bezier(0.23, 1, 0.32, 1)",
+                "fixed right-8 bottom-28 z-[100] transition-all duration-1000 cubic-bezier(0.23, 1, 0.32, 1)",
                 isVisible ? "translate-x-0" : "translate-x-32",
                 !isVisible ? "opacity-0" : isIdle ? "opacity-[0.05]" : "opacity-100"
             )}
@@ -234,35 +235,49 @@ export default function ElasticNavigator() {
                 if (!isExpanded) resetIdleTimeout(3500); // 3.5s nav inactivity
             }}
         >
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode="wait">
                 {!isExpanded ? (
+                    /* ── Collapsed FAB ── */
                     <motion.button
                         key="fab"
-                        layoutId="navigator-frame"
+                        initial={{ opacity: 0, scale: 0.7, y: 16 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.7, y: 16 }}
+                        transition={{ type: "spring", stiffness: 420, damping: 28 }}
                         className="fab-trigger"
                         onClick={() => {
                             setIsExpanded(true);
                             setTimeout(updateThumbPosition, 50);
                         }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.08, y: -2 }}
+                        whileTap={{ scale: 0.93 }}
+                        aria-label="Open page navigator"
                     >
-                        <AppIcon name="navigation" size={28} />
+                        {/* Navigation cursor/send icon - nudged for visual center */}
+                        <div className="flex items-center justify-center transform translate-x-[2px] translate-y-[2px]">
+                            <SvgIcon name="navigation" size={26} className="text-white" />
+                        </div>
                     </motion.button>
                 ) : (
+                    /* ── Expanded Slider Panel ── */
                     <motion.div
                         key="slider"
-                        layoutId="navigator-frame"
                         className="slider-container"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
+                        initial={{ opacity: 0, scale: 0.85, y: 24, originY: 1 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.85, y: 24 }}
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     >
+                        {/* Close button */}
                         <motion.button
                             onClick={() => setIsExpanded(false)}
-                            className="text-white/40 hover:text-white mb-6 transition-colors"
+                            className="text-white/40 hover:text-white mb-4 transition-colors duration-200 flex items-center justify-center w-8 h-8 rounded-full hover:bg-white/10"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            aria-label="Close navigator"
+                            title="Close"
                         >
-                            <AppIcon name="close" size={20} className="text-white" />
+                            <SvgIcon name="close" size={20} className="text-current" />
                         </motion.button>
 
                         <div
@@ -298,17 +313,20 @@ export default function ElasticNavigator() {
                                                 y: "-50%"
                                             }}
                                             animate={{
-                                                scale: isActive ? 1.4 : 1,
+                                                scale: isActive ? 1.5 : 1,
                                                 backgroundColor: isActive ? PRIMARY_COLOR : PRIMARY_MUTED
                                             }}
+                                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                         >
+                                            {/* Label — shown on active node, slides in from left */}
                                             <AnimatePresence>
                                                 {isActive && (
                                                     <motion.div
                                                         className="value-indicator"
-                                                        initial={{ opacity: 0, x: 10 }}
-                                                        animate={{ opacity: 1, x: 0 }}
-                                                        exit={{ opacity: 0, x: 10 }}
+                                                        initial={{ opacity: 0, x: 8, scale: 0.92 }}
+                                                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                                                        exit={{ opacity: 0, x: 8, scale: 0.92 }}
+                                                        transition={{ type: "spring", stiffness: 450, damping: 28 }}
                                                     >
                                                         {section.label}
                                                     </motion.div>
@@ -321,29 +339,26 @@ export default function ElasticNavigator() {
                             </motion.div>
                         </div>
 
-                        <motion.div
-                            className="nav-arrow text-white"
-                            animate={{
-                                y: region === 'top' ? [-4, 0, -4] : region === 'bottom' ? [4, 0, 4] : 0,
-                                opacity: isDragging ? 1 : 0.4
-                            }}
-                            transition={{ repeat: Infinity, duration: 1.5 }}
-                        >
-                            <AppIcon name={region === 'top' ? "stat_3" : region === 'bottom' ? "stat_minus_3" : "expand_more"} size={22} className="text-white" />
-                        </motion.div>
-
-                        {isDragging && (
-                            <motion.div
-                                className="slider-thumb"
-                                style={{
-                                    y: thumbY,
-                                    "--thumb-left": `${thumbLeft.get()}px`
-                                } as any}
-                            />
-                        )}
+                        {/* Drag thumb — only visible while dragging */}
+                        <AnimatePresence>
+                            {isDragging && (
+                                <motion.div
+                                    className="slider-thumb"
+                                    initial={{ opacity: 0, scale: 0.6 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.6 }}
+                                    transition={{ duration: 0.12 }}
+                                    style={{
+                                        y: thumbY,
+                                        "--thumb-left": `${thumbLeft.get()}px`
+                                    } as any}
+                                />
+                            )}
+                        </AnimatePresence>
                     </motion.div>
                 )}
             </AnimatePresence>
         </div>
     );
+
 }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Preloader from "@/components/Preloader";
 import Navbar from "@/components/Navbar";
+import AIAssistant from "@/components/AIAssistant";
 
 /**
  * ClientLayout — wraps children with the preloader animation.
@@ -24,6 +25,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       >
         <Navbar />
         {children}
+        {/* AI assistant — rendered globally, always accessible */}
+        <AIAssistant />
       </div>
     </>
   );

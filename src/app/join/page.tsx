@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -180,7 +180,7 @@ export default function JoinPage() {
                                 }}
                             >
                                 <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${track.color} flex items-center justify-center text-gold group-hover:scale-110 transition-transform duration-500`}>
-                                    <AppIcon name={track.icon} size={28} />
+                                    <SvgIcon name={track.icon} size={28} />
                                 </div>
                                 <h3 className="text-2xl font-black tracking-tighter group-hover:text-gold transition-colors">{track.title}</h3>
                                 <p className="text-foreground/50 text-sm font-bold leading-relaxed">{track.desc}</p>
@@ -188,7 +188,7 @@ export default function JoinPage() {
                                     <ul className="space-y-2 pt-2 border-t border-gold/20">
                                         {track.requirements.map((req, i) => (
                                             <li key={i} className="flex items-start gap-2 text-[11px] text-white/60 font-bold">
-                                                <AppIcon name="check_circle" size={14} className="text-gold mt-0.5 shrink-0" />
+                                                <SvgIcon name="check_circle" size={14} className="text-gold mt-0.5 shrink-0" />
                                                 {req}
                                             </li>
                                         ))}
@@ -216,7 +216,7 @@ export default function JoinPage() {
 
                             {submitted ? (
                                 <div className="text-center py-16 space-y-4">
-                                    <AppIcon name="check_circle" size={64} className="text-gold mx-auto" />
+                                    <SvgIcon name="check_circle" size={64} className="text-gold mx-auto" />
                                     <h3 className="text-2xl font-black">Application Sent!</h3>
                                     <p className="text-white/50 text-sm">We&apos;ll reach out to {formState.email} within 48 hours.</p>
                                 </div>
@@ -268,11 +268,11 @@ export default function JoinPage() {
                                     </div>
                                     <button type="submit" disabled={submitting}
                                         className="w-full py-5 bg-gold text-brown rounded-lg font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-glow disabled:opacity-50 flex items-center justify-center gap-3">
-                                        {submitting ? <><AppIcon name="autorenew" size={20} className="animate-spin" /> Sending...</> : <><AppIcon name="send" size={20} /> Submit Application</>}
+                                        {submitting ? <><SvgIcon name="loader" size={20} className="animate-spin" /> Sending...</> : <><SvgIcon name="send" size={20} /> Submit Application</>}
                                     </button>
                                     {error && (
                                         <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold">
-                                            <AppIcon name="error" size={18} />
+                                            <SvgIcon name="error_circle" size={18} />
                                             {error}
                                         </div>
                                     )}
@@ -314,7 +314,7 @@ export default function JoinPage() {
                                     </div>
                                 </div>
                                 <Link href="tel:*456*819867#" className="inline-flex items-center gap-3 press-scale px-8 py-4 bg-gold text-brown rounded-lg font-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all">
-                                    <AppIcon name="phone_in_talk" size={16} /> Dial *456*819867# on Safaricom
+                                    <SvgIcon name="phone_in_talk" size={16} /> Dial *456*819867# on Safaricom
                                 </Link>
                             </div>
                         </div>

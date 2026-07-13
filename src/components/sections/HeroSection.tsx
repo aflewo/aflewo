@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import SvgIcon from "@/components/ui/SvgIcon";
+import GlassSurface from "@/components/GlassSurface";
 import { motion, AnimatePresence } from "framer-motion";
 import { getIslandDisplayItems } from "@/lib/events";
 
@@ -57,11 +58,61 @@ export default function HeroSection() {
     }, []);
 
     const [eventIndex, setEventIndex] = useState(0);
+    const [direction, setDirection] = useState(1);
+    const [isDragging, setIsDragging] = useState(false);
+    const dragStartXRef = useRef(0);
+    const dragCurrentXRef = useRef(0);
+    const pillRef = useRef<HTMLDivElement>(null);
 
-    const nextEvent = () => setEventIndex((prev: number) => (prev + 1) % dynamicItems.length);
-    const prevEvent = () => setEventIndex((prev: number) => (prev - 1 + dynamicItems.length) % dynamicItems.length);
+    const nextEvent = useCallback(() => {
+        setDirection(1);
+        setEventIndex((prev: number) => (prev + 1) % dynamicItems.length);
+    }, []);
+    
+    const prevEvent = useCallback(() => {
+        setDirection(-1);
+        setEventIndex((prev: number) => (prev - 1 + dynamicItems.length) % dynamicItems.length);
+    }, []);
 
     const currentItem = dynamicItems[eventIndex];
+
+    // Touch/pointer drag handlers for horizontal swipe
+    const onDragStart = useCallback((clientX: number) => {
+        dragStartXRef.current = clientX;
+        dragCurrentXRef.current = clientX;
+        setIsDragging(true);
+    }, []);
+
+    const onDragMove = useCallback((clientX: number) => {
+        if (!isDragging) return;
+        dragCurrentXRef.current = clientX;
+    }, [isDragging]);
+
+    const onDragEnd = useCallback(() => {
+        if (!isDragging) return;
+        const delta = dragCurrentXRef.current - dragStartXRef.current;
+        const threshold = 50;
+        if (delta > threshold) {
+            prevEvent();
+        } else if (delta < -threshold) {
+            nextEvent();
+        }
+        setIsDragging(false);
+    }, [isDragging, nextEvent, prevEvent]);
+
+    // Pointer events (covers both mouse and touch)
+    const handlePointerDown = useCallback((e: React.PointerEvent) => {
+        e.currentTarget.setPointerCapture(e.pointerId);
+        onDragStart(e.clientX);
+    }, [onDragStart]);
+
+    const handlePointerMove = useCallback((e: React.PointerEvent) => {
+        onDragMove(e.clientX);
+    }, [onDragMove]);
+
+    const handlePointerUp = useCallback((e: React.PointerEvent) => {
+        onDragEnd();
+    }, [onDragEnd]);
 
     return (
         <div ref={sectionRef}>
@@ -85,57 +136,113 @@ export default function HeroSection() {
                 </div>
 
                 {/* Premium Typography Layer */}
-                <div ref={contentRef} className="relative z-10 text-center px-6 max-w-6xl mt-20">
-                    <div className="mb-8 flex justify-center">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={currentItem.id}
-                                drag="x"
-                                dragConstraints={{ left: 0, right: 0 }}
-                                onDragEnd={(e, { offset, velocity }) => {
-                                    if (offset.x > 50 || velocity.x > 300) prevEvent();
-                                    else if (offset.x < -50 || velocity.x < -300) nextEvent();
-                                }}
-                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                className="group relative cursor-pointer active:cursor-grabbing"
-                            >
-                                <Link
-                                    href={currentItem.url}
-                                    target={currentItem.isExternal ? "_blank" : undefined}
-                                    className="inline-flex items-center gap-3 px-6 py-3 glass-card rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-white hover:text-gold transition-colors animate-breathe"
-                                >
-                                    <span className="relative flex h-2 w-2">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
-                                    </span>
-                                    {currentItem.title}
-                                </Link>
+                <div ref={contentRef} className="relative z-10 text-center px-8 max-w-6xl mt-20 w-full">
 
-                                {/* Navigation Arrows (Visible on hover) */}
-                                <div className="absolute inset-0 flex items-center justify-between px-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                                    <button
-                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); prevEvent(); }}
-                                        className="pointer-events-auto p-1 text-white/40 hover:text-white transition-colors"
+                    {/* ── Notification Pill (GlassSurface, horizontal swipe, chevrons outside) ── */}
+                    <div className="mb-8 flex justify-center items-center gap-3">
+                        {/* Left chevron — outside pill */}
+                        {dynamicItems.length > 1 && (
+                            <button
+                                onClick={prevEvent}
+                                aria-label="Previous announcement"
+                                className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full bg-white/8 border border-white/10 text-white/40 hover:text-white hover:bg-white/15 transition-all duration-200 backdrop-blur-sm"
+                            >
+                                <SvgIcon name="arrow_left" size={14} />
+                            </button>
+                        )}
+
+                        {/* Pill container */}
+                        <div className="relative overflow-hidden rounded-full" style={{ maxWidth: '340px', width: '100%' }}>
+                            <GlassSurface
+                                width="100%"
+                                height="100%"
+                                borderRadius={50}
+                                borderWidth={0.07}
+                                brightness={50}
+                                opacity={0.93}
+                                blur={11}
+                                backgroundOpacity={0.1}
+                                saturation={1}
+                                displace={0.5}
+                                distortionScale={-180}
+                                redOffset={0}
+                                greenOffset={10}
+                                blueOffset={20}
+                                className="absolute inset-0"
+                                style={{ position: 'absolute', inset: 0, borderRadius: '50px', zIndex: 0 }}
+                            />
+
+                            <div
+                                ref={pillRef}
+                                className="relative z-10 overflow-hidden"
+                                style={{ touchAction: 'pan-y' }}
+                                onPointerDown={handlePointerDown}
+                                onPointerMove={handlePointerMove}
+                                onPointerUp={handlePointerUp}
+                                onPointerCancel={handlePointerUp}
+                            >
+                                <AnimatePresence mode="wait" initial={false} custom={direction}>
+                                    <motion.div
+                                        key={currentItem.id}
+                                        custom={direction}
+                                        initial={(dir) => ({ opacity: 0, x: dir > 0 ? 60 : -60 })}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={(dir) => ({ opacity: 0, x: dir > 0 ? -60 : 60 })}
+                                        transition={{ type: "spring", stiffness: 380, damping: 35 }}
+                                        className="w-full"
                                     >
-                                        <SvgIcon name="arrow_left" size={16} />
-                                    </button>
-                                    <button
-                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); nextEvent(); }}
-                                        className="pointer-events-auto p-1 text-white/40 hover:text-white transition-colors"
-                                    >
-                                        <SvgIcon name="arrow_right" size={16} />
-                                    </button>
-                                </div>
-                            </motion.div>
-                        </AnimatePresence>
+                                        <Link
+                                            href={currentItem.url}
+                                            target={currentItem.isExternal ? "_blank" : undefined}
+                                            draggable={false}
+                                            className="inline-flex items-center gap-3 px-5 py-2.5 text-[10px] font-black uppercase tracking-[0.3em] text-white hover:text-gold transition-colors animate-breathe w-full justify-center"
+                                            onClick={(e) => {
+                                                // Don't navigate if user was dragging
+                                                if (Math.abs(dragCurrentXRef.current - dragStartXRef.current) > 10) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
+                                        >
+                                            <span className="relative flex h-2 w-2 flex-shrink-0">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
+                                            </span>
+                                            <span className="truncate">{currentItem.title}</span>
+                                        </Link>
+                                    </motion.div>
+                                </AnimatePresence>
+                            </div>
+                        </div>
+
+                        {/* Right chevron — outside pill */}
+                        {dynamicItems.length > 1 && (
+                            <button
+                                onClick={nextEvent}
+                                aria-label="Next announcement"
+                                className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full bg-white/8 border border-white/10 text-white/40 hover:text-white hover:bg-white/15 transition-all duration-200 backdrop-blur-sm"
+                            >
+                                <SvgIcon name="arrow_right" size={14} />
+                            </button>
+                        )}
                     </div>
 
-                    <h1 className="hero-title text-7xl md:text-9xl font-black tracking-tighter text-white leading-[0.85] perspective-1000 mb-8">
+                    {/* ── Main Headline — padding to prevent clipping ── */}
+                    <h1
+                        className="hero-title font-black tracking-tighter text-white leading-[0.85] perspective-1000 mb-8"
+                        style={{
+                            fontSize: 'clamp(4rem, 12vw, 9rem)',
+                            padding: '0.08em 0.12em',
+                            overflow: 'visible',
+                            lineHeight: '0.88',
+                        }}
+                    >
                         AFRICA <br />
-                        <span className="text-gradient-gold">LET{"'"}S WORSHIP</span>
+                        <span
+                            className="text-gradient-gold"
+                            style={{ display: 'inline-block', padding: '0.06em 0.1em', overflow: 'visible' }}
+                        >
+                            LET{"'"}S WORSHIP
+                        </span>
                     </h1>
 
                     <p className="hero-sub text-xl md:text-2xl text-white/70 font-medium max-w-2xl mx-auto mb-12 leading-relaxed font-serif-spiritual">
@@ -154,7 +261,7 @@ export default function HeroSection() {
                     </div>
                 </div>
 
-                {/* Scroll Indicator — below content layer (z-0) so it never overlaps CTA buttons */}
+                {/* Scroll Indicator */}
                 <div className="absolute bottom-0 sm:bottom-4 lg:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-30 z-0 pointer-events-none">
                     <span className="text-[10px] font-black tracking-widest uppercase">Scroll</span>
                     <div className="w-[2px] h-4 bg-gradient-to-b from-white to-transparent" />

@@ -46,6 +46,17 @@ const config: Config = {
                 brown: "hsl(20 30% 18%)",
                 emerald: "hsl(160 84% 39%)",
             },
+            screens: {
+                // AFLEWO Responsive Tier Demarcation:
+                // mobile:  0px – 767px        (no prefix / base)
+                // tablet:  768px – 1279px      (md: prefix)
+                // desktop: 1280px+             (lg: prefix — new tier)
+                'sm': '640px',
+                'md': '768px',
+                'lg': '1280px',
+                'xl': '1536px',
+                '2xl': '1920px',
+            },
             animation: {
                 float: "float 6s ease-in-out infinite",
                 breathe: "breathe 4s ease-in-out infinite",

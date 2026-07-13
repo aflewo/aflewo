@@ -6,7 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import SvgIcon from "@/components/ui/SvgIcon";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -99,13 +99,13 @@ function StorySubmitModal({ onClose }: { onClose: () => void }) {
                         <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">We read every submission</p>
                     </div>
                     <button onClick={onClose} className="p-2 glass-card rounded-lg text-white/50 hover:text-white">
-                        <AppIcon name="close" size={20} />
+                        <SvgIcon name="close" size={20} />
                     </button>
                 </div>
 
                 {submitted ? (
                     <div className="text-center py-12 space-y-4">
-                        <AppIcon name="favorite" size={56} className="text-gold mx-auto" />
+                        <SvgIcon name="favorite" size={56} className="text-gold mx-auto" />
                         <h4 className="text-xl font-black">Testimony Received</h4>
                         <p className="text-white/50 text-sm">Thank you, {form.name}. We&apos;ll be in touch at {form.email}.</p>
                     </div>
@@ -151,7 +151,7 @@ function StorySubmitModal({ onClose }: { onClose: () => void }) {
                         </div>
                         <button type="submit" disabled={submitting}
                             className="w-full py-4 bg-gold text-brown rounded-lg font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                            {submitting ? <><AppIcon name="autorenew" size={18} className="animate-spin" /> Sending...</> : <><AppIcon name="send" size={18} /> Submit My Testimony</>}
+                            {submitting ? <><SvgIcon name="loader" size={18} className="animate-spin" /> Sending...</> : <><SvgIcon name="send" size={18} /> Submit My Testimony</>}
                         </button>
                     </form>
                 )}
@@ -263,7 +263,7 @@ export default function TestimoniesPage() {
             <section className="pb-32">
                 {filtered.length === 0 ? (
                     <div className="max-container px-6 py-32 text-center space-y-4">
-                        <AppIcon name="forum" size={48} className="text-white/10 mx-auto" />
+                        <SvgIcon name="forum" size={48} className="text-white/10 mx-auto" />
                         <p className="text-white/30 font-black uppercase tracking-widest text-sm">No testimonies yet for this chapter</p>
                     </div>
                 ) : (
@@ -315,7 +315,7 @@ export default function TestimoniesPage() {
             {/* Submission CTA */}
             <section className="section-padding bg-brown/30 text-white text-center border-t border-gold/10">
                 <div className="max-container space-y-12">
-                    <AppIcon name="auto_awesome" className="mx-auto text-gold" size={48} />
+                    <SvgIcon name="auto_awesome" className="mx-auto text-gold" size={48} />
                     <h2 className="text-4xl md:text-6xl font-black tracking-tight">WHAT&apos;S YOUR <span className="text-gold">TESTIMONY?</span></h2>
                     <p className="max-w-2xl mx-auto text-white/60 text-lg font-medium leading-relaxed">
                         Whether you were in the choir in 2004 or attended for the first time in 2025, we want to hear how God has moved in your life through worship.
@@ -324,7 +324,7 @@ export default function TestimoniesPage() {
                         onClick={() => setShowModal(true)}
                         className="press-scale bg-gold text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter hover:bg-white transition-all shadow-glow inline-flex items-center gap-3"
                     >
-                        <AppIcon name="edit_note" size={22} /> Share Your Testimony
+                        <SvgIcon name="edit_note" size={22} /> Share Your Testimony
                     </button>
                 </div>
             </section>

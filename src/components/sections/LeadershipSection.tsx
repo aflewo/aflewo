@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -49,7 +49,7 @@ export default function LeadershipSection() {
                             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden glass-card-elevated border-white/5 bg-brown/20 mb-6">
                                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60 z-10" />
                                 <div className="absolute inset-0 flex items-center justify-center text-white/5">
-                                    <AppIcon name="person" size={120} />
+                                    <SvgIcon name="person" size={120} />
                                 </div>
                             </div>
                             <h3 className="text-2xl font-black">{leader.name}</h3>

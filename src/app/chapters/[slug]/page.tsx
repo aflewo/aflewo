@@ -5,7 +5,7 @@ import { getChapter } from "@/lib/chapters";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import AppIcon from "@/components/ui/AppIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
@@ -44,12 +44,12 @@ function RegisterModal({ chapterName, eventName, onClose }: { chapterName: strin
                         <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">{chapterName} — {eventName}</p>
                     </div>
                     <button onClick={onClose} className="p-2 glass-card rounded-lg text-white/50 hover:text-white">
-                        <AppIcon name="close" size={20} />
+                        <SvgIcon name="close" size={20} />
                     </button>
                 </div>
                 {submitted ? (
                     <div className="text-center py-10 space-y-4">
-                        <AppIcon name="check_circle" size={56} className="text-gold mx-auto" />
+                        <SvgIcon name="check_circle" size={56} className="text-gold mx-auto" />
                         <h4 className="text-xl font-black">Registration Sent!</h4>
                         <p className="text-white/50 text-sm">We&apos;ll confirm to {form.email} within 24 hours.</p>
                     </div>
@@ -75,7 +75,7 @@ function RegisterModal({ chapterName, eventName, onClose }: { chapterName: strin
                         </div>
                         <button type="submit" disabled={submitting}
                             className="w-full py-4 bg-gold text-brown rounded-lg font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                            {submitting ? <><AppIcon name="autorenew" size={18} className="animate-spin" /> Sending...</> : <><AppIcon name="send" size={18} /> Confirm Registration</>}
+                            {submitting ? <><SvgIcon name="loader" size={18} className="animate-spin" /> Sending...</> : <><SvgIcon name="send" size={18} /> Confirm Registration</>}
                         </button>
                     </form>
                 )}
@@ -128,7 +128,7 @@ export default function ChapterPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
                 <div className="max-container relative z-10 space-y-4 px-6">
                     <Link href="/#chapters" className="inline-flex items-center gap-2 text-gold text-[10px] font-black uppercase tracking-widest hover:gap-4 transition-all mb-4">
-                        <AppIcon name="arrow_back" size={14} /> Back to Chapters
+                        <SvgIcon name="arrow_back" size={14} /> Back to Chapters
                     </Link>
                     <div className="animate-up">
                         <div className="flex items-center gap-3 mb-3">
@@ -160,24 +160,24 @@ export default function ChapterPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="glass-card p-8 rounded-lg space-y-3">
-                                <AppIcon name="calendar_month" className="text-gold" size={24} />
+                                <SvgIcon name="calendar" className="text-gold" size={24} />
                                 <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Established</p>
                                 <p className="text-xl font-black">AFLEWO {chapter.established}</p>
                             </div>
                             <div className="glass-card p-8 rounded-lg space-y-3">
-                                <AppIcon name="location_on" className="text-gold" size={24} />
+                                <SvgIcon name="location" className="text-gold" size={24} />
                                 <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Primary Venue</p>
                                 <p className="text-xl font-black">{chapter.venue}</p>
                             </div>
                             {chapter.capacity && (
                                 <div className="glass-card p-8 rounded-lg space-y-3">
-                                    <AppIcon name="groups" className="text-gold" size={24} />
+                                    <SvgIcon name="people" className="text-gold" size={24} />
                                     <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Peak Capacity</p>
                                     <p className="text-xl font-black">{chapter.capacity} Souls</p>
                                 </div>
                             )}
                             <div className="glass-card p-8 rounded-lg space-y-3">
-                                <AppIcon name="flag" className="text-gold" size={24} />
+                                <SvgIcon name="flag" className="text-gold" size={24} />
                                 <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Nation</p>
                                 <p className="text-xl font-black">{chapter.flag} {chapter.country}</p>
                             </div>
@@ -199,7 +199,7 @@ export default function ChapterPage() {
                                         onClick={() => setShowRegister(true)}
                                         className="w-full py-4 rounded-lg bg-gold text-brown font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-glow flex items-center justify-center gap-3"
                                     >
-                                        <AppIcon name="how_to_reg" size={18} /> Register Now
+                                        <SvgIcon name="check_circle" size={18} /> Register Now
                                     </button>
                                 )}
                                 {chapter.link && !chapter.registrationOpen && (
@@ -224,7 +224,7 @@ export default function ChapterPage() {
                                 {chapter.contactPhone && (
                                     <a href={`tel:${chapter.contactPhone}`} className="flex items-center gap-4 text-white/60 hover:text-white transition-colors group">
                                         <div className="w-10 h-10 rounded-lg bg-white/5 group-hover:bg-gold/20 flex items-center justify-center transition-colors">
-                                            <AppIcon name="call" size={18} className="text-gold" />
+                                            <SvgIcon name="call" size={18} className="text-gold" />
                                         </div>
                                         <div>
                                             <p className="text-[9px] font-black uppercase tracking-widest text-white/30">Call Us</p>
@@ -235,7 +235,7 @@ export default function ChapterPage() {
                                 {chapter.contactEmail && (
                                     <a href={`mailto:${chapter.contactEmail}`} className="flex items-center gap-4 text-white/60 hover:text-white transition-colors group">
                                         <div className="w-10 h-10 rounded-lg bg-white/5 group-hover:bg-gold/20 flex items-center justify-center transition-colors">
-                                            <AppIcon name="mail" size={18} className="text-gold" />
+                                            <SvgIcon name="mail" size={18} className="text-gold" />
                                         </div>
                                         <div>
                                             <p className="text-[9px] font-black uppercase tracking-widest text-white/30">Email Us</p>
@@ -246,7 +246,7 @@ export default function ChapterPage() {
                                 {chapter.whatsappLink && (
                                     <a href={chapter.whatsappLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-white/60 hover:text-white transition-colors group">
                                         <div className="w-10 h-10 rounded-lg bg-white/5 group-hover:bg-gold/20 flex items-center justify-center transition-colors">
-                                            <AppIcon name="forum" size={18} className="text-gold" />
+                                            <SvgIcon name="forum" size={18} className="text-gold" />
                                         </div>
                                         <div>
                                             <p className="text-[9px] font-black uppercase tracking-widest text-white/30">WhatsApp Group</p>
@@ -282,7 +282,7 @@ export default function ChapterPage() {
                             href="/#chapters"
                             className="flex items-center gap-3 text-white/40 hover:text-gold transition-colors text-[10px] font-black uppercase tracking-widest"
                         >
-                            <AppIcon name="arrow_back" size={14} /> All Chapters
+                            <SvgIcon name="arrow_back" size={14} /> All Chapters
                         </Link>
                     </div>
                 </div>

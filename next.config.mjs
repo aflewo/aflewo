@@ -1,3 +1,8 @@
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     transpilePackages: ["three", "gsap", "@react-three/fiber", "@react-three/drei"],
@@ -29,7 +34,13 @@ const nextConfig = {
             },
         ],
     },
+    webpack: (config) => {
+        // Allow importing Lottie JSON files from the context directory
+        config.resolve.alias = {
+            ...config.resolve.alias,
+        };
+        return config;
+    },
 };
 
 export default nextConfig;
-

@@ -6,7 +6,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
-import AppIcon from "@/components/ui/AppIcon";
 import SvgIcon from "@/components/ui/SvgIcon";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -117,12 +116,12 @@ function AlumniUpdateModal({ onClose }: { onClose: () => void }) {
                         <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">Connect with the AFLEWO legacy network</p>
                     </div>
                     <button onClick={onClose} className="p-2 glass-card rounded-lg text-white/50 hover:text-white">
-                        <AppIcon name="close" size={20} />
+                        <SvgIcon name="close" size={20} />
                     </button>
                 </div>
                 {submitted ? (
                     <div className="text-center py-12 space-y-4">
-                        <AppIcon name="verified" size={56} className="text-gold mx-auto" />
+                        <SvgIcon name="verified" size={56} className="text-gold mx-auto" />
                         <h4 className="text-xl font-black">Welcome Back, {form.name}!</h4>
                         <p className="text-white/50 text-sm">We&apos;ll reach out to {form.email} within 48 hours.</p>
                     </div>
@@ -164,7 +163,7 @@ function AlumniUpdateModal({ onClose }: { onClose: () => void }) {
                         </div>
                         <button type="submit" disabled={submitting}
                             className="w-full py-4 bg-gold text-brown rounded-lg font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                            {submitting ? <><AppIcon name="autorenew" size={18} className="animate-spin" /> Submitting...</> : <><AppIcon name="how_to_reg" size={18} /> Register as Alumni</>}
+                            {submitting ? <><SvgIcon name="loader" size={18} className="animate-spin" /> Submitting...</> : <><SvgIcon name="check_circle" size={18} /> Register as Alumni</>}
                         </button>
                     </form>
                 )}
@@ -268,7 +267,7 @@ export default function AboutPage() {
                     <div className="pillars-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {pillars.map((pillar, i) => (
                             <div key={i} className="pillar-card glass-card p-10 space-y-6 hover:-translate-y-2 transition-transform duration-500 rounded-[2rem]">
-                                <div className="text-gold"><AppIcon name={pillar.icon} size={32} /></div>
+                                <div className="text-gold"><SvgIcon name={pillar.icon} size={32} /></div>
                                 <h3 className="text-2xl font-black">{pillar.title}</h3>
                                 <p className="text-foreground/60 text-sm font-medium leading-relaxed">{pillar.desc}</p>
                             </div>
@@ -385,7 +384,7 @@ export default function AboutPage() {
                         onClick={() => setShowAlumniModal(true)}
                         className="press-scale px-12 py-5 bg-gold text-brown rounded-lg font-black uppercase tracking-widest hover:brightness-110 transition-all inline-flex items-center gap-4"
                     >
-                        Update Your Profile <AppIcon name="arrow_forward" size={20} />
+                        Update Your Profile <SvgIcon name="arrow_forward" size={20} />
                     </button>
                 </div>
             </section>
@@ -399,7 +398,7 @@ export default function AboutPage() {
                     >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center">
-                                <AppIcon name="format_quote" size={18} className="text-gold" />
+                                <SvgIcon name="format_quote" size={18} className="text-gold" />
                             </div>
                             <span className="text-[10px] font-black uppercase tracking-widest text-gold">Testimonies</span>
                         </div>
