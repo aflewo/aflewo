@@ -147,7 +147,7 @@ export default function Navbar() {
                 <div
                     className={`max-w-6xl mx-auto rounded-full transition-all duration-700 flex items-center justify-between px-5 py-3 md:px-8 md:py-3.5 border ${isScrolled ? "border-white/10 shadow-[0_8px_32px_rgba(212,175,55,0.15)]" : "bg-transparent border-transparent"
                         } relative`}
-                    style={isScrolled ? {} : {}}
+                    style={isScrolled ? { willChange: "transform" } : {}}
                 >
                     {isScrolled ? (
                         <GlassSurface

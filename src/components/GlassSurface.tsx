@@ -162,6 +162,15 @@ const GlassSurface = ({
       return false;
     }
 
+    // Downgrade to high-performance CSS glass on mobile and low-capability devices
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    const cores = navigator.hardwareConcurrency || 4;
+
+    if (isMobile || isTouch || cores < 8) {
+      return false;
+    }
+
     const div = document.createElement('div');
     div.style.backdropFilter = `url(#${filterId})`;
 
