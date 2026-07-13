@@ -34,7 +34,7 @@ declare global {
 function SendIcon() {
     return (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16.1391 2.95907L7.10914 5.95907C1.03914 7.98907 1.03914 11.2991 7.10914 13.3191L9.78914 14.2091L10.6791 16.8891C12.6991 22.9591 16.0191 22.9591 18.0391 16.8891L21.0491 7.86907C22.3891 3.81907 20.1891 1.60907 16.1391 2.95907ZM16.4591 8.33907L12.6591 12.1591C12.5091 12.3091 12.3191 12.3791 12.1291 12.3791C11.9391 12.3791 11.7491 12.3091 11.5991 12.1591C11.3091 11.8691 11.3091 11.3891 11.5991 11.0991L15.3991 7.27907C15.6891 6.98907 16.1691 6.98907 16.4591 7.27907C16.7491 7.56907 16.7491 8.04907 16.4591 8.33907Z" fill="currentColor"/>
+            <path d="M16.1391 2.95907L7.10914 5.95907C1.03914 7.98907 1.03914 11.2991 7.10914 13.3191L9.78914 14.2091L10.6791 16.8891C12.6991 22.9591 16.0191 22.9591 18.0391 16.8891L21.0491 7.86907C22.3891 3.81907 20.1891 1.60907 16.1391 2.95907ZM16.4591 8.33907L12.6591 12.1591C12.5091 12.3091 12.3191 12.3791 12.1291 12.3791C11.9391 12.3791 11.7491 12.3091 11.5991 12.1591C11.3091 11.8691 11.3091 11.3891 11.5991 11.0991L15.3991 7.27907C15.6891 6.98907 16.1691 6.98907 16.4591 7.27907C16.7491 7.56907 16.7491 8.04907 16.4591 8.33907Z" fill="currentColor" />
         </svg>
     );
 }
@@ -80,15 +80,15 @@ function applyFuzzyLinks(text: string, baseIndex: number) {
         const lowerPart = part.toLowerCase();
         const url = PAGE_DICTIONARY[lowerPart];
         if (url) {
-             return (
-                 <Link
-                     key={`fuzzy-${baseIndex}-${i}`}
-                     href={url}
-                     className="text-gold underline hover:text-gold/80 font-medium transition-all"
-                 >
-                     {part}
-                 </Link>
-             );
+            return (
+                <Link
+                    key={`fuzzy-${baseIndex}-${i}`}
+                    href={url}
+                    className="text-gold underline hover:text-gold/80 font-medium transition-all"
+                >
+                    {part}
+                </Link>
+            );
         }
         return part;
     });
@@ -162,8 +162,8 @@ function ChatBubble({ msg }: { msg: Message }) {
         >
             <div
                 className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${isUser
-                        ? "bg-gold/90 text-brown font-semibold rounded-br-sm"
-                        : "bg-white/8 text-white/90 border border-white/10 rounded-bl-sm"
+                    ? "bg-gold/90 text-brown font-semibold rounded-br-sm"
+                    : "bg-white/8 text-white/90 border border-white/10 rounded-bl-sm"
                     }`}
                 style={{ backdropFilter: isUser ? undefined : "blur(8px)" }}
             >
@@ -422,7 +422,7 @@ export default function AIAssistant() {
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SR();
         recognition.lang = "en-KE";
-        recognition.continuous = true;
+        recognition.continuous = false;
         recognition.interimResults = true;
 
         recognition.onstart = () => {
@@ -659,8 +659,8 @@ export default function AIAssistant() {
                                             initial={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0, y: 15, scale: 0.95 }}
                                             animate={{ opacity: 1, height: "auto", marginTop: 24, marginBottom: 24, y: 0, scale: 1 }}
                                             exit={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0, y: 10, scale: 0.98 }}
-                                            transition={{ 
-                                                duration: 0.4, ease: [0.32, 0.72, 0, 1] 
+                                            transition={{
+                                                duration: 0.4, ease: [0.32, 0.72, 0, 1]
                                             }}
                                             className="flex flex-col items-center justify-center overflow-hidden w-full"
                                         >
@@ -739,8 +739,8 @@ export default function AIAssistant() {
                                             disabled={isThinking}
                                             aria-label={isListening ? "Stop listening" : "Start voice input"}
                                             className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${isListening
-                                                    ? "bg-gold/20 text-gold border border-gold/40 animate-pulse"
-                                                    : "bg-white/8 text-white/50 border border-white/10 hover:text-white hover:bg-white/15"
+                                                ? "bg-gold/20 text-gold border border-gold/40 animate-pulse"
+                                                : "bg-white/8 text-white/50 border border-white/10 hover:text-white hover:bg-white/15"
                                                 }`}
                                         >
                                             <MicIcon active={isListening} />
