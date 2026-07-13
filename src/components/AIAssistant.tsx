@@ -422,7 +422,7 @@ export default function AIAssistant() {
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SR();
         recognition.lang = "en-KE";
-        recognition.continuous = false;
+        recognition.continuous = true;
         recognition.interimResults = true;
 
         recognition.onstart = () => {

@@ -19,9 +19,9 @@ const links = [
 ];
 
 const socialItems = [
-    { label: "YouTube", link: "https://youtube.com/@aflewo" },
-    { label: "Instagram", link: "https://instagram.com/aflewo" },
-    { label: "Facebook", link: "https://facebook.com/aflewo" },
+    { label: "YouTube", link: "https://youtube.com/@aflewoke" },
+    { label: "Instagram", link: "https://instagram.com/aflewoke" },
+    { label: "Facebook", link: "https://facebook.com/AFLEWOKE" },
 ];
 
 export default function Navbar() {
@@ -188,8 +188,8 @@ export default function Navbar() {
                                     key={link.name}
                                     href={link.href}
                                     className={`relative px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.18em] transition-colors duration-200 ${isActive
-                                            ? "text-gold"
-                                            : "text-white/60 hover:text-white"
+                                        ? "text-gold"
+                                        : "text-white/60 hover:text-white"
                                         }`}
                                 >
                                     {isActive && (
