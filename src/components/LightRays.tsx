@@ -4,12 +4,12 @@ import './LightRays.css';
 
 const DEFAULT_COLOR = '#ffffff';
 
-const hexToRgb = hex => {
+const hexToRgb = (hex: string) => {
   const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return m ? [parseInt(m[1], 16) / 255, parseInt(m[2], 16) / 255, parseInt(m[3], 16) / 255] : [1, 1, 1];
 };
 
-const getAnchorAndDir = (origin, w, h) => {
+const getAnchorAndDir = (origin: string, w: number, h: number) => {
   const outside = 0.2;
   switch (origin) {
     case 'top-left':
@@ -46,16 +46,16 @@ const LightRays = ({
   distortion = 0.0,
   className = ''
 }) => {
-  const containerRef = useRef(null);
-  const uniformsRef = useRef(null);
-  const rendererRef = useRef(null);
+  const containerRef = useRef<any>(null);
+  const uniformsRef = useRef<any>(null);
+  const rendererRef = useRef<any>(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
-  const animationIdRef = useRef(null);
-  const meshRef = useRef(null);
-  const cleanupFunctionRef = useRef(null);
+  const animationIdRef = useRef<any>(null);
+  const meshRef = useRef<any>(null);
+  const cleanupFunctionRef = useRef<any>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const observerRef = useRef(null);
+  const observerRef = useRef<any>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -259,7 +259,7 @@ void main() {
         uniforms.rayDir.value = dir;
       };
 
-      const loop = t => {
+      const loop = (t: number) => {
         if (!rendererRef.current || !uniformsRef.current || !meshRef.current) {
           return;
         }
@@ -379,7 +379,7 @@ void main() {
   ]);
 
   useEffect(() => {
-    const handleMouseMove = e => {
+    const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current || !rendererRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
