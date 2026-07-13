@@ -4,20 +4,20 @@ import Link from "next/link";
 import Image from "next/image";
 import SvgIcon from "@/components/ui/SvgIcon";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
     const [email, setEmail] = useState("");
     const [subState, setSubState] = useState<"idle" | "sending" | "done">("idle");
+    const router = useRouter();
 
     const handleSubscribe = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email) return;
         setSubState("sending");
         await new Promise((r) => setTimeout(r, 1000));
-        const subject = encodeURIComponent("AFLEWO Newsletter Signup");
-        const body = encodeURIComponent(`Please subscribe me to AFLEWO updates.\nEmail: ${email}`);
-        window.location.href = `mailto:nairobi@aflewo.org?subject=${subject}&body=${body}`;
+        router.push(`/join?email=${encodeURIComponent(email)}`);
         setSubState("done");
     };
 

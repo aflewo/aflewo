@@ -63,9 +63,19 @@ export default function JoinPage() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        // Read URL param ?tab=
+        // Read URL params
         const params = new URLSearchParams(window.location.search);
         const tab = params.get("tab");
+        const email = params.get("email");
+
+        if (email) {
+            setFormState((prev) => ({ ...prev, email }));
+            setTimeout(() => {
+                const el = document.getElementById("apply-form");
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, 600);
+        }
+
         if (tab) {
             const match = tracks.find((t) => t.id === tab);
             if (match) {
