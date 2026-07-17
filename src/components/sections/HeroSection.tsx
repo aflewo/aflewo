@@ -191,7 +191,7 @@ export default function HeroSection() {
                                 ref={pillRef}
                                 className="relative z-10 overflow-hidden"
                                 style={{ touchAction: 'pan-y' }}
-                                onPointerDown={handlePointerDown}
+                                onPointerDown={(e) => onDragStart(e.clientX)}
                                 onPointerMove={handlePointerMove}
                                 onPointerUp={handlePointerUp}
                                 onPointerCancel={handlePointerUp}

@@ -149,7 +149,7 @@ export function parseEventDate(dateStr: string): Date | null {
 }
 
 export function getLiveEvents() {
-    return events.filter(e => e.isLive);
+    return events.filter(e => e.isLive).reverse();
 }
 
 export function getIslandDisplayItems() {
