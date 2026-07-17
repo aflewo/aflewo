@@ -37,16 +37,45 @@ export default function PartnersSection() {
 
     return (
         <section ref={sectionRef} className="py-20 bg-background border-y border-white/5 overflow-hidden">
-            <div className="max-container flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
-                {partners.map((partner, i) => (
-                    <div key={i} className="partner-logo flex flex-col items-center gap-2">
-                        <div className="w-12 h-12 md:w-16 md:h-16 relative">
-                            {/* Placeholder for actual logos */}
-                            <div className="w-full h-full bg-white/20 rounded-lg animate-pulse" />
+            <div className="max-container">
+                <div className="text-center mb-10">
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30">Trusted Partners</span>
+                </div>
+                <div className="flex flex-wrap justify-center items-stretch gap-4 md:gap-6">
+                    {partners.map((partner, i) => (
+                        <div
+                            key={i}
+                            className="partner-logo group flex flex-col items-center gap-3 px-8 py-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:border-gold/20 transition-all duration-500 cursor-default min-w-[160px]"
+                            style={{
+                                backdropFilter: "blur(12px)",
+                                WebkitBackdropFilter: "blur(12px)",
+                            }}
+                        >
+                            {/* Logo area with initials fallback behind */}
+                            <div className="w-14 h-14 rounded-xl overflow-hidden flex items-center justify-center bg-white/5 border border-white/8 group-hover:border-gold/20 transition-colors duration-500 relative">
+                                {/* Initials badge — always rendered, image sits on top */}
+                                <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-white/30 tracking-tighter pointer-events-none select-none" aria-hidden="true">
+                                    {partner.name.split(" ").map(w => w[0]).slice(0, 2).join("")}
+                                </span>
+                                <Image
+                                    src={partner.logo}
+                                    alt={partner.name}
+                                    fill
+                                    sizes="56px"
+                                    className="object-contain opacity-50 group-hover:opacity-80 transition-opacity duration-500 p-1.5 relative z-10"
+                                />
+                            </div>
+                            {/* Name */}
+                            <p className="text-[11px] font-black uppercase tracking-wider text-white/40 group-hover:text-white/70 transition-colors duration-300 text-center leading-tight">
+                                {partner.name}
+                            </p>
+                            {/* Role tag */}
+                            <span className="text-[8px] font-black uppercase tracking-widest text-gold/40 group-hover:text-gold/70 transition-colors duration-300 px-2 py-0.5 rounded-full border border-gold/10 group-hover:border-gold/25">
+                                {partner.role}
+                            </span>
                         </div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-white/50">{partner.name}</span>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </section>
     );

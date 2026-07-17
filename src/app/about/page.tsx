@@ -188,7 +188,7 @@ export default function AboutPage() {
                 x: (i) => (i % 2 === 0 ? -60 : 60), opacity: 0, stagger: 0.15, duration: 1, ease: "power3.out",
             });
             gsap.from(".leader-card", {
-                scrollTrigger: { trigger: ".leadership-grid", start: "top 80%" },
+                scrollTrigger: { trigger: ".leadership-grid", start: "top 95%", once: true },
                 y: 40, opacity: 0, stagger: 0.12, duration: 0.9, ease: "power3.out",
             });
         }, containerRef);
@@ -318,12 +318,19 @@ export default function AboutPage() {
                     <div className="leadership-grid grid grid-cols-1 md:grid-cols-3 gap-8">
                         {leadership.map((leader, i) => (
                             <div key={i} className="leader-card glass-card-elevated p-8 rounded-2xl border-white/5 group hover:border-gold/30 transition-all space-y-6">
-                                {/* Initials avatar — no placeholder images for founders */}
-                                <div className="w-20 h-20 rounded-full border-2 border-gold/30 group-hover:border-gold transition-colors flex items-center justify-center bg-gradient-to-br from-gold/20 to-gold/5 relative overflow-hidden">
-                                    <span className="text-gold font-black text-3xl select-none">
+                                {/* Leader portrait — fills with image, falls back to initial if image missing */}
+                                <div className="w-20 h-20 rounded-full border-2 border-gold/30 group-hover:border-gold transition-colors overflow-hidden relative bg-gradient-to-br from-gold/20 to-gold/5 flex-shrink-0">
+                                    <Image
+                                        src={leader.image}
+                                        alt={leader.name}
+                                        fill
+                                        sizes="80px"
+                                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                    />
+                                    {/* Initials overlay — only visible while image loads or on error */}
+                                    <span className="absolute inset-0 flex items-center justify-center text-gold font-black text-3xl select-none pointer-events-none" aria-hidden="true" style={{ mixBlendMode: "overlay", opacity: 0.4 }}>
                                         {leader.name.charAt(0)}
                                     </span>
-                                    <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
                                 </div>
                                 <div className="space-y-1">
                                     <h4 className="text-xl font-black text-white">{leader.name}</h4>

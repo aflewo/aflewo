@@ -145,9 +145,24 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
     const textRef = useRef<HTMLDivElement>(null);
     const progressBarRef = useRef<HTMLDivElement>(null);
     const glowRef = useRef<HTMLDivElement>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
     const [progress, setProgress] = useState(0);
     const [showParticles, setShowParticles] = useState(true);
     const [currentPhrase, setCurrentPhrase] = useState(0);
+
+    // Pre-load transition audio
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const audio = new Audio("/audio/mixkit-intro-transition-1146.wav");
+        audio.volume = 0.35;
+        audio.preload = "auto";
+        audio.load();
+        audioRef.current = audio;
+        return () => {
+            audio.pause();
+            audioRef.current = null;
+        };
+    }, []);
 
     const phrases = [
         "Uniting",
@@ -201,6 +216,14 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
             onUpdate: () => setProgress(Math.round(progressObj.value)),
             onComplete: () => {
                 setShowParticles(false);
+
+                // Fire transition audio at the exact exit moment (respects autoplay policy)
+                if (audioRef.current) {
+                    audioRef.current.currentTime = 0;
+                    audioRef.current.play().catch(() => {
+                        // Silently ignore — browser blocked autoplay
+                    });
+                }
 
                 const exitTl = gsap.timeline({
                     onComplete

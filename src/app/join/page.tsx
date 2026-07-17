@@ -93,7 +93,7 @@ export default function JoinPage() {
     useEffect(() => {
         const ctx = gsap.context(() => {
             gsap.from(".track-card", {
-                scrollTrigger: { trigger: ".tracks-grid", start: "top 80%" },
+                scrollTrigger: { trigger: ".tracks-grid", start: "top 95%", once: true },
                 y: 60,
                 opacity: 0,
                 stagger: 0.1,

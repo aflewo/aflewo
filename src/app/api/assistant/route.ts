@@ -148,10 +148,12 @@ async function retrieveRAGContext(query: string): Promise<string> {
 }
 
 // ─── Main response generation using OpenAI-compatible endpoint ───────────────
-// Uses Resend-adjacent pattern: tries OPENAI_API_KEY from env, falls back to
-// a simple rule-based response so the assistant always works.
-async function generateResponse(messages: Message[], ragContext: string): Promise<string> {
-    const systemPrompt = `You are a helpful assistant for AFLEWO (Africa Let's Worship). You speak with warmth, faith, and clarity. You have deep knowledge of AFLEWO's mission, chapters, events, and how people can get involved.
+async function generateResponse(messages: Message[], ragContext: string, currentPath?: string): Promise<string> {
+    const locationContext = currentPath
+        ? `\nUSER'S CURRENT LOCATION: The user is currently on the page at path "${currentPath}". Do NOT suggest navigating to this same path — they are already there. If the user asks about this page's content, describe it or scroll to relevant sections instead. Do not issue [navigate_to: ${currentPath}] commands.\n`
+        : "";
+
+    const systemPrompt = `You are a helpful assistant for AFLEWO (Africa Let's Worship). You speak with warmth, faith, and clarity. You have deep knowledge of AFLEWO's mission, chapters, events, and how people can get involved.${locationContext}
 
 ${SITE_MAP_CONTEXT}
 
@@ -307,6 +309,7 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const messages: Message[] = body.messages || [];
+        const currentPath: string | undefined = body.currentPath || undefined;
 
         if (!messages.length) {
             return NextResponse.json({ error: "No messages provided" }, { status: 400 });
@@ -317,7 +320,7 @@ export async function POST(req: NextRequest) {
         const ragContext = await retrieveRAGContext(lastUserMsg);
 
         // Generate response
-        const rawResponse = await generateResponse(messages, ragContext);
+        const rawResponse = await generateResponse(messages, ragContext, currentPath);
 
         // Extract navigation action if present
         const action = extractNavigationAction(rawResponse);

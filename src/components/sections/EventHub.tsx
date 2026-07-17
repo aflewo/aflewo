@@ -51,21 +51,32 @@ function FlipDigit({ value, label }: FlipDigitProps) {
     const prevValue = useRef(value);
     const [displayValue, setDisplayValue] = useState(value);
     const [nextValue, setNextValue] = useState(value);
+    const tlRef = useRef<gsap.core.Timeline | null>(null);
 
     useEffect(() => {
         if (prevValue.current !== value) {
+            // Kill any in-progress flip before starting a fresh one
+            tlRef.current?.kill();
+            if (flipRef.current) gsap.set(flipRef.current, { rotateX: 0 });
+
             setNextValue(value);
+            const capturedPrev = prevValue.current;
+            prevValue.current = value;
+
             const tl = gsap.timeline({
                 onComplete: () => {
                     setDisplayValue(value);
                     if (flipRef.current) gsap.set(flipRef.current, { rotateX: 0 });
                 }
             });
+            tlRef.current = tl;
             if (flipRef.current) {
                 tl.to(flipRef.current, { rotateX: -180, duration: 0.6, ease: "power2.inOut" });
             }
+            void capturedPrev;
+        } else {
+            prevValue.current = value;
         }
-        prevValue.current = value;
     }, [value]);
 
     const formattedDisplay = displayValue.toString().padStart(2, '0');

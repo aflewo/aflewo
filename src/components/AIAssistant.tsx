@@ -1,13 +1,25 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SvgIcon from "@/components/ui/SvgIcon";
 import fireMicData from "@/../context/lottie/Fire Mic Animation - LIstening_AI.json";
+import aiChatData from "@/../context/inspo/AI Chat.json";
 import { useAuth } from "@/app/(dashboard)/AuthContext";
+
+// ─── Wallpaper Presets ────────────────────────────────────────────────────────
+const WALLPAPER_PRESETS = [
+    { id: "default", label: "Default", value: null, preview: "hsl(20 14% 5%)" },
+    { id: "cosmos", label: "Cosmos", value: "linear-gradient(160deg,#0f0c29,#302b63,#24243e)", preview: "#302b63" },
+    { id: "gold", label: "Gold Dust", value: "linear-gradient(160deg,#1a0e00,#3d2500,#1a0e00)", preview: "#3d2500" },
+    { id: "forest", label: "Forest", value: "linear-gradient(160deg,#0a1a0f,#0d2f18,#071208)", preview: "#0d2f18" },
+    { id: "nebula", label: "Nebula", value: "linear-gradient(160deg,#1a0020,#2d0035,#0d0015)", preview: "#2d0035" },
+    { id: "ocean", label: "Ocean", value: "linear-gradient(160deg,#000d1a,#00243d,#000d1a)", preview: "#00243d" },
+];
+const WP_STORAGE_KEY = "aflewo_chat_wallpaper";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Message {
@@ -74,7 +86,7 @@ const PAGE_DICTIONARY: Record<string, string> = {
 };
 const fuzzyRegex = new RegExp(`\\b(${Object.keys(PAGE_DICTIONARY).join("|")})\\b`, "gi");
 
-function applyFuzzyLinks(text: string, baseIndex: number) {
+function applyFuzzyLinks(text: string, baseIndex: number, onNavigate?: () => void) {
     const parts = text.split(fuzzyRegex);
     return parts.map((part, i) => {
         const lowerPart = part.toLowerCase();
@@ -84,6 +96,9 @@ function applyFuzzyLinks(text: string, baseIndex: number) {
                 <Link
                     key={`fuzzy-${baseIndex}-${i}`}
                     href={url}
+                    onClick={() => {
+                        if (onNavigate) onNavigate();
+                    }}
                     className="text-gold underline hover:text-gold/80 font-medium transition-all"
                 >
                     {part}
@@ -94,7 +109,7 @@ function applyFuzzyLinks(text: string, baseIndex: number) {
     });
 }
 
-function parseMessageContent(content: string, profile: any) {
+function parseMessageContent(content: string, profile: any, onNavigate?: () => void) {
     let replacedText = content;
     if (profile) {
         replacedText = replacedText
@@ -121,36 +136,53 @@ function parseMessageContent(content: string, profile: any) {
     while ((match = regex.exec(replacedText)) !== null) {
         const textBefore = replacedText.substring(lastIndex, match.index);
         if (textBefore) {
-            parts.push(...applyFuzzyLinks(textBefore, matchCount++));
+            parts.push(...applyFuzzyLinks(textBefore, matchCount++, onNavigate));
         }
 
         const linkText = match[1];
         const linkUrl = match[2];
-        parts.push(
-            <a
-                key={match.index}
-                href={linkUrl}
-                target={linkUrl.startsWith("http") ? "_blank" : undefined}
-                rel={linkUrl.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="text-gold underline hover:text-gold/80 font-medium transition-all"
-            >
-                {linkText}
-            </a>
-        );
+        const isInternal = !linkUrl.startsWith("http") && !linkUrl.startsWith("//");
+
+        if (isInternal) {
+            parts.push(
+                <Link
+                    key={match.index}
+                    href={linkUrl}
+                    onClick={() => {
+                        if (onNavigate) onNavigate();
+                    }}
+                    className="text-gold underline hover:text-gold/80 font-medium transition-all"
+                >
+                    {linkText}
+                </Link>
+            );
+        } else {
+            parts.push(
+                <a
+                    key={match.index}
+                    href={linkUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gold underline hover:text-gold/80 font-medium transition-all"
+                >
+                    {linkText}
+                </a>
+            );
+        }
 
         lastIndex = regex.lastIndex;
     }
 
     const textAfter = replacedText.substring(lastIndex);
     if (textAfter) {
-        parts.push(...applyFuzzyLinks(textAfter, matchCount++));
+        parts.push(...applyFuzzyLinks(textAfter, matchCount++, onNavigate));
     }
 
-    return parts.length > 0 ? parts : applyFuzzyLinks(replacedText, matchCount);
+    return parts.length > 0 ? parts : applyFuzzyLinks(replacedText, matchCount, onNavigate);
 }
 
 // ─── Chat bubble ─────────────────────────────────────────────────────────────
-function ChatBubble({ msg }: { msg: Message }) {
+function ChatBubble({ msg, onNavigate }: { msg: Message; onNavigate?: () => void }) {
     const { profile } = useAuth();
     const isUser = msg.role === "user";
     return (
@@ -167,7 +199,7 @@ function ChatBubble({ msg }: { msg: Message }) {
                     }`}
                 style={{ backdropFilter: isUser ? undefined : "blur(8px)" }}
             >
-                {parseMessageContent(msg.content, profile)}
+                {parseMessageContent(msg.content, profile, onNavigate)}
             </div>
         </motion.div>
     );
@@ -238,8 +270,9 @@ function DynamicSuggestions({ suggestions, onSelect }: { suggestions: any[], onS
 }
 
 // ─── Main AI Assistant Component ──────────────────────────────────────────────
-export default function AIAssistant() {
+export default function AIAssistant({ onNavigate }: { onNavigate?: () => void }) {
     const router = useRouter();
+    const pathname = usePathname();
     const { profile } = useAuth();
 
     const [isOpen, setIsOpen] = useState(false);
@@ -258,6 +291,12 @@ export default function AIAssistant() {
     const [voiceTranscript, setVoiceTranscript] = useState("");
     const [isNavigating, setIsNavigating] = useState<{ type: string; target: string } | null>(null);
     const [activeSystemMessage, setActiveSystemMessage] = useState<string | null>(null);
+    const [showSignInPill, setShowSignInPill] = useState(false);
+    const [fabIsIdle, setFabIsIdle] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);
+    const [chatWallpaper, setChatWallpaper] = useState<string | null>(null);
+    const [showPersonalize, setShowPersonalize] = useState(false);
+    const aiChatLottieRef = useRef<LottieRefCurrentProps>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -265,6 +304,7 @@ export default function AIAssistant() {
     const recognitionRef = useRef<any>(null);
     const synthRef = useRef<SpeechSynthesis | null>(null);
     const hasSentRef = useRef(false);
+    const wpFileInputRef = useRef<HTMLInputElement>(null);
 
     // Check for voice support
     useEffect(() => {
@@ -274,6 +314,46 @@ export default function AIAssistant() {
             synthRef.current = window.speechSynthesis || null;
         }
     }, []);
+
+    // Load persisted wallpaper
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const saved = localStorage.getItem(WP_STORAGE_KEY);
+        if (saved) setChatWallpaper(saved === "null" ? null : saved);
+    }, []);
+
+    // Delay show sign-in pill to draw focus when chat is opened
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        if (isOpen) {
+            timer = setTimeout(() => {
+                setShowSignInPill(true);
+            }, 1000);
+        } else {
+            setShowSignInPill(false);
+        }
+        return () => clearTimeout(timer);
+    }, [isOpen]);
+
+    // Activity-based FAB opacity fade — mirrors Nav FAB behaviour
+    useEffect(() => {
+        if (isOpen) {
+            setFabIsIdle(false);
+            return;
+        }
+        const idleTimer = setTimeout(() => setFabIsIdle(true), 4000);
+        const resetIdle = () => {
+            setFabIsIdle(false);
+            clearTimeout(idleTimer);
+        };
+        window.addEventListener("mousemove", resetIdle, { passive: true });
+        window.addEventListener("touchstart", resetIdle, { passive: true });
+        return () => {
+            clearTimeout(idleTimer);
+            window.removeEventListener("mousemove", resetIdle);
+            window.removeEventListener("touchstart", resetIdle);
+        };
+    }, [isOpen]);
 
     // Auto-scroll to latest message or when thinking
     useEffect(() => {
@@ -297,6 +377,7 @@ export default function AIAssistant() {
     // ─── Navigation action executor ─────────────────────────────────────────
     const executeAction = useCallback((action: NavigationAction) => {
         if (action.type === "navigate_to") {
+            if (onNavigate) onNavigate();
             router.push(action.target);
         } else if (action.type === "scroll_to") {
             const el = document.getElementById(action.target);
@@ -304,13 +385,15 @@ export default function AIAssistant() {
                 el.scrollIntoView({ behavior: "smooth", block: "start" });
             } else {
                 // Fallback: if section not found on current page, navigate home and scroll
+                if (onNavigate) onNavigate();
                 router.push(`/#${action.target}`);
             }
         }
-    }, [router]);
+    }, [router, onNavigate]);
 
     // ─── Text-to-speech ──────────────────────────────────────────────────────
     const speak = useCallback((text: string) => {
+        if (isMuted) return;
         if (!synthRef.current) return;
         synthRef.current.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
@@ -352,7 +435,7 @@ export default function AIAssistant() {
             const res = await fetch("/api/assistant", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ messages: history }),
+                body: JSON.stringify({ messages: history, currentPath: pathname }),
             });
 
             const data = await res.json();
@@ -501,10 +584,10 @@ export default function AIAssistant() {
                     <motion.button
                         key="fab"
                         initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
+                        animate={{ scale: 1, opacity: fabIsIdle ? 0.28 : 1 }}
                         exit={{ scale: 0, opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                        onClick={() => setIsOpen(true)}
+                        transition={{ type: "spring", stiffness: 400, damping: 25, opacity: { duration: 1.2, ease: "easeInOut" } }}
+                        onClick={() => { setIsOpen(true); setFabIsIdle(false); }}
                         aria-label="Open assistant"
                         className="fixed bottom-8 right-8 z-[150] w-16 h-16 rounded-full flex items-center justify-center shadow-[0_8px_32px_rgba(212,175,55,0.15)] border border-white/10 hover:border-gold/40 cursor-pointer overflow-hidden transition-all duration-300 group"
                         style={{
@@ -512,7 +595,7 @@ export default function AIAssistant() {
                             backdropFilter: "blur(24px)",
                             WebkitBackdropFilter: "blur(24px)"
                         }}
-                        whileHover={{ scale: 1.08 }}
+                        whileHover={{ scale: 1.08, opacity: 1 }}
                         whileTap={{ scale: 0.94 }}
                     >
                         {/* Premium Glossy Inset Ring */}
@@ -523,7 +606,7 @@ export default function AIAssistant() {
 
                         {/* Centered Icon */}
                         <div className="relative z-20 flex items-center justify-center">
-                            <SvgIcon name="search-square" size={26} className="text-white drop-shadow-[0_2px_8px_rgba(255,255,255,0.2)]" />
+                            <SvgIcon name="search-status-1" size={26} className="text-white drop-shadow-[0_2px_8px_rgba(255,255,255,0.2)]" />
                         </div>
                     </motion.button>
                 )}
@@ -551,20 +634,66 @@ export default function AIAssistant() {
                         {/* ── Panel Header ── */}
                         <div className="flex items-center justify-between px-5 py-4 border-b border-white/8 flex-shrink-0">
                             <div className="flex items-center gap-3">
-                                {/* Panel header avatar */}
+                                {/* AI Chat Lottie avatar */}
                                 <div className="w-10 h-10 relative flex-shrink-0 flex items-center justify-center">
-                                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white">
-                                        <SvgIcon name="search-square" size={20} />
-                                    </div>
+                                    <Lottie
+                                        lottieRef={aiChatLottieRef}
+                                        animationData={aiChatData}
+                                        loop={true}
+                                        autoplay={true}
+                                        style={{ width: 40, height: 40 }}
+                                    />
                                 </div>
                                 <div>
-                                    <p className="text-white font-black text-sm tracking-tight">AFLEWO Connect</p>
+                                    <p className="text-white font-black text-sm tracking-tight">AFLEWO Chatbox</p>
                                     <p className="text-white/40 text-[10px] font-medium tracking-wider uppercase">
-                                        {isListening ? "Listening..." : isThinking ? "Thinking..." : "Ask me anything"}
+                                        {isListening ? "Listening..." : isThinking ? "Thinking..." : "Ask me anything!"}
                                     </p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-1.5">
+                                {/* Mute TTS toggle */}
+                                <button
+                                    onClick={() => {
+                                        setIsMuted(m => !m);
+                                        if (!isMuted) synthRef.current?.cancel();
+                                    }}
+                                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${
+                                        isMuted
+                                            ? "text-white/25 bg-white/5 hover:bg-white/10"
+                                            : "text-white/40 hover:text-white hover:bg-white/10"
+                                    }`}
+                                    title={isMuted ? "Unmute voice" : "Mute voice"}
+                                    aria-label={isMuted ? "Unmute voice" : "Mute voice"}
+                                >
+                                    {isMuted ? (
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <path d="M17.27 17.27C16.14 18.07 14.62 18.5 12.95 18.5C9.21 18.5 6.45 16.07 6.45 12.5V11.35L3.03 7.93C3.01 8.11 3 8.31 3 8.5V12.5C3 17.08 7.03 20.5 12.95 20.5C14.93 20.5 16.74 19.97 18.21 19.05L17.27 17.27Z" fill="currentColor" opacity=".4"/>
+                                            <path d="M19.65 15.53C20.18 14.6 20.45 13.56 20.45 12.5V8.5C20.45 3.92 16.42 0.5 10.5 0.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                            <path d="M2 2L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                        </svg>
+                                    ) : (
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <path d="M18.12 8.41C18.67 9.37 19 10.4 19 11.5V16.5C19 19.26 16.76 21.5 14 21.5C11.24 21.5 9 19.26 9 16.5V7.5C9 4.74 11.24 2.5 14 2.5C15.36 2.5 16.6 3.05 17.5 3.95" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                            <path d="M5 11.5V15.5C5 20.47 9.03 24.5 14 24.5C18.97 24.5 23 20.47 23 15.5V11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                            <path d="M14 24.5V27.5M11 27.5H17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                        </svg>
+                                    )}
+                                </button>
+                                {/* Personalize */}
+                                <button
+                                    onClick={() => setShowPersonalize(p => !p)}
+                                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${
+                                        showPersonalize ? "text-gold bg-gold/10" : "text-white/40 hover:text-white hover:bg-white/10"
+                                    }`}
+                                    title="Personalize chat"
+                                    aria-label="Personalize chat"
+                                >
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="currentColor" strokeWidth="1.5"/>
+                                        <path d="M8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16C9.79 16 8 14.21 8 12Z" fill="currentColor" opacity=".4"/>
+                                    </svg>
+                                </button>
                                 <button
                                     onClick={handleNewChat}
                                     className="w-8 h-8 flex items-center justify-center rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-all"
@@ -587,10 +716,86 @@ export default function AIAssistant() {
                             </div>
                         </div>
 
+                        {/* ── Personalize Drawer ── */}
+                        <AnimatePresence>
+                            {showPersonalize && (
+                                <motion.div
+                                    key="personalize-drawer"
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ type: "spring", stiffness: 380, damping: 34 }}
+                                    className="overflow-hidden flex-shrink-0 border-b border-white/8"
+                                >
+                                    <div className="px-5 py-4 space-y-3">
+                                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-white/30">Wallpaper</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {WALLPAPER_PRESETS.map(preset => (
+                                                <button
+                                                    key={preset.id}
+                                                    onClick={() => {
+                                                        const val = preset.value;
+                                                        setChatWallpaper(val);
+                                                        localStorage.setItem(WP_STORAGE_KEY, val ?? "null");
+                                                    }}
+                                                    title={preset.label}
+                                                    className={`w-8 h-8 rounded-full border-2 transition-all duration-200 flex-shrink-0 ${
+                                                        chatWallpaper === preset.value
+                                                            ? "border-gold scale-110 shadow-[0_0_8px_rgba(212,175,55,0.5)]"
+                                                            : "border-white/10 hover:border-white/30"
+                                                    }`}
+                                                    style={{ background: preset.value ?? preset.preview }}
+                                                />
+                                            ))}
+                                            {/* Custom image upload */}
+                                            <button
+                                                onClick={() => wpFileInputRef.current?.click()}
+                                                title="Custom image"
+                                                className="w-8 h-8 rounded-full border-2 border-dashed border-white/20 hover:border-gold/50 transition-all flex items-center justify-center text-white/30 hover:text-gold"
+                                            >
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                                            </button>
+                                        </div>
+                                        <input
+                                            ref={wpFileInputRef}
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+                                                const reader = new FileReader();
+                                                reader.onload = (ev) => {
+                                                    const dataUrl = ev.target?.result as string;
+                                                    const val = `url(${dataUrl})`;
+                                                    setChatWallpaper(val);
+                                                    try { localStorage.setItem(WP_STORAGE_KEY, val); } catch { /* quota */ }
+                                                };
+                                                reader.readAsDataURL(file);
+                                            }}
+                                        />
+                                        {chatWallpaper !== null && (
+                                            <button
+                                                onClick={() => { setChatWallpaper(null); localStorage.setItem(WP_STORAGE_KEY, "null"); }}
+                                                className="text-[9px] font-black uppercase tracking-widest text-white/20 hover:text-white/50 transition-colors"
+                                            >
+                                                Reset to default
+                                            </button>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
                         {/* ── Messages Area ── */}
                         <div
                             className="flex-1 overflow-y-auto px-4 py-4 hide-scrollbar flex flex-col gap-2.5"
-                            style={{ minHeight: 0 }}
+                            style={{
+                                minHeight: 0,
+                                backgroundImage: chatWallpaper?.startsWith("url(") ? chatWallpaper : chatWallpaper ?? undefined,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                            }}
                         >
                             {messages.map((msg, index) => {
                                 const isLast = index === messages.length - 1;
@@ -609,7 +814,7 @@ export default function AIAssistant() {
 
                                 return (
                                     <div key={msg.id} className="space-y-2">
-                                        <ChatBubble msg={msg} />
+                                        <ChatBubble msg={msg} onNavigate={onNavigate} />
 
                                         {/* Contextual suggestions under the last assistant message */}
                                         {isLast && isAssistant && !isThinking && !isListening && (
@@ -620,16 +825,32 @@ export default function AIAssistant() {
                                                 />
 
                                                 {/* Tiny guest sign-in encouragement badge */}
-                                                {!profile && messages.length === 1 && (
-                                                    <div className="text-center mt-1">
-                                                        <Link
-                                                            href="/auth"
-                                                            className="inline-block px-3 py-1 bg-white/5 border border-white/5 rounded-full text-[10px] text-white/40 tracking-tight transition-all duration-300 ease-in-out hover:bg-[hsl(var(--primary))] hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))] hover:font-semibold"
+                                                <AnimatePresence>
+                                                    {!profile && messages.length === 1 && showSignInPill && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, scale: 0.4, y: 12 }}
+                                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                            exit={{ opacity: 0, scale: 0.8, y: 8 }}
+                                                            transition={{
+                                                                type: "spring",
+                                                                stiffness: 420,
+                                                                damping: 18,
+                                                                mass: 0.6
+                                                            }}
+                                                            className="text-center mt-1"
                                                         >
-                                                            Sign in to save your chat history
-                                                        </Link>
-                                                    </div>
-                                                )}
+                                                            <Link
+                                                                href="/auth"
+                                                                onClick={() => {
+                                                                    if (onNavigate) onNavigate();
+                                                                }}
+                                                                className="inline-block px-3 py-1 bg-white/5 border border-white/5 rounded-full text-[10px] text-white/40 tracking-tight transition-all duration-300 ease-in-out hover:bg-[hsl(var(--primary))] hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))] hover:font-semibold"
+                                                            >
+                                                                Sign in to save your chat history
+                                                            </Link>
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
                                             </div>
                                         )}
                                     </div>

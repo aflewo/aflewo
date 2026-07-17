@@ -19,7 +19,7 @@ const links = [
 ];
 
 const socialItems = [
-    { label: "YouTube", link: "https://youtube.com/@aflewoke" },
+    { label: "YouTube", link: "https://youtube.com/@aflewokeke" },
     { label: "Instagram", link: "https://instagram.com/aflewoke" },
     { label: "Facebook", link: "https://facebook.com/AFLEWOKE" },
 ];

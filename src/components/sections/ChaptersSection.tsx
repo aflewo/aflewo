@@ -483,17 +483,17 @@ export default function ChaptersSection() {
                             </p>
                         </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                    <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto flex-shrink-0">
                         <Link
                             href="mailto:nairobi@aflewo.org?subject=New%20Chapter%20Inquiry"
-                            className="flex-1 sm:flex-none px-10 py-5 glass-card-elevated hover:bg-white/10 rounded-lg font-black text-[11px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 border-white/10"
+                            className="flex-1 sm:flex-none px-10 py-5 glass-card-elevated hover:bg-white/10 rounded-lg font-black text-[11px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 border-white/10 whitespace-nowrap"
                         >
                             Email HQ <SvgIcon name="external" size={14} className="text-gold" />
                         </Link>
                         <Link
                             href="https://wa.me/254722819867?text=I%20am%20interested%20in%20starting%20an%20AFLEWO%20chapter"
                             target="_blank"
-                            className="flex-1 sm:flex-none px-10 py-5 bg-gold text-brown rounded-lg font-black text-[11px] uppercase tracking-[0.2em] hover:brightness-110 transition-all flex items-center justify-center gap-3 shadow-glow"
+                            className="flex-1 sm:flex-none px-10 py-5 bg-gold text-brown rounded-lg font-black text-[11px] uppercase tracking-[0.2em] hover:brightness-110 transition-all flex items-center justify-center gap-3 shadow-glow whitespace-nowrap"
                         >
                             WhatsApp HQ <SvgIcon name="whatsapp" size={14} />
                         </Link>

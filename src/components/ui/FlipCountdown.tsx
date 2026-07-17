@@ -22,10 +22,16 @@ function FlipCard({ value, label }: { value: number; label: string }) {
     const prevValueRef = useRef(value);
     const [displayValue, setDisplayValue] = useState(value);
     const [nextValue, setNextValue] = useState(value);
+    const tlRef = useRef<gsap.core.Timeline | null>(null);
 
     useEffect(() => {
         if (prevValueRef.current !== value) {
+            // Kill any in-progress animation to prevent stacking glitches
+            tlRef.current?.kill();
+            if (flipRef.current) gsap.set(flipRef.current, { rotateX: 0 });
+
             setNextValue(value);
+            prevValueRef.current = value;
 
             const tl = gsap.timeline({
                 onComplete: () => {
@@ -36,6 +42,7 @@ function FlipCard({ value, label }: { value: number; label: string }) {
                     }
                 }
             });
+            tlRef.current = tl;
 
             if (flipRef.current) {
                 tl.to(flipRef.current, {

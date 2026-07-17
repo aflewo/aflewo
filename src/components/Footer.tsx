@@ -51,7 +51,7 @@ export default function Footer() {
                                 className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all">
                                 <SvgIcon name="whatsapp" size={20} className="text-gold" />
                             </a>
-                            <a href="https://youtube.com/@aflewo" target="_blank" rel="noopener noreferrer" aria-label="AFLEWO YouTube"
+                            <a href="https://youtube.com/@aflewoke" target="_blank" rel="noopener noreferrer" aria-label="AFLEWO YouTube"
                                 className="p-3 glass-card rounded-ios text-gold hover:bg-gold hover:text-brown transition-all">
                                 <SvgIcon name="youtube" size={20} className="text-gold" />
                             </a>
@@ -96,12 +96,12 @@ export default function Footer() {
                                 <p className="text-[10px] text-white/30 font-black uppercase tracking-widest leading-relaxed">
                                     Join 15K+ worshippers in the movement.
                                 </p>
-                                    {subState === "done" ? (
+                                {subState === "done" ? (
                                     <div className="flex items-center gap-2 text-gold text-[10px] font-black uppercase tracking-widest">
                                         <SvgIcon name="check" size={16} className="text-gold" /> Subscribed!
                                     </div>
-                                    ) : (
-                                        <form onSubmit={handleSubscribe} className="relative">
+                                ) : (
+                                    <form onSubmit={handleSubscribe} className="relative">
                                         <input
                                             type="email"
                                             value={email}
@@ -120,7 +120,7 @@ export default function Footer() {
                                             }
                                         </button>
                                     </form>
-                                    )}
+                                )}
                                 <div className="space-y-2 pt-2">
                                     <p className="text-[9px] text-white/20 font-black uppercase tracking-widest">M-Pesa Support</p>
                                     <p className="text-white/50 text-[10px] font-black">Paybill: <span className="text-gold">819867</span></p>

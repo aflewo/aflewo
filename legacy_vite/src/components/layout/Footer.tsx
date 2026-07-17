@@ -22,7 +22,7 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { icon: Youtube, href: 'https://youtube.com/@aflewoke', label: 'YouTube' },
+  { icon: Youtube, href: 'https://youtube.com/@aflewokeke', label: 'YouTube' },
   { icon: Instagram, href: 'https://instagram.com/aflewoke', label: 'Instagram' },
   { icon: Facebook, href: 'https://facebook.com/aflewo', label: 'Facebook' },
   { icon: Twitter, href: 'https://twitter.com/AFLEWO', label: 'Twitter' },
@@ -50,7 +50,7 @@ export function Footer() {
               </div>
             </a>
             <p className="text-cream/60 mb-6 max-w-sm">
-              Uniting Africa in worship since 2004. An inter-denominational movement 
+              Uniting Africa in worship since 2004. An inter-denominational movement
               bringing believers together through music and prayer.
             </p>
             <div className="flex items-center gap-4">

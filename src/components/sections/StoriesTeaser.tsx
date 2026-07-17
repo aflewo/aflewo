@@ -164,7 +164,7 @@ export default function StoriesTeaser() {
             </div>
 
             <div className="max-container relative z-10">
-                <div className="flex flex-col lg:flex-row gap-16 lg:gap-20 items-center min-h-[600px]">
+                <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 items-start lg:items-center min-h-[auto] lg:min-h-[600px]">
                     {/* Left — sticky header + controls */}
                     <div className="stories-header flex-1 space-y-8 lg:sticky lg:top-32">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/20 rounded-full text-gold text-[10px] font-black uppercase tracking-[0.2em]">
@@ -217,7 +217,7 @@ export default function StoriesTeaser() {
                     </div>
 
                     {/* Right — carousel stack */}
-                    <div className="flex-1 w-full h-[520px] relative overflow-hidden">
+                    <div className="flex-1 w-full h-[420px] sm:h-[480px] lg:h-[540px] relative overflow-hidden">
                         {stories.map((story, i) => (
                             <div
                                 key={i}
@@ -225,7 +225,7 @@ export default function StoriesTeaser() {
                                 className="story-card absolute inset-0 flex items-center justify-center"
                                 style={{ willChange: "transform, opacity" }}
                             >
-                                <div className="glass-card-elevated p-10 md:p-12 relative overflow-hidden group rounded-[2rem] border-white/5 bg-brown/40 backdrop-blur-3xl shadow-2xl w-full max-w-[420px]">
+                                <div className="glass-card-elevated p-8 md:p-12 relative overflow-hidden group rounded-[2rem] border-white/5 bg-brown/40 backdrop-blur-3xl shadow-2xl w-full max-w-full lg:max-w-[420px]">
                                     <SvgIcon name="quote" size={80} className="absolute top-8 right-8 text-gold/10 group-hover:text-gold/20 transition-colors duration-500" />
 
                                     <div className="relative z-10 space-y-8">
