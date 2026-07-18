@@ -274,111 +274,128 @@ export default function HeroSection() {
                 <div ref={contentRef} className="relative z-10 text-center px-8 max-w-6xl mt-20 w-full">
 
                     {/* ── Dynamic Island ── */}
-                    <div className="mb-8 flex justify-center items-center gap-3 relative z-20">
+                    {/* Wrapper holds exact collapsed height (44px) in the document flow to prevent layout shifting. */}
+                    <div className="mb-8 relative z-50 w-full h-[44px]">
+                        
+                        {/* Fullscreen Dimmer Backdrop */}
+                        <AnimatePresence>
+                            {isExpanded && (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    onClick={collapse}
+                                    className="fixed inset-0 bg-background/80 z-[-1] backdrop-blur-sm"
+                                />
+                            )}
+                        </AnimatePresence>
 
-                        {/* Left chevron — hidden when expanded or when hover-gated on desktop */}
-                        {showChevrons && !isExpanded && dynamicItems.length > 1 && (
-                            <button
-                                onClick={prevEvent}
-                                aria-label="Previous announcement"
-                                className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-white/40 hover:text-white transition-all duration-200"
-                            >
-                                <SvgIcon name="arrow_left" size={14} />
-                            </button>
-                        )}
+                        {/* Absolute Overlay Layer — anchors from the top, expands downwards */}
+                        <div className="absolute top-0 inset-x-0 flex justify-center items-start gap-3">
 
-                        {/* ── The morphing island pill ── */}
-                        <motion.div
-                            ref={islandRef}
-                            layout={!prefersReducedMotion}
-                            transition={{ type: "spring", stiffness: 340, damping: 32 }}
-                            className="relative overflow-hidden"
-                            style={{
-                                borderRadius: isExpanded ? 24 : 50,
-                                maxWidth: isExpanded ? config.expandedMaxWidth : config.collapsedMaxWidth,
-                                width: "100%",
-                            }}
-                        >
-                            {/* Framer layout also animates border-radius — wrap in motion.div to apply */}
+                            {/* Left chevron — hidden when expanded or when hover-gated on desktop */}
+                            {showChevrons && !isExpanded && dynamicItems.length > 1 && (
+                                <button
+                                    onClick={prevEvent}
+                                    aria-label="Previous announcement"
+                                    className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-white/40 hover:text-white transition-all duration-200 mt-2"
+                                >
+                                    <SvgIcon name="arrow_left" size={14} />
+                                </button>
+                            )}
+
+                            {/* ── The morphing island pill ── */}
                             <motion.div
+                                ref={islandRef}
                                 layout={!prefersReducedMotion}
-                                style={{ borderRadius: "inherit" }}
-                                className="relative overflow-hidden"
                                 transition={{ type: "spring", stiffness: 340, damping: 32 }}
+                                className="relative overflow-hidden shadow-2xl"
+                                style={{
+                                    borderRadius: isExpanded ? 24 : 50,
+                                    maxWidth: isExpanded ? config.expandedMaxWidth : config.collapsedMaxWidth,
+                                    width: "100%",
+                                }}
                             >
-                                {renderSurface(isExpanded ? 24 : 50)}
+                                {/* Framer layout also animates border-radius — wrap in motion.div to apply */}
+                                <motion.div
+                                    layout={!prefersReducedMotion}
+                                    style={{ borderRadius: "inherit" }}
+                                    className="relative overflow-hidden"
+                                    transition={{ type: "spring", stiffness: 340, damping: 32 }}
+                                >
+                                    {renderSurface(isExpanded ? 24 : 50)}
 
-                                <AnimatePresence mode="wait" initial={false}>
+                                    <AnimatePresence mode="wait" initial={false}>
 
-                                    {/* ── COLLAPSED state: sliding carousel pill ── */}
-                                    {!isExpanded && (
-                                        <motion.div
-                                            key="collapsed"
-                                            exit={{ opacity: 0, transition: { duration: 0.12 } }}
-                                            className="relative z-10 overflow-hidden"
-                                            style={{ touchAction: "pan-y" }}
-                                            onPointerDown={handlePointerDown}
-                                            onPointerMove={handlePointerMove}
-                                            onPointerUp={handlePointerUp}
-                                            onPointerCancel={handlePointerUp}
-                                        >
-                                            <AnimatePresence mode="wait" initial={false} custom={direction}>
-                                                <motion.div
-                                                    key={currentItem.id}
-                                                    custom={direction}
-                                                    variants={slideVariants}
-                                                    initial="enter"
-                                                    animate="center"
-                                                    exit="exit"
-                                                    transition={{ type: "spring", stiffness: 380, damping: 35 }}
-                                                    className="w-full"
-                                                >
-                                                    {/* Tap = expand. No navigation on pill tap. */}
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            // Guard: ignore tap if it was actually the end of a drag
-                                                            if (Math.abs(dragCurrentXRef.current - dragStartXRef.current) > 10) return;
-                                                            expand();
-                                                        }}
-                                                        draggable={false}
-                                                        className="inline-flex items-center gap-3 px-5 py-2.5 text-[10px] font-black uppercase tracking-[0.3em] text-white hover:text-gold transition-colors animate-breathe w-full justify-center"
+                                        {/* ── COLLAPSED state: sliding carousel pill ── */}
+                                        {!isExpanded && (
+                                            <motion.div
+                                                key="collapsed"
+                                                exit={{ opacity: 0, transition: { duration: 0.12 } }}
+                                                className="relative z-10 overflow-hidden h-[44px] flex items-center"
+                                                style={{ touchAction: "pan-y" }}
+                                                onPointerDown={handlePointerDown}
+                                                onPointerMove={handlePointerMove}
+                                                onPointerUp={handlePointerUp}
+                                                onPointerCancel={handlePointerUp}
+                                            >
+                                                <AnimatePresence mode="wait" initial={false} custom={direction}>
+                                                    <motion.div
+                                                        key={currentItem.id}
+                                                        custom={direction}
+                                                        variants={slideVariants}
+                                                        initial="enter"
+                                                        animate="center"
+                                                        exit="exit"
+                                                        transition={{ type: "spring", stiffness: 380, damping: 35 }}
+                                                        className="w-full h-full"
                                                     >
-                                                        <span className="relative flex h-2 w-2 flex-shrink-0">
-                                                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${currentItem.isLive ? "bg-red-500" : "bg-gold"}`} />
-                                                            <span className={`relative inline-flex rounded-full h-2 w-2 ${currentItem.isLive ? "bg-red-500" : "bg-gold"}`} />
-                                                        </span>
-                                                        <span className="truncate">{currentItem.title}</span>
-                                                    </button>
-                                                </motion.div>
-                                            </AnimatePresence>
-                                        </motion.div>
-                                    )}
+                                                        {/* Tap = expand. No navigation on pill tap. */}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                if (Math.abs(dragCurrentXRef.current - dragStartXRef.current) > 10) return;
+                                                                expand();
+                                                            }}
+                                                            draggable={false}
+                                                            className="inline-flex h-full items-center gap-3 px-5 text-[10px] font-black uppercase tracking-[0.3em] text-white hover:text-gold transition-colors animate-breathe w-full justify-center"
+                                                        >
+                                                            <span className="relative flex h-2 w-2 flex-shrink-0">
+                                                                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${currentItem.isLive ? "bg-red-500" : "bg-gold"}`} />
+                                                                <span className={`relative inline-flex rounded-full h-2 w-2 ${currentItem.isLive ? "bg-red-500" : "bg-gold"}`} />
+                                                            </span>
+                                                            <span className="truncate">{currentItem.title}</span>
+                                                        </button>
+                                                    </motion.div>
+                                                </AnimatePresence>
+                                            </motion.div>
+                                        )}
 
-                                    {/* ── EXPANDED state: full event card ── */}
-                                    {isExpanded && (
-                                        <motion.div
-                                            key="expanded"
-                                            exit={{ opacity: 0, transition: { duration: 0.12 } }}
-                                        >
-                                            {expandedCardContent}
-                                        </motion.div>
-                                    )}
+                                        {/* ── EXPANDED state: full event card ── */}
+                                        {isExpanded && (
+                                            <motion.div
+                                                key="expanded"
+                                                exit={{ opacity: 0, transition: { duration: 0.12 } }}
+                                            >
+                                                {expandedCardContent}
+                                            </motion.div>
+                                        )}
 
-                                </AnimatePresence>
+                                    </AnimatePresence>
+                                </motion.div>
                             </motion.div>
-                        </motion.div>
 
-                        {/* Right chevron */}
-                        {showChevrons && !isExpanded && dynamicItems.length > 1 && (
-                            <button
-                                onClick={nextEvent}
-                                aria-label="Next announcement"
-                                className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-white/40 hover:text-white transition-all duration-200"
-                            >
-                                <SvgIcon name="arrow_right" size={14} />
-                            </button>
-                        )}
+                            {/* Right chevron */}
+                            {showChevrons && !isExpanded && dynamicItems.length > 1 && (
+                                <button
+                                    onClick={nextEvent}
+                                    aria-label="Next announcement"
+                                    className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-white/40 hover:text-white transition-all duration-200 mt-2"
+                                >
+                                    <SvgIcon name="arrow_right" size={14} />
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     {/* ── Main Headline ── */}

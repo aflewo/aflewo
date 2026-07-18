@@ -4,7 +4,7 @@ export interface IslandTierConfig {
     /** Max width of the pill in its collapsed (resting) state */
     collapsedMaxWidth: number;
     /** Max width of the pill when fully expanded inline */
-    expandedMaxWidth: number;
+    expandedMaxWidth: number | string;
     /** GlassSurface blur radius — scaled down on mobile to protect GPU budget */
     blur: number;
     /** Height of the embedded map iframe in the expanded card */
@@ -16,7 +16,7 @@ export interface IslandTierConfig {
 export const ISLAND_CONFIG: Record<DeviceTier, IslandTierConfig> = {
     mobile: {
         collapsedMaxWidth: 300,
-        expandedMaxWidth: 340,   // constrained to near-full-width on small screens
+        expandedMaxWidth: "calc(100vw - 32px)", // perfectly edge-to-edge with 16px padding
         blur: 8,                 // lighter blur — real GPU cost mitigation on mobile
         mapHeight: 150,
         chevronRequiresHover: false,
