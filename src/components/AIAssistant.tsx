@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -11,7 +11,7 @@ import aiChatData from "@/../context/inspo/AI Chat.json";
 import { useAuth } from "@/app/(dashboard)/AuthContext";
 import { useBandwidth, useOfflineManifest } from "@/hooks/useNetworkStatus";
 
-// ─── Wallpaper Presets ────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Wallpaper Presets Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 const WALLPAPER_PRESETS = [
     { id: "default", label: "Default", value: null, preview: "hsl(20 14% 5%)" },
     { id: "cosmos", label: "Cosmos", value: "linear-gradient(160deg,#0f0c29,#302b63,#24243e)", preview: "#302b63" },
@@ -22,7 +22,7 @@ const WALLPAPER_PRESETS = [
 ];
 const WP_STORAGE_KEY = "aflewo_chat_wallpaper";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Types Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 interface Message {
     id: string;
     role: "user" | "assistant" | "system";
@@ -35,7 +35,24 @@ interface NavigationAction {
     target: string;
 }
 
-// ─── Web Speech API declarations ──────────────────────────────────────────────
+// --- Island State Machine Types ---
+// Valid states: IDLE | CHAT_ACTIVE | MAP_VIEW | OFFLINE_TICKET | LIVE_WAVEFORM
+// Only one state active at a time. Transitions are atomic.
+type IslandMode = "IDLE" | "CHAT_ACTIVE" | "MAP_VIEW" | "OFFLINE_TICKET" | "LIVE_WAVEFORM";
+
+interface IslandPayload {
+    lat?: number;
+    lng?: number;
+    label?: string;
+    items?: string[];
+}
+
+interface IslandState {
+    mode: IslandMode;
+    payload: IslandPayload | null;
+}
+
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Web Speech API declarations Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 declare global {
     interface Window {
         SpeechRecognition: any;
@@ -43,7 +60,7 @@ declare global {
     }
 }
 
-// ─── Send icon SVG ────────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Send icon SVG Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function SendIcon() {
     return (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,7 +69,7 @@ function SendIcon() {
     );
 }
 
-// ─── Close icon SVG ───────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Close icon SVG Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function CloseIcon() {
     return (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -61,7 +78,7 @@ function CloseIcon() {
     );
 }
 
-// ─── Mic icon SVG ─────────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Mic icon SVG Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function MicIcon({ active }: { active: boolean }) {
     return (
         <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -72,7 +89,7 @@ function MicIcon({ active }: { active: boolean }) {
     );
 }
 
-// ─── Hyperlink & Context Parser ──────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Hyperlink & Context Parser Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 const PAGE_DICTIONARY: Record<string, string> = {
     "media page": "/media",
     "about page": "/about",
@@ -182,7 +199,7 @@ function parseMessageContent(content: string, profile: any, onNavigate?: () => v
     return parts.length > 0 ? parts : applyFuzzyLinks(replacedText, matchCount, onNavigate);
 }
 
-// ─── Chat bubble ─────────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Chat bubble Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function ChatBubble({ msg, onNavigate }: { msg: Message; onNavigate?: () => void }) {
     const { profile } = useAuth();
     const isUser = msg.role === "user";
@@ -206,7 +223,7 @@ function ChatBubble({ msg, onNavigate }: { msg: Message; onNavigate?: () => void
     );
 }
 
-// ─── Dynamic Suggestions Carousel ─────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Dynamic Suggestions Carousel Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 function DynamicSuggestions({ suggestions, onSelect }: { suggestions: any[], onSelect: (prompt: string) => void }) {
     const [currentIndex, setCurrentIndex] = useState(1);
     const [isHovered, setIsHovered] = useState(false);
@@ -270,7 +287,73 @@ function DynamicSuggestions({ suggestions, onSelect }: { suggestions: any[], onS
     );
 }
 
-// ─── Main AI Assistant Component ──────────────────────────────────────────────
+// --- Liquid Glass Island Sub-Component ---
+// Glass shell always on top. Content (map/waveform/ticket) interchanges beneath it.
+// Shell and content scale as one. Never appear simultaneously.
+function LiquidGlassIsland({ island, onDismiss }: { island: IslandState; onDismiss: () => void }) {
+    if (island.mode === "IDLE" || island.mode === "CHAT_ACTIVE") return null;
+    return (
+        <AnimatePresence mode="wait">
+            <motion.div
+                key={island.mode}
+                layoutId="liquid-glass-island"
+                layout
+                initial={{ opacity: 0, scale: 0.94, y: -8 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.94, y: -8 }}
+                transition={{ type: "spring", stiffness: 420, damping: 36 }}
+                className="absolute top-0 left-0 right-0 z-[200] mx-3 mt-3 rounded-2xl overflow-hidden"
+                style={{
+                    background: "rgba(10, 8, 6, 0.72)",
+                    backdropFilter: "blur(16px) saturate(1.4)",
+                    WebkitBackdropFilter: "blur(16px) saturate(1.4)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
+                }}
+            >
+                <div className="flex justify-end px-3 pt-2">
+                    <button onClick={onDismiss} className="text-white/30 hover:text-white/70 transition-colors" aria-label="Dismiss island">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" /></svg>
+                    </button>
+                </div>
+                {island.mode === "MAP_VIEW" && island.payload?.lat != null && island.payload?.lng != null && (
+                    <motion.div key="map-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.26 }} className="px-3 pb-3">
+                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gold/70 mb-2">{island.payload.label || "Venue Location"}</p>
+                        <div className="w-full rounded-xl overflow-hidden" style={{ height: 156, background: "rgba(0,0,0,0.3)" }}>
+                            <iframe title={island.payload.label || "Venue map"} src={https://maps.google.com/maps?q=,&z=15&output=embed} width="100%" height="100%" style={{ border: 0, borderRadius: 12, opacity: 0.92 }} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+                        </div>
+                        <p className="text-[8px] text-white/30 text-center mt-1.5 font-medium tracking-wide">{island.payload.lat.toFixed(4)}, {island.payload.lng.toFixed(4)}</p>
+                    </motion.div>
+                )}
+                {island.mode === "LIVE_WAVEFORM" && (
+                    <motion.div key="waveform-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.26 }} className="px-4 pb-4">
+                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-red-400 mb-3 flex items-center gap-2">
+                            <span className="relative flex h-1.5 w-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" /><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" /></span>
+                            Live
+                        </p>
+                        <div className="flex items-center gap-[3px] h-8">
+                            {Array.from({ length: 20 }).map((_, i) => (
+                                <motion.div key={i} className="flex-1 rounded-full bg-gold/70" animate={{ scaleY: [0.2, 1, 0.3, 0.8, 0.2] }} transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.06, ease: "easeInOut" }} style={{ originY: "center", height: "100%" }} />
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+                {island.mode === "OFFLINE_TICKET" && island.payload?.items && (
+                    <motion.div key="ticket-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.26 }} className="px-4 pb-4">
+                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-amber-400/80 mb-2.5 flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-400/70 flex-shrink-0" />Saved offline</p>
+                        <div className="space-y-1.5">
+                            {island.payload.items.map((item, idx) => (
+                                <div key={idx} className="flex items-start gap-2"><span className="w-1 h-1 rounded-full bg-gold/60 mt-1.5 flex-shrink-0" /><p className="text-[11px] text-white/80 leading-snug">{item}</p></div>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+            </motion.div>
+        </AnimatePresence>
+    );
+}
+
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Main AI Assistant Component Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 export default function AIAssistant({ onNavigate }: { onNavigate?: () => void }) {
     const router = useRouter();
     const pathname = usePathname();
@@ -288,20 +371,24 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
             timestamp: new Date(),
         },
     ]);
+
+    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Liquid Glass Island state machine Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // Atomic state: only one mode can be active at a time.
+    const [islandState, setIslandState] = useState<IslandState>({ mode: "IDLE", payload: null });
     const [hasVoiceSupport, setHasVoiceSupport] = useState(false);
     const [voiceTranscript, setVoiceTranscript] = useState("");
     const [isNavigating, setIsNavigating] = useState<{ type: string; target: string } | null>(null);
     const [activeSystemMessage, setActiveSystemMessage] = useState<string | null>(null);
     const [showSignInPill, setShowSignInPill] = useState(false);
     const [fabIsIdle, setFabIsIdle] = useState(false);
-    // Voice is muted by default — users must opt-in to enable TTS
+    // Voice is muted by default Ã¢â‚¬â€ users must opt-in to enable TTS
     const [isMuted, setIsMuted] = useState(true);
     const [isHeroVisible, setIsHeroVisible] = useState(true);
     const [chatWallpaper, setChatWallpaper] = useState<string | null>(null);
     const [showPersonalize, setShowPersonalize] = useState(false);
     const aiChatLottieRef = useRef<LottieRefCurrentProps>(null);
 
-    // ─── Network awareness ───────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Network awareness Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     const { isLowBandwidth, isOnline } = useBandwidth();
     const { saveManifest } = useOfflineManifest();
 
@@ -342,7 +429,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         return () => clearTimeout(timer);
     }, [isOpen]);
 
-    // Activity-based FAB opacity fade — mirrors Nav FAB behaviour
+    // Activity-based FAB opacity fade Ã¢â‚¬â€ mirrors Nav FAB behaviour
     useEffect(() => {
         if (isOpen) {
             setFabIsIdle(false);
@@ -362,7 +449,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         };
     }, [isOpen]);
 
-    // Hide FAB when hero section is visible — mirrors Nav FAB behaviour exactly
+    // Hide FAB when hero section is visible Ã¢â‚¬â€ mirrors Nav FAB behaviour exactly
     useEffect(() => {
         const heroEl = document.getElementById("hero") || document.querySelector("[data-hero]");
         if (!heroEl) { setIsHeroVisible(false); return; }
@@ -393,7 +480,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         }
     }, [isOpen]);
 
-    // ─── Navigation action executor ─────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Navigation action executor Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     const executeAction = useCallback((action: NavigationAction) => {
         if (action.type === "navigate_to") {
             // BUG FIX: if already on the target page, abort navigation entirely
@@ -417,7 +504,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         }
     }, [router, onNavigate, pathname]);
 
-    // ─── Text-to-speech ──────────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Text-to-speech Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     const speak = useCallback((text: string) => {
         if (isMuted) return;
         if (!synthRef.current) return;
@@ -436,7 +523,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         synthRef.current.speak(utterance);
     }, []);
 
-    // ─── Send message to backend ─────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Send message to backend Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     const sendMessage = useCallback(async (text: string) => {
         if (!text.trim() || isThinking) return;
 
@@ -475,10 +562,25 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                 saveManifest(data.offlineManifest);
             }
 
+            // Dispatch island state from AI trigger (atomic â€” one state at a time)
+            if (data.islandTrigger) {
+                const trigger = data.islandTrigger;
+                if (trigger.mode === "map" && trigger.payload) {
+                    setIslandState({ mode: "MAP_VIEW", payload: trigger.payload });
+                } else if (trigger.mode === "waveform") {
+                    setIslandState({ mode: "LIVE_WAVEFORM", payload: null });
+                } else if (trigger.mode === "ticket") {
+                    // Ticket uses the offline manifest items as payload
+                    if (data.offlineManifest?.items) {
+                        setIslandState({ mode: "OFFLINE_TICKET", payload: { items: data.offlineManifest.items } });
+                    }
+                }
+            }
+
             const assistantMsg: Message = {
                 id: `a-${Date.now()}`,
                 role: "assistant",
-                content: data.message || "I'm here — could you ask that again?",
+                content: data.message || "I'm here Ã¢â‚¬â€ could you ask that again?",
                 timestamp: new Date(),
             };
 
@@ -534,7 +636,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         }
     }, [messages, isThinking, speak, executeAction]);
 
-    // ─── Voice recognition ───────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Voice recognition Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     const startListening = useCallback(() => {
         if (!hasVoiceSupport || isListening) return;
 
@@ -602,7 +704,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         setVoiceTranscript("");
     }, [stopListening]);
 
-    // ─── Input key handler ───────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Input key handler Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -610,10 +712,10 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         }
     };
 
-    // ─── Render ──────────────────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Render Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     return (
         <>
-            {/* ── Floating Trigger Button ── */}
+            {/* Ã¢â€â‚¬Ã¢â€â‚¬ Floating Trigger Button Ã¢â€â‚¬Ã¢â€â‚¬ */}
             <AnimatePresence>
                 {!isOpen && !isHeroVisible && (
                     <motion.button
@@ -647,7 +749,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                 )}
             </AnimatePresence>
 
-            {/* ── Chat Panel ── */}
+            {/* Ã¢â€â‚¬Ã¢â€â‚¬ Chat Panel Ã¢â€â‚¬Ã¢â€â‚¬ */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -656,7 +758,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 40, scale: 0.92 }}
                         transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                        className="fixed bottom-8 right-8 z-[150] w-[360px] max-w-[calc(100vw-2rem)] rounded-3xl overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.6)] border border-white/10"
+                        className="fixed bottom-8 right-8 z-[150] w-[360px] max-w-[calc(100vw-2rem)] rounded-3xl overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.6)] border border-white/10 relative"
                         style={{
                             background: "hsl(20 14% 5% / 0.95)",
                             backdropFilter: "blur(32px)",
@@ -666,7 +768,13 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                             flexDirection: "column",
                         }}
                     >
-                        {/* ── Panel Header ── */}
+                        {/* -- Liquid Glass Island -- */}
+                        <LiquidGlassIsland
+                            island={islandState}
+                            onDismiss={() => setIslandState({ mode: "IDLE", payload: null })}
+                        />
+
+                        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Panel Header Ã¢â€â‚¬Ã¢â€â‚¬ */}
                         <div className="flex items-center justify-between px-5 py-4 border-b border-white/8 flex-shrink-0">
                             <div className="flex items-center gap-3">
                                 {/* AI Chat Lottie avatar */}
@@ -751,7 +859,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                             </div>
                         </div>
 
-                        {/* ── Personalize Drawer ── */}
+                        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Personalize Drawer Ã¢â€â‚¬Ã¢â€â‚¬ */}
                         <AnimatePresence>
                             {showPersonalize && (
                                 <motion.div
@@ -822,7 +930,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                             )}
                         </AnimatePresence>
 
-                        {/* ── Offline / Low-Bandwidth Status Banner ── */}
+                        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Offline / Low-Bandwidth Status Banner Ã¢â€â‚¬Ã¢â€â‚¬ */}
                         <AnimatePresence>
                             {!isOnline && (
                                 <motion.div
@@ -852,7 +960,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                             )}
                         </AnimatePresence>
 
-                        {/* ── Messages Area ── */}
+                        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Messages Area Ã¢â€â‚¬Ã¢â€â‚¬ */}
                         <div
                             className="flex-1 overflow-y-auto px-4 py-4 hide-scrollbar flex flex-col gap-2.5"
                             style={{
@@ -1001,7 +1109,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                             </div>
                         </div>
 
-                        {/* ── Input Area ── */}
+                        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Input Area Ã¢â€â‚¬Ã¢â€â‚¬ */}
                         <div className="px-4 py-3 border-t border-white/8 flex-shrink-0">
                             <div className="flex items-end gap-2">
                                 {/* Text input */}
@@ -1052,7 +1160,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                             </div>
                         </div>
 
-                        {/* ── Transition Overlay ── */}
+                        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Transition Overlay Ã¢â€â‚¬Ã¢â€â‚¬ */}
                         <AnimatePresence>
                             {isNavigating && (
                                 <motion.div
@@ -1080,22 +1188,22 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
     );
 }
 
-// ─── Suggestions Configuration ──────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Suggestions Configuration Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 // Priority sorting: live-event items first, then chapter-specific, then general.
 function getContextualSuggestions(text: string) {
     const lower = text.toLowerCase();
     const now = new Date();
     const hour = now.getHours();
-    const isEvening = hour >= 17 || hour < 4; // 5 PM – 4 AM = likely event hours
+    const isEvening = hour >= 17 || hour < 4; // 5 PM Ã¢â‚¬â€œ 4 AM = likely event hours
 
-    // ── LIVE EVENT: AFLEWO Eldoret is LIVE NOW (pinned highest priority) ──────
+    // Ã¢â€â‚¬Ã¢â€â‚¬ LIVE EVENT: AFLEWO Eldoret is LIVE NOW (pinned highest priority) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     const liveEldoretSuggestions = [
-        { id: "live_eldoret", label: "🔴 Eldoret LIVE", prompt: "AFLEWO Eldoret is live right now! Where can I watch the stream?", icon: "videocam" },
+        { id: "live_eldoret", label: "Ã°Å¸â€Â´ Eldoret LIVE", prompt: "AFLEWO Eldoret is live right now! Where can I watch the stream?", icon: "videocam" },
         { id: "live_youtube", label: "Watch on YouTube", prompt: "Open the AFLEWO Eldoret YouTube live stream", icon: "youtube" },
         { id: "live_facebook", label: "Watch on Facebook", prompt: "Open the AFLEWO Eldoret Facebook live stream", icon: "share" },
     ];
 
-    // ── JOIN / AUDITIONS ──────────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬ JOIN / AUDITIONS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     if (lower.includes("join") || lower.includes("choir") || lower.includes("audition") || lower.includes("register") || lower.includes("apply")) {
         return [
             { id: "join_choir", label: "Join Choir", prompt: "How do I register to join the AFLEWO choir?", icon: "church" },
@@ -1105,17 +1213,17 @@ function getContextualSuggestions(text: string) {
         ];
     }
 
-    // ── EVENTS / DATES ────────────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬ EVENTS / DATES Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     if (lower.includes("event") || lower.includes("date") || lower.includes("calendar") || lower.includes("worship night") || lower.includes("schedule")) {
         return [
-            { id: "main_event", label: "Oct 2–4 Nairobi", prompt: "Tell me about the main AFLEWO Night on October 2nd in Nairobi", icon: "calendar" },
+            { id: "main_event", label: "Oct 2Ã¢â‚¬â€œ4 Nairobi", prompt: "Tell me about the main AFLEWO Night on October 2nd in Nairobi", icon: "calendar" },
             { id: "calendar_2026", label: "Full 2026 Schedule", prompt: "What is the full AFLEWO 2026 event calendar?", icon: "calendar" },
             { id: "nairobi_launch", label: "Pre-Launch", prompt: "Tell me about the Nairobi Pre-Launch event on April 10th", icon: "calendar" },
             ...liveEldoretSuggestions.slice(0, 1),
         ];
     }
 
-    // ── ELDORET SPECIFIC ──────────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬ ELDORET SPECIFIC Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     if (lower.includes("eldoret")) {
         return [
             ...liveEldoretSuggestions,
@@ -1123,7 +1231,7 @@ function getContextualSuggestions(text: string) {
         ];
     }
 
-    // ── CHAPTER CONTEXT ───────────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬ CHAPTER CONTEXT Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     if (lower.includes("chapter") || lower.includes("nairobi") || lower.includes("mombasa") || lower.includes("nakuru") || lower.includes("rwanda") || lower.includes("tanzania")) {
         return [
             { id: "chapters_list", label: "All Chapters", prompt: "Show me all 7 active AFLEWO chapters", icon: "location" },
@@ -1133,12 +1241,12 @@ function getContextualSuggestions(text: string) {
         ];
     }
 
-    // ── LIVE / STREAM ─────────────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬ LIVE / STREAM Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     if (lower.includes("live") || lower.includes("stream") || lower.includes("watch")) {
         return liveEldoretSuggestions;
     }
 
-    // ── MEDIA / WORSHIP ARCHIVE ───────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬ MEDIA / WORSHIP ARCHIVE Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     if (lower.includes("media") || lower.includes("video") || lower.includes("worship") || lower.includes("song") || lower.includes("music")) {
         return [
             { id: "media_archive", label: "Worship Archive", prompt: "Where can I watch past AFLEWO worship videos?", icon: "music" },
@@ -1147,7 +1255,7 @@ function getContextualSuggestions(text: string) {
         ];
     }
 
-    // ── DONATION / PAYBILL ────────────────────────────────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬ DONATION / PAYBILL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     if (lower.includes("donate") || lower.includes("mpesa") || lower.includes("partner") || lower.includes("support") || lower.includes("paybill")) {
         return [
             { id: "donate_mpesa", label: "M-Pesa Paybill", prompt: "What is the AFLEWO M-Pesa paybill number?", icon: "wallet" },
@@ -1156,7 +1264,7 @@ function getContextualSuggestions(text: string) {
         ];
     }
 
-    // ── DEFAULT (evening: surface live event first) ───────────────────────────
+    // Ã¢â€â‚¬Ã¢â€â‚¬ DEFAULT (evening: surface live event first) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     if (isEvening) {
         return [
             liveEldoretSuggestions[0],

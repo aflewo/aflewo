@@ -97,6 +97,16 @@ interface NavigationAction {
     target: string;
 }
 
+interface IslandTrigger {
+    mode: "map" | "waveform" | "ticket" | "idle";
+    payload?: {
+        lat?: number;
+        lng?: number;
+        label?: string;
+        items?: string[];
+    };
+}
+
 // ─── Simple rule-based action extractor ──────────────────────────────────────
 function extractNavigationAction(text: string): NavigationAction | null {
     const routeMatch = text.match(/\[navigate_to:\s*([^\]]+)\]/i);
@@ -241,6 +251,30 @@ async function retrieveRAGContext(query: string): Promise<string> {
     }
 }
 
+// ─── Map trigger extractor ───────────────────────────────────────────────────
+// Parses [SHOW_MAP: lat, lng, "Label"] tags from the raw AI response.
+// Returns a typed IslandTrigger or null. Never exposed to the client as raw text.
+function extractIslandTrigger(text: string): IslandTrigger | null {
+    const mapMatch = text.match(/\[SHOW_MAP:\s*(-?[\d.]+),\s*(-?[\d.]+),\s*"([^"]+)"\s*\]/i);
+    if (mapMatch) {
+        return {
+            mode: "map",
+            payload: {
+                lat: parseFloat(mapMatch[1]),
+                lng: parseFloat(mapMatch[2]),
+                label: mapMatch[3],
+            },
+        };
+    }
+    const waveformMatch = text.match(/\[SHOW_WAVEFORM\]/i);
+    if (waveformMatch) return { mode: "waveform" };
+
+    const ticketMatch = text.match(/\[SYNC_ITINERARY\]/i);
+    if (ticketMatch) return { mode: "ticket" };
+
+    return null;
+}
+
 // ─── Main response generation using OpenAI-compatible endpoint ───────────────
 async function generateResponse(
     messages: Message[],
@@ -253,32 +287,66 @@ async function generateResponse(
         : "";
 
     const bandwidthContext = lowBandwidth
-        ? "\n[LOW_BANDWIDTH] User has a weak connection. Strip all pleasantries. Respond in one ultra-short sentence of pure fact only.\n"
+        ? "\n[LOW_BANDWIDTH] User has a weak connection. Respond in one ultra-short sentence of pure fact only.\n"
         : "";
 
-    const systemPrompt = `You are a helpful assistant for AFLEWO (Africa Let's Worship). You speak with warmth, faith, and clarity. You have deep knowledge of AFLEWO's mission, chapters, events, and how people can get involved.${locationContext}${bandwidthContext}
+    // ── BEHAVIORAL CALIBRATION (must appear ABOVE knowledge context) ──────────
+    // These rules are read by the model BEFORE it sees any AFLEWO data,
+    // ensuring the constraint is set before the material that tempts over-sharing.
+    const calibrationBlock = `
+CALIBRATION — READ THIS BEFORE ANYTHING ELSE:
+
+Match response length to the question, not to available token space.
+
+- A greeting or acknowledgment ("hi", "hey", "thanks", "okay") gets a one-sentence reply in kind. No context. No history. No offer of what you can help with unless asked.
+- A specific factual or logistics question gets a direct answer, two to three sentences, containing only what was asked.
+- A request for background, history, theology, or anything phrased as "tell me about" or "explain" gets a fuller answer drawing on the full context provided.
+- If a question is ambiguous between a short factual answer and a longer explanation, default to the short answer and note that more detail is available if wanted.
+- Never volunteer facts, dates, chapter names, or history the user did not ask about — even if they are directly relevant to something nearby in the conversation. Relevance is not the same as being asked.
+- Do not pad a short answer with unsolicited context to seem more thorough. A complete short answer is the goal, not an incomplete long one.
+
+FEW-SHOT EXAMPLES (follow this behavior exactly):
+
+User: hi
+Assistant: Hey! What can I help you with?
+
+User: when's rehearsal this week
+Assistant: Nakuru chapter rehearsal is on Saturdays. Let me know which chapter you need or if you want the full schedule.
+
+User: tell me about how AFLEWO started
+Assistant: Africa Let's Worship was founded in 2004 as a continental interdenominational movement with one mission — stirring up hope in Jesus through a united African voice. It now spans 7 chapters across Kenya, Tanzania, and Rwanda, all rooted in the tagline "One God. One People. One Africa." Would you like to know more about a specific chapter or event?
+
+User: thanks
+Assistant: Of course! Anything else I can help with?
+`;
+
+    const systemPrompt = `You are a helpful assistant for AFLEWO (Africa Let's Worship). You speak with warmth, faith, and clarity.${locationContext}${bandwidthContext}
+
+${calibrationBlock}
 
 ${SITE_MAP_CONTEXT}
 
 ${ragContext ? `ADDITIONAL RETRIEVED CONTEXT (from secure knowledge sandbox):\n${ragContext}` : ""}
 
-IMPORTANT FORMATTING RULES:
-- When you want to navigate the user to a page, include [navigate_to: /path] in your response.
-- When you want to scroll to a section, include [scroll_to: sectionId] in your response.
-- Strip these tags from your spoken/displayed response but act on them.
+FORMATTING RULES:
+- When you want to navigate the user to a page, append [navigate_to: /path] at the very end of your response.
+- When you want to scroll to a section, append [scroll_to: sectionId] at the very end.
+- When the user asks for directions or venue location, append [SHOW_MAP: lat, lng, "Venue Name"] at the very end.
+- When the user asks for their schedule or itinerary, append [SYNC_ITINERARY] at the very end.
+- These tags are stripped from the displayed text — they are never shown to the user.
 - Never answer outside the scope of AFLEWO unless it's a general Christian faith question.
-- ${lowBandwidth ? "MINIMAL MODE: One sentence maximum. Facts only." : "Be concise. 1-3 sentences max unless the user asks for more detail."}`;
+- ${lowBandwidth ? "MINIMAL MODE: One sentence maximum. Facts only." : ""}`;
 
     const env = process.env;
 
-    // Expanded context window: 20 messages (was 8)
+    // History window: 20 messages
     const finalMessages = [
         { role: "system", content: systemPrompt },
         ...messages.slice(-20),
     ];
 
-    // Expanded token budget: 800 (was 300)
-    const MAX_TOKENS = lowBandwidth ? 120 : 800;
+    // Fixed ceiling backstop: 400 tokens. Not a steering wheel — calibration prompt does that.
+    const MAX_TOKENS = 400;
 
     const providers = [
         // 1. Google Gemini (Best quality)
@@ -429,10 +497,16 @@ export async function POST(req: NextRequest) {
         // Extract navigation action if present
         const action = extractNavigationAction(rawResponse);
 
-        // Strip action tags from displayed text
+        // Extract island/map trigger if present
+        const islandTrigger = extractIslandTrigger(rawResponse);
+
+        // Strip all action and trigger tags from displayed text
         const displayText = rawResponse
             .replace(/\[navigate_to:[^\]]+\]/gi, "")
             .replace(/\[scroll_to:[^\]]+\]/gi, "")
+            .replace(/\[SHOW_MAP:[^\]]+\]/gi, "")
+            .replace(/\[SHOW_WAVEFORM\]/gi, "")
+            .replace(/\[SYNC_ITINERARY\]/gi, "")
             .trim();
 
         // Build offline manifest if this response contains logistical data
@@ -441,6 +515,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
             message: displayText,
             action: action || null,
+            islandTrigger: islandTrigger || null,
             offlineManifest: offlineManifest || null,
         });
     } catch (err) {
