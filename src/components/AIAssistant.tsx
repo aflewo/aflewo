@@ -381,7 +381,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
     const [activeSystemMessage, setActiveSystemMessage] = useState<string | null>(null);
     const [showSignInPill, setShowSignInPill] = useState(false);
     const [fabIsIdle, setFabIsIdle] = useState(false);
-    // Voice is muted by default Ã¢â‚¬â€ users must opt-in to enable TTS
+    // Voice is muted by default — users must opt-in to enable TTS
     const [isMuted, setIsMuted] = useState(true);
     const [isHeroVisible, setIsHeroVisible] = useState(true);
     const [chatWallpaper, setChatWallpaper] = useState<string | null>(null);
@@ -429,7 +429,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         return () => clearTimeout(timer);
     }, [isOpen]);
 
-    // Activity-based FAB opacity fade Ã¢â‚¬â€ mirrors Nav FAB behaviour
+    // Activity-based FAB opacity fade — mirrors Nav FAB behaviour
     useEffect(() => {
         if (isOpen) {
             setFabIsIdle(false);
@@ -449,7 +449,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         };
     }, [isOpen]);
 
-    // Hide FAB when hero section is visible Ã¢â‚¬â€ mirrors Nav FAB behaviour exactly
+    // Hide FAB when hero section is visible — mirrors Nav FAB behaviour exactly
     useEffect(() => {
         const heroEl = document.getElementById("hero") || document.querySelector("[data-hero]");
         if (!heroEl) { setIsHeroVisible(false); return; }
@@ -580,7 +580,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
             const assistantMsg: Message = {
                 id: `a-${Date.now()}`,
                 role: "assistant",
-                content: data.message || "I'm here Ã¢â‚¬â€ could you ask that again?",
+                content: data.message || "I'm here — could you ask that again?",
                 timestamp: new Date(),
             };
 
@@ -1196,7 +1196,7 @@ function getContextualSuggestions(text: string) {
     const lower = text.toLowerCase();
     const now = new Date();
     const hour = now.getHours();
-    const isEvening = hour >= 17 || hour < 4; // 5 PM Ã¢â‚¬â€œ 4 AM = likely event hours
+    const isEvening = hour >= 17 || hour < 4; // 5 PM —œ 4 AM = likely event hours
 
     // Ã¢â€â‚¬Ã¢â€â‚¬ LIVE EVENT: AFLEWO Eldoret is LIVE NOW (pinned highest priority) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     const liveEldoretSuggestions = [
@@ -1218,7 +1218,7 @@ function getContextualSuggestions(text: string) {
     // Ã¢â€â‚¬Ã¢â€â‚¬ EVENTS / DATES Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     if (lower.includes("event") || lower.includes("date") || lower.includes("calendar") || lower.includes("worship night") || lower.includes("schedule")) {
         return [
-            { id: "main_event", label: "Oct 2Ã¢â‚¬â€œ4 Nairobi", prompt: "Tell me about the main AFLEWO Night on October 2nd in Nairobi", icon: "calendar" },
+            { id: "main_event", label: "Oct 2—œ4 Nairobi", prompt: "Tell me about the main AFLEWO Night on October 2nd in Nairobi", icon: "calendar" },
             { id: "calendar_2026", label: "Full 2026 Schedule", prompt: "What is the full AFLEWO 2026 event calendar?", icon: "calendar" },
             { id: "nairobi_launch", label: "Pre-Launch", prompt: "Tell me about the Nairobi Pre-Launch event on April 10th", icon: "calendar" },
             ...liveEldoretSuggestions.slice(0, 1),
