@@ -107,6 +107,52 @@ interface IslandTrigger {
     };
 }
 
+// ─── Output Sanitizer / Degeneration Gatekeeper ─────────────────────────────
+// Intercepts token degeneration, Unicode soup, and repetitive gibberish before
+// it ever reaches the user. Returns a clean fallback string if the response
+// is deemed unsafe for display.
+const DEGENERATION_FALLBACK = "I'm sorry, I ran into a technical issue. Could you please ask your question again?";
+
+function sanitizeResponse(text: string): string {
+    if (!text || text.trim().length === 0) return DEGENERATION_FALLBACK;
+
+    // 1. Reject if response is abnormally short after stripping whitespace
+    const stripped = text.replace(/\s+/g, " ").trim();
+    if (stripped.length < 10) return DEGENERATION_FALLBACK;
+
+    // 2. Detect high-density repetition: any single word appearing > 6 times
+    // ("soap soap soap soap soap soap soap" is a classic degeneration pattern)
+    const words = stripped.toLowerCase().split(/\s+/);
+    const wordFreq: Record<string, number> = {};
+    for (const w of words) {
+        if (w.length < 3) continue; // skip tiny particles
+        wordFreq[w] = (wordFreq[w] || 0) + 1;
+        if (wordFreq[w] > 6) {
+            console.error(`[AFLEWO AI] 🚨 Degeneration detected — word "${w}" repeated ${wordFreq[w]} times. Suppressing.`);
+            return DEGENERATION_FALLBACK;
+        }
+    }
+
+    // 3. Detect non-ASCII / Unicode garbage: reject if > 15% of chars are non-Latin
+    const nonLatinCount = (text.match(/[^\x00-\x7F\u00C0-\u024F\u2018-\u201D\u2026\u2014\u2013\u00B7]/g) || []).length;
+    const nonLatinRatio = nonLatinCount / text.length;
+    if (nonLatinRatio > 0.15) {
+        console.error(`[AFLEWO AI] 🚨 Unicode soup detected (${(nonLatinRatio * 100).toFixed(1)}% non-Latin). Suppressing.`);
+        return DEGENERATION_FALLBACK;
+    }
+
+    // 4. Detect token flooding: extremely high density of short (2-5 char) capitalised tokens
+    // e.g. "soap FR titan Arn EG soap BIO" — hallucinated vocab fragments
+    const shortCapsTokens = words.filter(w => w.length <= 5 && /^[A-Z]{2,}$/.test(w));
+    const capsRatio = shortCapsTokens.length / Math.max(words.length, 1);
+    if (words.length > 15 && capsRatio > 0.2) {
+        console.error(`[AFLEWO AI] 🚨 Token flooding detected (${(capsRatio * 100).toFixed(1)}% caps fragments). Suppressing.`);
+        return DEGENERATION_FALLBACK;
+    }
+
+    return text;
+}
+
 // ─── Simple rule-based action extractor ──────────────────────────────────────
 function extractNavigationAction(text: string): NavigationAction | null {
     const routeMatch = text.match(/\[navigate_to:\s*([^\]]+)\]/i);
@@ -354,28 +400,28 @@ FORMATTING RULES:
             name: "Gemini",
             url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
             key: env.AFLEWO_GEMINI_API_KEY || env.GEMINI_API_KEY,
-            body: { model: "gemini-2.5-flash", messages: finalMessages, max_tokens: MAX_TOKENS, temperature: 0.6 }
+            body: { model: "gemini-2.5-flash", messages: finalMessages, max_tokens: MAX_TOKENS, temperature: 0.4 }
         },
         // 2. Groq (Fastest inference - ideal for low-bandwidth)
         {
             name: "Groq",
             url: "https://api.groq.com/openai/v1/chat/completions",
             key: env.AFLEWO_GROQ_API_KEY,
-            body: { model: "llama-3.3-70b-versatile", messages: finalMessages, max_tokens: MAX_TOKENS, temperature: 0.6 }
+            body: { model: "llama-3.3-70b-versatile", messages: finalMessages, max_tokens: MAX_TOKENS, temperature: 0.4 }
         },
         // 3. Cerebras
         {
             name: "Cerebras",
             url: "https://api.cerebras.ai/v1/chat/completions",
             key: env.AFLEWO_CEREBRAS_API_KEY,
-            body: { model: "llama3.1-70b", messages: finalMessages, max_tokens: MAX_TOKENS, temperature: 0.6 }
+            body: { model: "llama3.1-70b", messages: finalMessages, max_tokens: MAX_TOKENS, temperature: 0.4 }
         },
         // 4. Mistral
         {
             name: "Mistral",
             url: "https://api.mistral.ai/v1/chat/completions",
             key: env.AFLEWO_MISTRAL_API_KEY,
-            body: { model: "open-mistral-7b", messages: finalMessages, max_tokens: MAX_TOKENS, temperature: 0.6 }
+            body: { model: "open-mistral-7b", messages: finalMessages, max_tokens: MAX_TOKENS, temperature: 0.4 }
         }
     ];
 
@@ -394,8 +440,15 @@ FORMATTING RULES:
             if (response.ok) {
                 const data = await response.json();
                 if (data.choices?.[0]?.message?.content) {
+                    const raw = data.choices[0].message.content;
+                    const safe = sanitizeResponse(raw);
+                    if (safe === DEGENERATION_FALLBACK) {
+                        // Log and try next provider instead of returning garbage
+                        console.warn(`[AFLEWO AI] ${provider.name} response failed sanitization — falling through to next provider.`);
+                        continue;
+                    }
                     console.log(`[AFLEWO AI] Served by ${provider.name} | LowBW: ${lowBandwidth}`);
-                    return data.choices[0].message.content;
+                    return safe;
                 }
             } else {
                 console.warn(`[AFLEWO AI] ${provider.name} failed: ${response.status}`);
@@ -423,15 +476,20 @@ FORMATTING RULES:
                 body: JSON.stringify({
                     messages: finalMessages,
                     max_tokens: MAX_TOKENS,
-                    temperature: 0.6,
+                    temperature: 0.4,
                 }),
             });
 
             if (response.ok) {
                 const data = await response.json();
                 if (data.success && data.result?.response) {
-                    console.log(`[AFLEWO AI] Served by Cloudflare Workers AI (${model})`);
-                    return data.result.response;
+                    const rawCf = data.result.response;
+                    const safeCf = sanitizeResponse(rawCf);
+                    if (safeCf !== DEGENERATION_FALLBACK) {
+                        console.log(`[AFLEWO AI] Served by Cloudflare Workers AI (${model})`);
+                        return safeCf;
+                    }
+                    console.warn(`[AFLEWO AI] Cloudflare Workers AI response failed sanitization.`);
                 }
             }
         } catch (e) {
