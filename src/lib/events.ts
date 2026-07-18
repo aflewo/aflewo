@@ -118,7 +118,7 @@ export const events: AFLEWOEvent[] = [
     },
     {
         id: "eldoret-live-2026",
-        title: "LIVE NOW — Eldoret Worship Night",
+        title: "LIVE NOW - Eldoret Worship Night",
         date: "Jul 17, 2026",
         start: "20260717T190000",
         end: "20260718T020000",
