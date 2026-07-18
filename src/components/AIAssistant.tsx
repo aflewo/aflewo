@@ -9,6 +9,7 @@ import SvgIcon from "@/components/ui/SvgIcon";
 import fireMicData from "@/../context/lottie/Fire Mic Animation - LIstening_AI.json";
 import aiChatData from "@/../context/inspo/AI Chat.json";
 import { useAuth } from "@/app/(dashboard)/AuthContext";
+import { useBandwidth, useOfflineManifest } from "@/hooks/useNetworkStatus";
 
 // ─── Wallpaper Presets ────────────────────────────────────────────────────────
 const WALLPAPER_PRESETS = [
@@ -300,6 +301,10 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
     const [showPersonalize, setShowPersonalize] = useState(false);
     const aiChatLottieRef = useRef<LottieRefCurrentProps>(null);
 
+    // ─── Network awareness ───────────────────────────────────────────────────
+    const { isLowBandwidth, isOnline } = useBandwidth();
+    const { saveManifest } = useOfflineManifest();
+
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const lottieRef = useRef<LottieRefCurrentProps>(null);
@@ -456,10 +461,19 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
             const res = await fetch("/api/assistant", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ messages: history, currentPath: pathname }),
+                body: JSON.stringify({
+                    messages: history,
+                    currentPath: pathname,
+                    lowBandwidth: isLowBandwidth,
+                }),
             });
 
             const data = await res.json();
+
+            // Cache any logistical info offline for use without a connection
+            if (data.offlineManifest) {
+                saveManifest(data.offlineManifest);
+            }
 
             const assistantMsg: Message = {
                 id: `a-${Date.now()}`,
@@ -804,6 +818,36 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                                             </button>
                                         )}
                                     </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* ── Offline / Low-Bandwidth Status Banner ── */}
+                        <AnimatePresence>
+                            {!isOnline && (
+                                <motion.div
+                                    key="offline-banner"
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    className="overflow-hidden flex-shrink-0 bg-red-950/60 border-b border-red-500/20"
+                                >
+                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-red-400 text-center py-2">
+                                        You are offline. Showing cached info only.
+                                    </p>
+                                </motion.div>
+                            )}
+                            {isOnline && isLowBandwidth && (
+                                <motion.div
+                                    key="lowbw-banner"
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    className="overflow-hidden flex-shrink-0 bg-amber-950/50 border-b border-amber-500/20"
+                                >
+                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-400/80 text-center py-2">
+                                        Slow connection - minimal replies active
+                                    </p>
                                 </motion.div>
                             )}
                         </AnimatePresence>
