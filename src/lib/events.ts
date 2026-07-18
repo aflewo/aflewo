@@ -118,7 +118,7 @@ export const events: AFLEWOEvent[] = [
     },
     {
         id: "eldoret-live-2026",
-        title: "🔴 LIVE NOW — Eldoret Worship Night",
+        title: "LIVE NOW — Eldoret Worship Night",
         date: "Jul 17, 2026",
         start: "20260717T190000",
         end: "20260718T020000",
@@ -158,12 +158,14 @@ export function getIslandDisplayItems() {
         id: l.id,
         title: l.title,
         url: l.url || "/events",
-        isExternal: l.url?.startsWith("http")
+        isExternal: l.url?.startsWith("http"),
+        isLive: true
     }));
     return promos.map(p => ({
         id: p.id,
         title: p.title,
         url: p.url,
-        isExternal: p.isExternal
+        isExternal: p.isExternal,
+        isLive: false
     }));
 }

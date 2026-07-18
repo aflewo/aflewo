@@ -220,8 +220,8 @@ export default function HeroSection() {
                                             }}
                                         >
                                             <span className="relative flex h-2 w-2 flex-shrink-0">
-                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
-                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-gold"></span>
+                                                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${currentItem.isLive ? 'bg-red-500' : 'bg-gold'}`}></span>
+                                                <span className={`relative inline-flex rounded-full h-2 w-2 ${currentItem.isLive ? 'bg-red-500' : 'bg-gold'}`}></span>
                                             </span>
                                             <span className="truncate">{currentItem.title}</span>
                                         </Link>
