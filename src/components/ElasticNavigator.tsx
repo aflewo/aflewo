@@ -7,12 +7,12 @@ import { motion, animate, useMotionValue, useMotionValueEvent, useTransform, use
 import './ElasticNavigator.css';
 
 const sections = [
-    { id: "hero", label: "Altar" },
-    { id: "about", label: "Vision" },
+    { id: "hero", label: "Home" },
+    { id: "about", label: "About" },
     { id: "chapters", label: "Chapters" },
-    { id: "events", label: "Calendar" },
-    { id: "media", label: "Archive" },
-    { id: "stories", label: "Echoes" },
+    { id: "events", label: "Events" },
+    { id: "media", label: "Media" },
+    { id: "stories", label: "Stories" },
     { id: "join", label: "Join" },
 ];
 

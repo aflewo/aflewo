@@ -178,46 +178,49 @@ export default function StoriesTeaser() {
                             &quot;Behind every worship night is a story of transformation. From the hidden prayers of volunteers to the global echoes of our anthem.&quot;
                         </p>
 
-                        {/* Controls */}
-                        <div className="flex items-center gap-4 pt-4">
-                            <button
-                                onClick={handlePrev}
-                                aria-label="Previous story"
-                                className="p-4 rounded-full glass-card hover:bg-white/10 transition-colors active:scale-95"
-                            >
-                                <SvgIcon name="arrow_back" size={20} />
-                            </button>
-                            <div className="flex gap-2">
-                                {stories.map((_, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => gotoStory(i)}
-                                        aria-label={`Go to story ${i + 1}`}
-                                        className={`h-2 rounded-full transition-all duration-500 ${
-                                            i === activeIndex ? "w-8 bg-gold" : "w-2 bg-white/20 hover:bg-white/40"
-                                        }`}
-                                    />
-                                ))}
+                        {/* Desktop Controls (hidden on mobile) */}
+                        <div className="hidden lg:flex flex-col gap-8">
+                            <div className="flex items-center gap-4 pt-4">
+                                <button
+                                    onClick={handlePrev}
+                                    aria-label="Previous story"
+                                    className="p-4 rounded-full glass-card hover:bg-white/10 transition-colors active:scale-95"
+                                >
+                                    <SvgIcon name="arrow_back" size={20} />
+                                </button>
+                                <div className="flex gap-2">
+                                    {stories.map((_, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => gotoStory(i)}
+                                            aria-label={`Go to story ${i + 1}`}
+                                            className={`h-2 rounded-full transition-all duration-500 ${
+                                                i === activeIndex ? "w-8 bg-gold" : "w-2 bg-white/20 hover:bg-white/40"
+                                            }`}
+                                        />
+                                    ))}
+                                </div>
+                                <button
+                                    onClick={handleNext}
+                                    aria-label="Next story"
+                                    className="p-4 rounded-full glass-card hover:bg-white/10 transition-colors active:scale-95"
+                                >
+                                    <SvgIcon name="arrow_forward" size={20} />
+                                </button>
                             </div>
-                            <button
-                                onClick={handleNext}
-                                aria-label="Next story"
-                                className="p-4 rounded-full glass-card hover:bg-white/10 transition-colors active:scale-95"
-                            >
-                                <SvgIcon name="arrow_forward" size={20} />
-                            </button>
-                        </div>
 
-                        <Link
-                            href="/testimonies"
-                            className="press-scale inline-flex items-center gap-4 bg-gold text-brown px-10 py-5 rounded-lg font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
-                        >
-                            Read Testimonies <SvgIcon name="arrow_forward" size={20} />
-                        </Link>
+                            <Link
+                                href="/testimonies"
+                                className="press-scale inline-flex items-center gap-4 bg-gold text-brown w-max px-10 py-5 rounded-lg font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
+                            >
+                                Read Testimonies <SvgIcon name="arrow_forward" size={20} />
+                            </Link>
+                        </div>
                     </div>
 
-                    {/* Right — carousel stack */}
-                    <div className="flex-1 w-full h-[420px] sm:h-[480px] lg:h-[540px] relative overflow-hidden">
+                    {/* Right — carousel stack & Mobile Controls */}
+                    <div className="flex-1 w-full flex flex-col gap-10">
+                        <div className="w-full h-[420px] sm:h-[480px] lg:h-[540px] relative overflow-hidden">
                         {stories.map((story, i) => (
                             <div
                                 key={i}
@@ -266,6 +269,46 @@ export default function StoriesTeaser() {
                                 </div>
                             </div>
                         ))}
+                        </div>
+
+                        {/* Mobile Controls (hidden on desktop) */}
+                        <div className="flex lg:hidden flex-col gap-8 items-center sm:items-start">
+                            <div className="flex items-center gap-4">
+                                <button
+                                    onClick={handlePrev}
+                                    aria-label="Previous story"
+                                    className="p-4 rounded-full glass-card hover:bg-white/10 transition-colors active:scale-95"
+                                >
+                                    <SvgIcon name="arrow_back" size={20} />
+                                </button>
+                                <div className="flex gap-2">
+                                    {stories.map((_, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => gotoStory(i)}
+                                            aria-label={`Go to story ${i + 1}`}
+                                            className={`h-2 rounded-full transition-all duration-500 ${
+                                                i === activeIndex ? "w-8 bg-gold" : "w-2 bg-white/20 hover:bg-white/40"
+                                            }`}
+                                        />
+                                    ))}
+                                </div>
+                                <button
+                                    onClick={handleNext}
+                                    aria-label="Next story"
+                                    className="p-4 rounded-full glass-card hover:bg-white/10 transition-colors active:scale-95"
+                                >
+                                    <SvgIcon name="arrow_forward" size={20} />
+                                </button>
+                            </div>
+
+                            <Link
+                                href="/testimonies"
+                                className="press-scale inline-flex items-center gap-4 bg-gold text-brown w-full justify-center sm:w-max px-10 py-5 rounded-lg font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
+                            >
+                                Read Testimonies <SvgIcon name="arrow_forward" size={20} />
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
