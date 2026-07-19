@@ -11,7 +11,7 @@ import aiChatData from "@/../context/inspo/AI Chat.json";
 import { useAuth } from "@/app/(dashboard)/AuthContext";
 import { useBandwidth, useOfflineManifest } from "@/hooks/useNetworkStatus";
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Wallpaper Presets Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ─── Wallpaper Presets ────────────────────────────────────────────────────────
 const WALLPAPER_PRESETS = [
     { id: "default", label: "Default", value: null, preview: "hsl(20 14% 5%)" },
     { id: "cosmos", label: "Cosmos", value: "linear-gradient(160deg,#0f0c29,#302b63,#24243e)", preview: "#302b63" },
@@ -22,7 +22,7 @@ const WALLPAPER_PRESETS = [
 ];
 const WP_STORAGE_KEY = "aflewo_chat_wallpaper";
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Types Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ─── Types ────────────────────────────────────────────────────────────────────
 interface Message {
     id: string;
     role: "user" | "assistant" | "system";
@@ -60,7 +60,7 @@ declare global {
     }
 }
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Send icon SVG Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ─── Send icon SVG ────────────────────────────────────────────────────────────
 function SendIcon() {
     return (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +89,7 @@ function MicIcon({ active }: { active: boolean }) {
     );
 }
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Hyperlink & Context Parser Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ─── Hyperlink & Context Parser ──────────────────────────────────────────────
 const PAGE_DICTIONARY: Record<string, string> = {
     "media page": "/media",
     "about page": "/about",
@@ -199,7 +199,7 @@ function parseMessageContent(content: string, profile: any, onNavigate?: () => v
     return parts.length > 0 ? parts : applyFuzzyLinks(replacedText, matchCount, onNavigate);
 }
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Chat bubble Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ─── Chat bubble ─────────────────────────────────────────────────────────────
 function ChatBubble({ msg, onNavigate }: { msg: Message; onNavigate?: () => void }) {
     const { profile } = useAuth();
     const isUser = msg.role === "user";
@@ -223,7 +223,7 @@ function ChatBubble({ msg, onNavigate }: { msg: Message; onNavigate?: () => void
     );
 }
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Dynamic Suggestions Carousel Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// ─── Dynamic Suggestions Carousel ─────────────────────────────────────────────
 function DynamicSuggestions({ suggestions, onSelect }: { suggestions: any[], onSelect: (prompt: string) => void }) {
     const [currentIndex, setCurrentIndex] = useState(1);
     const [isHovered, setIsHovered] = useState(false);
@@ -381,7 +381,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
     const [activeSystemMessage, setActiveSystemMessage] = useState<string | null>(null);
     const [showSignInPill, setShowSignInPill] = useState(false);
     const [fabIsIdle, setFabIsIdle] = useState(false);
-    // Voice is muted by default — users must opt-in to enable TTS
+    // Voice is muted by default Ã¢â‚¬â€ users must opt-in to enable TTS
     const [isMuted, setIsMuted] = useState(true);
     const [isHeroVisible, setIsHeroVisible] = useState(true);
     const [chatWallpaper, setChatWallpaper] = useState<string | null>(null);
@@ -429,7 +429,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         return () => clearTimeout(timer);
     }, [isOpen]);
 
-    // Activity-based FAB opacity fade — mirrors Nav FAB behaviour
+    // Activity-based FAB opacity fade Ã¢â‚¬â€ mirrors Nav FAB behaviour
     useEffect(() => {
         if (isOpen) {
             setFabIsIdle(false);
@@ -449,7 +449,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         };
     }, [isOpen]);
 
-    // Hide FAB when hero section is visible — mirrors Nav FAB behaviour exactly
+    // Hide FAB when hero section is visible Ã¢â‚¬â€ mirrors Nav FAB behaviour exactly
     useEffect(() => {
         const heroEl = document.getElementById("hero") || document.querySelector("[data-hero]");
         if (!heroEl) { setIsHeroVisible(false); return; }
@@ -580,7 +580,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
             const assistantMsg: Message = {
                 id: `a-${Date.now()}`,
                 role: "assistant",
-                content: data.message || "I'm here — could you ask that again?",
+                content: data.message || "I'm here Ã¢â‚¬â€ could you ask that again?",
                 timestamp: new Date(),
             };
 
@@ -803,11 +803,10 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                                         setIsMuted(m => !m);
                                         if (!isMuted) synthRef.current?.cancel();
                                     }}
-                                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${
-                                        isMuted
-                                            ? "text-white/25 bg-white/5 hover:bg-white/10"
-                                            : "text-white/40 hover:text-white hover:bg-white/10"
-                                    }`}
+                                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${isMuted
+                                        ? "text-white/25 bg-white/5 hover:bg-white/10"
+                                        : "text-white/40 hover:text-white hover:bg-white/10"
+                                        }`}
                                     title={isMuted ? "Unmute voice" : "Mute voice"}
                                     aria-label={isMuted ? "Unmute voice" : "Mute voice"}
                                 >
@@ -827,15 +826,14 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                                 {/* Personalize / Wallpaper */}
                                 <button
                                     onClick={() => setShowPersonalize(p => !p)}
-                                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${
-                                        showPersonalize ? "text-gold bg-gold/10" : "text-white/40 hover:text-white hover:bg-white/10"
-                                    }`}
+                                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${showPersonalize ? "text-gold bg-gold/10" : "text-white/40 hover:text-white hover:bg-white/10"
+                                        }`}
                                     title="Personalize chat"
                                     aria-label="Personalize chat"
                                 >
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M15.7209 7.34884C15.7209 8.37634 14.888 9.2093 13.8605 9.2093C12.833 9.2093 12 8.37634 12 7.34884C12 6.32133 12.833 5.48837 13.8605 5.48837C14.888 5.48837 15.7209 6.32133 15.7209 7.34884Z" fill="currentColor"/>
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M16.0853 2.10839C15.2789 1.99997 14.2535 1.99998 12.9813 2H11.0187C9.74655 1.99998 8.72114 1.99997 7.91466 2.10839C7.07735 2.22097 6.37235 2.4618 5.81243 3.02172C5.25251 3.58164 5.01168 4.28664 4.89911 5.12395C4.79068 5.93043 4.79069 6.95585 4.79071 8.22802V15.772C4.79069 17.0442 4.79068 18.0696 4.89911 18.876C5.01168 19.7134 5.25251 20.4184 5.81243 20.9783C6.37235 21.5382 7.07735 21.779 7.91466 21.8916C8.72114 22 9.74655 22 11.0187 22H12.9813C14.2534 22 15.2789 22 16.0853 21.8916C16.9226 21.779 17.6276 21.5382 18.1876 20.9783C18.7475 20.4184 18.9883 19.7134 19.1009 18.876C19.2093 18.0696 19.2093 17.0441 19.2093 15.772V8.22803C19.2093 6.95585 19.2093 5.93044 19.1009 5.12395C18.9883 4.28664 18.7475 3.58164 18.1876 3.02172C17.6276 2.4618 16.9226 2.22097 16.0853 2.10839ZM16.8085 16.6302L17.7946 17.6708C17.8134 17.134 17.8139 16.4954 17.8139 15.7209V8.27907C17.8139 6.9438 17.8125 6.01253 17.718 5.30988C17.6262 4.6273 17.4584 4.26584 17.2009 4.00838C16.9435 3.75093 16.582 3.58307 15.8994 3.4913C15.1968 3.39683 14.2655 3.39535 12.9302 3.39535H11.0698C9.7345 3.39535 8.80324 3.39683 8.10059 3.4913C7.41801 3.58307 7.05654 3.75093 6.79909 4.00838C6.54164 4.26584 6.37378 4.6273 6.28201 5.30988C6.18754 6.01253 6.18606 6.9438 6.18606 8.27907V12.904L6.18936 12.9007C7.10618 11.96 8.52458 12.0245 9.37271 13.019L12.313 16.4668C12.5485 16.7429 12.8584 16.7555 13.0961 16.5596L13.3005 16.3912C14.3764 15.5045 15.8517 15.6204 16.8085 16.6302Z" fill="currentColor" opacity="0.4"/>
+                                        <path d="M15.7209 7.34884C15.7209 8.37634 14.888 9.2093 13.8605 9.2093C12.833 9.2093 12 8.37634 12 7.34884C12 6.32133 12.833 5.48837 13.8605 5.48837C14.888 5.48837 15.7209 6.32133 15.7209 7.34884Z" fill="currentColor" />
+                                        <path fillRule="evenodd" clipRule="evenodd" d="M16.0853 2.10839C15.2789 1.99997 14.2535 1.99998 12.9813 2H11.0187C9.74655 1.99998 8.72114 1.99997 7.91466 2.10839C7.07735 2.22097 6.37235 2.4618 5.81243 3.02172C5.25251 3.58164 5.01168 4.28664 4.89911 5.12395C4.79068 5.93043 4.79069 6.95585 4.79071 8.22802V15.772C4.79069 17.0442 4.79068 18.0696 4.89911 18.876C5.01168 19.7134 5.25251 20.4184 5.81243 20.9783C6.37235 21.5382 7.07735 21.779 7.91466 21.8916C8.72114 22 9.74655 22 11.0187 22H12.9813C14.2534 22 15.2789 22 16.0853 21.8916C16.9226 21.779 17.6276 21.5382 18.1876 20.9783C18.7475 20.4184 18.9883 19.7134 19.1009 18.876C19.2093 18.0696 19.2093 17.0441 19.2093 15.772V8.22803C19.2093 6.95585 19.2093 5.93044 19.1009 5.12395C18.9883 4.28664 18.7475 3.58164 18.1876 3.02172C17.6276 2.4618 16.9226 2.22097 16.0853 2.10839ZM16.8085 16.6302L17.7946 17.6708C17.8134 17.134 17.8139 16.4954 17.8139 15.7209V8.27907C17.8139 6.9438 17.8125 6.01253 17.718 5.30988C17.6262 4.6273 17.4584 4.26584 17.2009 4.00838C16.9435 3.75093 16.582 3.58307 15.8994 3.4913C15.1968 3.39683 14.2655 3.39535 12.9302 3.39535H11.0698C9.7345 3.39535 8.80324 3.39683 8.10059 3.4913C7.41801 3.58307 7.05654 3.75093 6.79909 4.00838C6.54164 4.26584 6.37378 4.6273 6.28201 5.30988C6.18754 6.01253 6.18606 6.9438 6.18606 8.27907V12.904L6.18936 12.9007C7.10618 11.96 8.52458 12.0245 9.37271 13.019L12.313 16.4668C12.5485 16.7429 12.8584 16.7555 13.0961 16.5596L13.3005 16.3912C14.3764 15.5045 15.8517 15.6204 16.8085 16.6302Z" fill="currentColor" opacity="0.4" />
                                     </svg>
                                 </button>
                                 <button
@@ -844,7 +842,10 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                                     title="New Chat"
                                     aria-label="New Chat"
                                 >
-                                    <SvgIcon name="edit_note" size={18} />
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                    </svg>
                                 </button>
                                 <button
                                     onClick={() => {
@@ -855,7 +856,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                                     className="w-8 h-8 flex items-center justify-center rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-all"
                                     aria-label="Close"
                                 >
-                                    <CloseIcon />
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                                 </button>
                             </div>
                         </div>
@@ -883,11 +884,10 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                                                         localStorage.setItem(WP_STORAGE_KEY, val ?? "null");
                                                     }}
                                                     title={preset.label}
-                                                    className={`w-8 h-8 rounded-full border-2 transition-all duration-200 flex-shrink-0 ${
-                                                        chatWallpaper === preset.value
-                                                            ? "border-gold scale-110 shadow-[0_0_8px_rgba(212,175,55,0.5)]"
-                                                            : "border-white/10 hover:border-white/30"
-                                                    }`}
+                                                    className={`w-8 h-8 rounded-full border-2 transition-all duration-200 flex-shrink-0 ${chatWallpaper === preset.value
+                                                        ? "border-gold scale-110 shadow-[0_0_8px_rgba(212,175,55,0.5)]"
+                                                        : "border-white/10 hover:border-white/30"
+                                                        }`}
                                                     style={{ background: preset.value ?? preset.preview }}
                                                 />
                                             ))}
@@ -897,7 +897,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                                                 title="Custom image"
                                                 className="w-8 h-8 rounded-full border-2 border-dashed border-white/20 hover:border-gold/50 transition-all flex items-center justify-center text-white/30 hover:text-gold"
                                             >
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
                                             </button>
                                         </div>
                                         <input
@@ -1195,7 +1195,7 @@ function getContextualSuggestions(text: string) {
     const lower = text.toLowerCase();
     const now = new Date();
     const hour = now.getHours();
-    const isEvening = hour >= 17 || hour < 4; // 5 PM —œ 4 AM = likely event hours
+    const isEvening = hour >= 17 || hour < 4; // 5 PM Ã¢â‚¬â€œ 4 AM = likely event hours
 
     // Ã¢â€â‚¬Ã¢â€â‚¬ LIVE EVENT: AFLEWO Eldoret is LIVE NOW (pinned highest priority) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     const liveEldoretSuggestions = [
@@ -1217,7 +1217,7 @@ function getContextualSuggestions(text: string) {
     // Ã¢â€â‚¬Ã¢â€â‚¬ EVENTS / DATES Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     if (lower.includes("event") || lower.includes("date") || lower.includes("calendar") || lower.includes("worship night") || lower.includes("schedule")) {
         return [
-            { id: "main_event", label: "Oct 2—œ4 Nairobi", prompt: "Tell me about the main AFLEWO Night on October 2nd in Nairobi", icon: "calendar" },
+            { id: "main_event", label: "Oct 2Ã¢â‚¬â€œ4 Nairobi", prompt: "Tell me about the main AFLEWO Night on October 2nd in Nairobi", icon: "calendar" },
             { id: "calendar_2026", label: "Full 2026 Schedule", prompt: "What is the full AFLEWO 2026 event calendar?", icon: "calendar" },
             { id: "nairobi_launch", label: "Pre-Launch", prompt: "Tell me about the Nairobi Pre-Launch event on April 10th", icon: "calendar" },
             ...liveEldoretSuggestions.slice(0, 1),
