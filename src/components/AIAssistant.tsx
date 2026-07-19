@@ -288,49 +288,88 @@ function DynamicSuggestions({ suggestions, onSelect }: { suggestions: any[], onS
 }
 
 // --- Liquid Glass Island Sub-Component ---
-// Glass shell always on top. Content (map/waveform/ticket) interchanges beneath it.
-// Shell and content scale as one. Never appear simultaneously.
-function LiquidGlassIsland({ island, onDismiss }: { island: IslandState; onDismiss: () => void }) {
+// Renders as a flex-shrink-0 sub-header slot BELOW the panel header.
+// This ensures voice controls are NEVER obstructed.
+function LiquidGlassIsland({
+    island,
+    onDismiss,
+    isFullscreen,
+    onToggleFullscreen,
+}: {
+    island: IslandState;
+    onDismiss: () => void;
+    isFullscreen: boolean;
+    onToggleFullscreen: () => void;
+}) {
     if (island.mode === "IDLE" || island.mode === "CHAT_ACTIVE") return null;
     return (
         <AnimatePresence mode="wait">
             <motion.div
                 key={island.mode}
-                layoutId="liquid-glass-island"
-                layout
-                initial={{ opacity: 0, scale: 0.94, y: -8 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.94, y: -8 }}
-                transition={{ type: "spring", stiffness: 420, damping: 36 }}
-                className="absolute top-0 left-0 right-0 z-[200] mx-3 mt-3 rounded-2xl overflow-hidden"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ type: "spring", stiffness: 380, damping: 36 }}
+                className="overflow-hidden flex-shrink-0 border-b border-white/8"
                 style={{
-                    background: "rgba(10, 8, 6, 0.72)",
-                    backdropFilter: "blur(16px) saturate(1.4)",
-                    WebkitBackdropFilter: "blur(16px) saturate(1.4)",
-                    border: "1px solid rgba(255,255,255,0.10)",
-                    boxShadow: "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
+                    background: "rgba(10, 8, 6, 0.6)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
                 }}
             >
-                <div className="flex justify-end px-3 pt-2">
-                    <button onClick={onDismiss} className="text-white/30 hover:text-white/70 transition-colors" aria-label="Dismiss island">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" /></svg>
-                    </button>
+                {/* Control row: label + expand + dismiss */}
+                <div className="flex items-center justify-between px-3 pt-2.5 pb-1">
+                    <p className="text-[8px] font-black uppercase tracking-[0.28em] text-gold/60">
+                        {island.mode === "MAP_VIEW" ? (island.payload?.label || "Venue Location") :
+                         island.mode === "LIVE_WAVEFORM" ? "Live Audio" : "Saved Offline"}
+                    </p>
+                    <div className="flex items-center gap-1.5">
+                        {island.mode === "MAP_VIEW" && (
+                            <button
+                                onClick={onToggleFullscreen}
+                                className="text-white/30 hover:text-gold transition-colors"
+                                aria-label={isFullscreen ? "Collapse map" : "Expand map fullscreen"}
+                                title={isFullscreen ? "Collapse" : "Expand"}
+                            >
+                                {isFullscreen ? (
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 14H10M10 14V20M10 14L3 21M20 10H14M14 10V4M14 10L21 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                ) : (
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M14 10L21 3M21 3H15M21 3V9M10 14L3 21M3 21H9M3 21V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                )}
+                            </button>
+                        )}
+                        <button onClick={onDismiss} className="text-white/25 hover:text-white/60 transition-colors" aria-label="Dismiss">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" /></svg>
+                        </button>
+                    </div>
                 </div>
+
+                {/* MAP VIEW */}
                 {island.mode === "MAP_VIEW" && island.payload?.lat != null && island.payload?.lng != null && (
-                    <motion.div key="map-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.26 }} className="px-3 pb-3">
-                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-gold/70 mb-2">{island.payload.label || "Venue Location"}</p>
-                        <div className="w-full rounded-xl overflow-hidden" style={{ height: 156, background: "rgba(0,0,0,0.3)" }}>
-                            <iframe title={island.payload.label || "Venue map"} src={`https://maps.google.com/maps?q=${island.payload.lat},${island.payload.lng}&z=15&output=embed`} width="100%" height="100%" style={{ border: 0, borderRadius: 12, opacity: 0.92 }} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+                    <motion.div key="map-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }} className="px-3 pb-3">
+                        <div
+                            className="w-full rounded-xl overflow-hidden transition-all duration-500"
+                            style={{ height: isFullscreen ? "55vh" : 148, background: "rgba(0,0,0,0.3)" }}
+                        >
+                            <iframe
+                                title={island.payload.label || "Venue map"}
+                                src={`https://maps.google.com/maps?q=${island.payload.lat},${island.payload.lng}&z=15&output=embed`}
+                                width="100%"
+                                height="100%"
+                                style={{ border: 0, borderRadius: 12, opacity: 0.93 }}
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                            />
                         </div>
-                        <p className="text-[8px] text-white/30 text-center mt-1.5 font-medium tracking-wide">{island.payload.lat.toFixed(4)}, {island.payload.lng.toFixed(4)}</p>
+                        <p className="text-[8px] text-white/25 text-center mt-1 font-medium tracking-wide">
+                            {island.payload.lat.toFixed(4)}, {island.payload.lng.toFixed(4)}
+                        </p>
                     </motion.div>
                 )}
+
+                {/* LIVE WAVEFORM */}
                 {island.mode === "LIVE_WAVEFORM" && (
-                    <motion.div key="waveform-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.26 }} className="px-4 pb-4">
-                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-red-400 mb-3 flex items-center gap-2">
-                            <span className="relative flex h-1.5 w-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" /><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" /></span>
-                            Live
-                        </p>
+                    <motion.div key="waveform-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }} className="px-4 pb-4">
                         <div className="flex items-center gap-[3px] h-8">
                             {Array.from({ length: 20 }).map((_, i) => (
                                 <motion.div key={i} className="flex-1 rounded-full bg-gold/70" animate={{ scaleY: [0.2, 1, 0.3, 0.8, 0.2] }} transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.06, ease: "easeInOut" }} style={{ originY: "center", height: "100%" }} />
@@ -338,9 +377,10 @@ function LiquidGlassIsland({ island, onDismiss }: { island: IslandState; onDismi
                         </div>
                     </motion.div>
                 )}
+
+                {/* OFFLINE TICKET */}
                 {island.mode === "OFFLINE_TICKET" && island.payload?.items && (
-                    <motion.div key="ticket-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.26 }} className="px-4 pb-4">
-                        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-amber-400/80 mb-2.5 flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-amber-400/70 flex-shrink-0" />Saved offline</p>
+                    <motion.div key="ticket-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }} className="px-4 pb-4">
                         <div className="space-y-1.5">
                             {island.payload.items.map((item, idx) => (
                                 <div key={idx} className="flex items-start gap-2"><span className="w-1 h-1 rounded-full bg-gold/60 mt-1.5 flex-shrink-0" /><p className="text-[11px] text-white/80 leading-snug">{item}</p></div>
@@ -350,6 +390,37 @@ function LiquidGlassIsland({ island, onDismiss }: { island: IslandState; onDismi
                 )}
             </motion.div>
         </AnimatePresence>
+    );
+}
+
+// --- AI Action Chips --- deep-link chips from suggestedActions payload
+function ActionChips({
+    actions,
+    onAction,
+}: {
+    actions: { label: string; icon: string; action: { type: string; target: string } }[];
+    onAction: (action: { type: string; target: string }) => void;
+}) {
+    if (!actions || actions.length === 0) return null;
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 6 }}
+            transition={{ duration: 0.28 }}
+            className="flex flex-wrap gap-1.5 px-1 mt-1"
+        >
+            {actions.map((item) => (
+                <button
+                    key={item.label}
+                    onClick={() => onAction(item.action)}
+                    className="flex items-center gap-1.5 bg-gold/10 hover:bg-gold/20 active:scale-95 border border-gold/25 rounded-full px-2.5 py-1 text-[11px] text-gold font-bold transition-all whitespace-nowrap"
+                >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    {item.label}
+                </button>
+            ))}
+        </motion.div>
     );
 }
 
@@ -375,6 +446,8 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
     // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Liquid Glass Island state machine Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
     // Atomic state: only one mode can be active at a time.
     const [islandState, setIslandState] = useState<IslandState>({ mode: "IDLE", payload: null });
+    const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+    const [suggestedActions, setSuggestedActions] = useState<{ label: string; icon: string; action: { type: string; target: string } }[]>([]);
     const [hasVoiceSupport, setHasVoiceSupport] = useState(false);
     const [voiceTranscript, setVoiceTranscript] = useState("");
     const [isNavigating, setIsNavigating] = useState<{ type: string; target: string } | null>(null);
@@ -480,7 +553,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         }
     }, [isOpen]);
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Navigation action executor Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // ------------------------------------ Navigation action executor ---------------------------------------------
     const executeAction = useCallback((action: NavigationAction) => {
         if (action.type === "navigate_to") {
             // BUG FIX: if already on the target page, abort navigation entirely
@@ -504,7 +577,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         }
     }, [router, onNavigate, pathname]);
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Text-to-speech Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // ------------------------------------ Text-to-speech ---------------------------------------------
     const speak = useCallback((text: string) => {
         if (isMuted) return;
         if (!synthRef.current) return;
@@ -523,7 +596,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         synthRef.current.speak(utterance);
     }, []);
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Send message to backend Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // ------------------------------------ Send message to backend ---------------------------------------------
     const sendMessage = useCallback(async (text: string) => {
         if (!text.trim() || isThinking) return;
 
@@ -562,7 +635,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                 saveManifest(data.offlineManifest);
             }
 
-            // Dispatch island state from AI trigger (atomic â€” one state at a time)
+            // Dispatch island state from AI trigger (atomic — one state at a time)
             if (data.islandTrigger) {
                 const trigger = data.islandTrigger;
                 if (trigger.mode === "map" && trigger.payload) {
@@ -577,10 +650,17 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                 }
             }
 
+            // Parse suggestedActions from AI response — these are deep-link action chips
+            if (Array.isArray(data.suggestedActions) && data.suggestedActions.length > 0) {
+                setSuggestedActions(data.suggestedActions);
+            } else {
+                setSuggestedActions([]);
+            };
+
             const assistantMsg: Message = {
                 id: `a-${Date.now()}`,
                 role: "assistant",
-                content: data.message || "I'm here Ã¢â‚¬â€ could you ask that again?",
+                content: data.message || "I'm here — could you ask that again?",
                 timestamp: new Date(),
             };
 
@@ -636,7 +716,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         }
     }, [messages, isThinking, speak, executeAction]);
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Voice recognition Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // ------------------------------------ Voice recognition ---------------------------------------------
     const startListening = useCallback(() => {
         if (!hasVoiceSupport || isListening) return;
 
@@ -704,7 +784,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         setVoiceTranscript("");
     }, [stopListening]);
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Input key handler Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // ------------------------------------ Input key handler ---------------------------------------------
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -712,10 +792,10 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
         }
     };
 
-    // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Render Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+    // ------------------------------------ Render ---------------------------------------------
     return (
         <>
-            {/* Ã¢â€â‚¬Ã¢â€â‚¬ Floating Trigger Button Ã¢â€â‚¬Ã¢â€â‚¬ */}
+            {/* -------------------- Floating Trigger Button -------------------- */}
             <AnimatePresence>
                 {!isOpen && !isHeroVisible && (
                     <motion.button
@@ -749,7 +829,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                 )}
             </AnimatePresence>
 
-            {/* Ã¢â€â‚¬Ã¢â€â‚¬ Chat Panel Ã¢â€â‚¬Ã¢â€â‚¬ */}
+            {/* -------------------- Chat Panel -------------------- */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -768,15 +848,9 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                             flexDirection: "column",
                         }}
                     >
-                        {/* -- Liquid Glass Island (relative wrapper gives island absolute anchor) -- */}
-                        <div className="relative flex-shrink-0">
-                            <LiquidGlassIsland
-                                island={islandState}
-                                onDismiss={() => setIslandState({ mode: "IDLE", payload: null })}
-                            />
-                        </div>
+                        {/* Header is always first — island is always BELOW it, never overlapping voice controls */}
 
-                        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Panel Header Ã¢â€â‚¬Ã¢â€â‚¬ */}
+                        {/* -------------------- Panel Header -------------------- */}
                         <div className="flex items-center justify-between px-5 py-4 border-b border-white/8 flex-shrink-0">
                             <div className="flex items-center gap-3">
                                 {/* AI Chat Lottie avatar */}
@@ -861,7 +935,15 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                             </div>
                         </div>
 
-                        {/* Ã¢â€â‚¬Ã¢â€â‚¬ Personalize Drawer Ã¢â€â‚¬Ã¢â€â‚¬ */}
+                        {/* -- Map / Island Sub-Header (pinned below controls, expands downward) -- */}
+                        <LiquidGlassIsland
+                            island={islandState}
+                            onDismiss={() => { setIslandState({ mode: "IDLE", payload: null }); setIsMapFullscreen(false); }}
+                            isFullscreen={isMapFullscreen}
+                            onToggleFullscreen={() => setIsMapFullscreen(f => !f)}
+                        />
+
+                        {/* -- Personalize Drawer -- */}
                         <AnimatePresence>
                             {showPersonalize && (
                                 <motion.div
@@ -990,9 +1072,18 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                                     <div key={msg.id} className="space-y-2">
                                         <ChatBubble msg={msg} onNavigate={onNavigate} />
 
-                                        {/* Contextual suggestions under the last assistant message */}
+                                        {/* Contextual suggestions + AI action chips under last assistant message */}
                                         {isLast && isAssistant && !isThinking && !isListening && (
                                             <div className="flex flex-col gap-2">
+                                                {/* Deep-link action chips from AI suggestedActions payload */}
+                                                <AnimatePresence>
+                                                    {suggestedActions.length > 0 && (
+                                                        <ActionChips
+                                                            actions={suggestedActions}
+                                                            onAction={(action) => executeAction(action as { type: "navigate_to" | "scroll_to"; target: string })}
+                                                        />
+                                                    )}
+                                                </AnimatePresence>
                                                 <DynamicSuggestions
                                                     suggestions={getContextualSuggestions(msg.content)}
                                                     onSelect={(prompt) => sendMessage(prompt)}
