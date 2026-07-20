@@ -383,7 +383,11 @@ function LiquidGlassIsland({
                                     title={isFullscreen ? "Collapse" : "Expand"}
                                 >
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M10 19H5V14M14 5H19V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        {isFullscreen ? (
+                                            <path d="M5 14H10V19M19 10H14V5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        ) : (
+                                            <path d="M10 19H5V14M14 5H19V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        )}
                                     </svg>
                                 </button>
                             </div>
