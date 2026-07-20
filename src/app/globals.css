@@ -260,6 +260,60 @@
   .pulse-glow {
     animation: pulseGlow 3s ease-in-out infinite;
   }
+
+  /* ── Dropdown / select dark-mode enforcement ───────────────────────────────
+     Fixes the white-backdrop / white-text legibility failure on all native
+     <select> elements across the site.  Sets color-scheme: dark so the OS
+     renders the popup with a dark background and white text.  Also provides
+     explicit foreground / background tokens so browsers that ignore
+     color-scheme alone still get a visually consistent result.             */
+  select,
+  select option {
+    color-scheme: dark;
+    background-color: hsl(20 20% 8%);
+    color: hsl(42 100% 95%);
+  }
+
+  select:focus {
+    outline: none;
+    border-color: hsl(42 92% 56% / 0.5);
+  }
+
+  /* Individual option hover — best-effort, overridden by OS on native selects */
+  select option:hover,
+  select option:focus,
+  select option:checked {
+    background-color: hsl(42 92% 56% / 0.15);
+    color: hsl(42 92% 56%);
+  }
+
+  /* ── Image download prevention ─────────────────────────────────────────────
+     Applies friction-level drag/right-click blocking on gallery images.
+     Does NOT prevent screenshots or devtools — that requires server-side
+     watermarking (applied in the Lightbox watermark overlay).             */
+  .no-download {
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: none;
+  }
+
+  .no-download-wrapper {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .no-download-wrapper img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
+
+  .no-download-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
 }
 
 @layer utilities {

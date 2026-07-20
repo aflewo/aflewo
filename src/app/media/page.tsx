@@ -123,18 +123,15 @@ const YOUTUBE_VIDEOS = [
 ];
 
 // ─── Lightbox ───────────────────────────────────────────────────────────────
-function Lightbox({ item, onClose, onPrev, onNext }: {
+// Per spec: image + close only. No prev/next nav, no download, no share.
+function Lightbox({ item, onClose }: {
   item: GalleryItem | null;
   onClose: () => void;
-  onPrev: () => void;
-  onNext: () => void;
 }) {
   useEffect(() => {
     if (!item) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") onPrev();
-      if (e.key === "ArrowRight") onNext();
     };
     window.addEventListener("keydown", handler);
     document.body.style.overflow = "hidden";
@@ -142,7 +139,7 @@ function Lightbox({ item, onClose, onPrev, onNext }: {
       window.removeEventListener("keydown", handler);
       document.body.style.overflow = "";
     };
-  }, [item, onClose, onPrev, onNext]);
+  }, [item, onClose]);
 
   if (!item) return null;
 
@@ -175,37 +172,41 @@ function Lightbox({ item, onClose, onPrev, onNext }: {
           </button>
         </div>
 
-        {/* Image */}
-        <div className="relative w-full rounded-2xl overflow-hidden bg-white/5 border border-white/10"
-          style={{ maxHeight: "70vh" }}>
+        {/* Image with watermark — download prevented via CSS + onContextMenu */}
+        <div
+          className="no-download-wrapper relative w-full rounded-2xl overflow-hidden bg-white/5 border border-white/10 select-none"
+          style={{ maxHeight: "70vh" }}
+          onContextMenu={(e) => e.preventDefault()}
+        >
           <Image
             src={item.src}
             alt={item.title}
             width={1200}
             height={800}
-            className="w-full h-full object-contain"
-            style={{ maxHeight: "70vh" }}
+            className="w-full h-full object-contain select-none"
+            style={{ maxHeight: "70vh", pointerEvents: "none", WebkitUserDrag: "none" } as React.CSSProperties}
             unoptimized
+            draggable={false}
           />
+          {/* Watermark overlay — AFLEWO branding, covers entire image */}
+          <div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            aria-hidden="true"
+          >
+            <div
+              className="flex flex-col items-center gap-1 opacity-[0.12] select-none"
+              style={{ transform: "rotate(-25deg)", userSelect: "none" }}
+            >
+              <span className="text-white font-black text-4xl md:text-6xl tracking-[0.4em] uppercase">AFLEWO</span>
+              <span className="text-white font-black text-xs md:text-sm tracking-[0.6em] uppercase">aflewo.org</span>
+            </div>
+          </div>
         </div>
 
-        {/* Footer */}
+        {/* Footer — description only, no controls */}
         <div className="flex items-center justify-between">
           <p className="text-white/50 text-sm font-medium">{item.desc}</p>
-          <div className="flex gap-2">
-            <button
-              onClick={onPrev}
-              className="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all"
-            >
-              <SvgIcon name="chevron_left" size={20} className="opacity-80" />
-            </button>
-            <button
-              onClick={onNext}
-              className="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all"
-            >
-              <SvgIcon name="chevron_right" size={20} className="opacity-80" />
-            </button>
-          </div>
+          <p className="text-white/20 text-[9px] font-black uppercase tracking-widest">© AFLEWO Archive</p>
         </div>
       </div>
     </div>
@@ -219,6 +220,7 @@ export default function MediaPage() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [chapterFilter, setChapterFilter] = useState("All Chapters");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const topRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -257,12 +259,6 @@ export default function MediaPage() {
 
   const openLightbox = useCallback((index: number) => setLightboxIndex(index), []);
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
-  const prevItem = useCallback(() =>
-    setLightboxIndex((i) => (i === null ? null : (i - 1 + filtered.length) % filtered.length)),
-    [filtered.length]);
-  const nextItem = useCallback(() =>
-    setLightboxIndex((i) => (i === null ? null : (i + 1) % filtered.length)),
-    [filtered.length]);
 
   const lightboxItem = lightboxIndex !== null ? filtered[lightboxIndex] ?? null : null;
 
@@ -271,8 +267,6 @@ export default function MediaPage() {
       <Lightbox
         item={lightboxItem}
         onClose={closeLightbox}
-        onPrev={prevItem}
-        onNext={nextItem}
       />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
@@ -307,8 +301,8 @@ export default function MediaPage() {
             </div>
           </div>
 
-          {/* Filters */}
-          <div className="mt-8 flex flex-col sm:flex-row gap-3">
+          {/* Filters + View Toggle */}
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
             {/* Category filter */}
             <div className="flex overflow-x-auto hide-scrollbar gap-1.5 glass-card p-1.5 rounded-full">
               {FILTERS.map((f) => (
@@ -340,6 +334,37 @@ export default function MediaPage() {
                 </button>
               ))}
             </div>
+
+            {/* Grid / List view toggle */}
+            <div className="ml-auto flex items-center gap-1 glass-card p-1 rounded-full shrink-0">
+              <button
+                onClick={() => setViewMode("grid")}
+                title="Grid view"
+                className={`p-2.5 rounded-full transition-all ${
+                  viewMode === "grid" ? "bg-gold text-brown" : "text-white/30 hover:text-white"
+                }`}
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <rect x="0" y="0" width="6" height="6" rx="1" />
+                  <rect x="10" y="0" width="6" height="6" rx="1" />
+                  <rect x="0" y="10" width="6" height="6" rx="1" />
+                  <rect x="10" y="10" width="6" height="6" rx="1" />
+                </svg>
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                title="List view"
+                className={`p-2.5 rounded-full transition-all ${
+                  viewMode === "list" ? "bg-gold text-brown" : "text-white/30 hover:text-white"
+                }`}
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <rect x="0" y="0" width="16" height="3" rx="1" />
+                  <rect x="0" y="6" width="16" height="3" rx="1" />
+                  <rect x="0" y="12" width="16" height="3" rx="1" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {/* Result count */}
@@ -354,7 +379,13 @@ export default function MediaPage() {
         <div className="max-container">
           <div className="flex items-center justify-between mb-6">
             <div className="space-y-1">
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-gold/60">Live Recordings</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-gold/60 flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-gold/10 border border-gold/20 text-gold text-[8px] font-black uppercase tracking-widest">
+                  <svg width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4" /></svg>
+                  External
+                </span>
+                Live Recordings
+              </span>
               <h2 className="text-2xl font-black tracking-tighter">WORSHIP <span className="text-gold">ON DEMAND</span></h2>
             </div>
             <a
@@ -426,15 +457,51 @@ export default function MediaPage() {
                 No media found for this filter
               </p>
             </div>
+          ) : viewMode === "list" ? (
+            /* ── List / Detail view ── */
+            <div className="flex flex-col gap-3">
+              {filtered.map((item, index) => (
+                <div
+                  key={item.id}
+                  className="group flex items-center gap-5 glass-card rounded-xl px-5 py-4 border border-white/5 hover:border-gold/30 transition-all duration-300 cursor-pointer no-download-wrapper"
+                  onClick={() => openLightbox(index)}
+                  onContextMenu={(e) => e.preventDefault()}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open ${item.title}`}
+                  onKeyDown={(e) => e.key === "Enter" && openLightbox(index)}
+                >
+                  <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-white/5">
+                    <Image
+                      src={item.src}
+                      alt={item.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      unoptimized
+                      draggable={false}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-gold text-[9px] font-black uppercase tracking-widest">{item.chapter} · {item.year}</p>
+                    <h3 className="text-white text-sm font-black leading-tight truncate group-hover:text-gold transition-colors">{item.title}</h3>
+                    <p className="text-white/30 text-xs font-medium truncate mt-0.5">{item.desc}</p>
+                  </div>
+                  <span className="text-[9px] font-black uppercase tracking-widest bg-white/5 border border-white/10 px-2.5 py-1 rounded-full text-white/40 shrink-0">{item.category}</span>
+                  <SvgIcon name="open_in_full" size={14} className="text-white/20 group-hover:text-gold transition-colors shrink-0" />
+                </div>
+              ))}
+            </div>
           ) : (
-            /* YouTube-style responsive grid — wide items span 2 cols on desktop */
+            /* ── Masonry grid view ── */
             <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
               {filtered.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`break-inside-avoid mb-4 group relative rounded-2xl overflow-hidden cursor-pointer border border-white/5 hover:border-gold/30 transition-all duration-500 bg-white/3 ${item.wide ? "sm:col-span-2" : ""
-                    }`}
+                  className={`break-inside-avoid mb-4 group relative rounded-2xl overflow-hidden cursor-pointer border border-white/5 hover:border-gold/30 transition-all duration-500 bg-white/3 no-download-wrapper ${
+                    item.wide ? "sm:col-span-2" : ""
+                  }`}
                   onClick={() => openLightbox(index)}
+                  onContextMenu={(e) => e.preventDefault()}
                   role="button"
                   tabIndex={0}
                   aria-label={`Open ${item.title}`}
@@ -448,6 +515,7 @@ export default function MediaPage() {
                       height={400}
                       className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
                       unoptimized
+                      draggable={false}
                     />
                   </div>
 

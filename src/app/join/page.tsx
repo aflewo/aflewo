@@ -14,33 +14,71 @@ gsap.registerPlugin(ScrollTrigger);
 
 const tracks = [
     {
-        id: "music",
-        title: "Music & Choir",
-        desc: "Join the mass choir or instrumental team. Open to vocalists, pianists, drummers, and string players. Registration leads to auditions.",
+        id: "choir",
+        title: "Choir",
+        shortTitle: "Choir",
+        desc: "Join the mass choir. Open to vocalists — soprano, alto, tenor, and bass. Registration leads to auditions.",
+        mobileExplainer: "Mass choir vocals — all voice parts welcome. Commitment to attend all rehearsals required. Registration opens the auditions pathway.",
         iconName: "track_mic",
         color: "from-gold/20 to-gold/5",
         requirements: ["Ability to read sheet music or learn by ear", "Commitment to attend all rehearsals", "Fill registration form below"],
     },
     {
-        id: "production",
-        title: "Production & Media",
+        id: "band",
+        title: "Band",
+        shortTitle: "Band",
+        desc: "Join the instrumental team. Open to pianists, drummers, string players, guitarists, and brass.",
+        mobileExplainer: "Live instruments backing the entire movement. Pianists, drummers, guitarists, and string/brass players. Technical audition required.",
+        iconName: "track_mic",
+        color: "from-gold/20 to-gold/5",
+        requirements: ["Proficiency on your instrument", "Ability to follow chord charts", "Attend all pre-event rehearsals"],
+    },
+    {
+        id: "media",
+        title: "Media",
+        shortTitle: "Media",
         desc: "Run cameras, sound boards, and live stream desks. Capture the moment for thousands watching online across Africa.",
+        mobileExplainer: "Video, audio, and livestream production for the main event and online audiences. Own or access equipment required.",
         iconName: "track_video",
         color: "from-secondary/40 to-secondary/10",
         requirements: ["Experience in video/sound production", "Own or access equipment", "Attend 2 pre-event tech rehearsals"],
     },
     {
-        id: "hospitality",
-        title: "Hospitality & Logistics",
-        desc: "Ensuring every worshipper feels at home. Ushering, crowd flow, welcome teams, and on-site logistics.",
+        id: "ushering",
+        title: "Ushering",
+        shortTitle: "Usher",
+        desc: "Ensuring every worshipper feels at home. Welcome teams, crowd flow, and on-site logistics.",
+        mobileExplainer: "Front-line hospitality and crowd flow management. Friendly, servant-hearted, and physically able to stand for extended periods.",
         iconName: "track_home",
         color: "from-emerald/20 to-emerald/5",
         requirements: ["Friendly and servant-hearted", "Physically able to stand for long hours", "Bilingual (Swahili + English) preferred"],
     },
     {
+        id: "security",
+        title: "Security",
+        shortTitle: "Security",
+        desc: "Keep the congregation safe and the venue orderly. Coordinate with venue security personnel.",
+        mobileExplainer: "Perimeter and internal crowd safety. Works alongside venue security. Physical fitness and calm under pressure required.",
+        iconName: "track_home",
+        color: "from-accent/10 to-accent/5",
+        requirements: ["Physical fitness and calm demeanor", "Prior security or military background preferred", "Coordinate with venue security on-site"],
+    },
+    {
+        id: "dancing",
+        title: "Dancing",
+        shortTitle: "Dance",
+        desc: "Lead congregational movement in worship. Dance ministry expressing the full spectrum of praise.",
+        mobileExplainer: "Praise and worship dance ministry. All styles welcome — African, contemporary, and liturgical. Audition required.",
+        iconName: "track_mic",
+        color: "from-accent/20 to-accent/5",
+        requirements: ["Dance experience (any style)", "Heart for expressive worship", "Attend choreography rehearsals"],
+    },
+    {
         id: "partners",
         title: "Partners & Sponsors",
+        shortTitle: "Partner",
         desc: "For corporate and individual supporters powering the vision. M-Pesa, bank transfer, and in-kind partnerships available.",
+        mobileExplainer: "Corporate and individual financial partnership. Brand placement on all event material. Dedicated receipt provided.",
         iconName: "track_donate",
         color: "from-accent/20 to-accent/5",
         requirements: ["Minimum KES 10,000 corporate tier", "Brand placement on all event material", "Dedicated partnership receipt provided"],
@@ -190,22 +228,88 @@ export default function JoinPage() {
             {/* Track Cards */}
             <section className="section-padding">
                 <div className="max-container space-y-8">
-                    <div className="tracks-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* ── Mobile (< md): 3×2/4×2 button grid above form ── */}
+                    <div className="md:hidden space-y-4 mb-8">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-white/30 text-center">Choose your track to get started</p>
+                        <div className="grid grid-cols-3 gap-2.5">
+                            {tracks.map((track) => (
+                                <button
+                                    key={track.id}
+                                    id={`track-${track.id}`}
+                                    onClick={() => {
+                                        const next = activeTrack === track.id ? null : track.id;
+                                        setActiveTrack(next);
+                                        setFormState((prev) => ({ ...prev, track: next ? track.title : "" }));
+                                        if (next) {
+                                            setTimeout(() => {
+                                                const el = document.getElementById("apply-form");
+                                                if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+                                            }, 200);
+                                        }
+                                    }}
+                                    className={`flex flex-col items-center justify-center gap-2 py-4 px-2 rounded-2xl border transition-all duration-300 text-center ${
+                                        activeTrack === track.id
+                                            ? "bg-gold/10 border-gold/50 text-gold"
+                                            : "glass-card border-white/5 hover:border-gold/20 text-white/50 hover:text-white"
+                                    }`}
+                                >
+                                    <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${track.color} flex items-center justify-center transition-transform duration-300 ${
+                                        activeTrack === track.id ? "scale-110" : ""
+                                    }`}>
+                                        <SvgIcon name={track.iconName} size={18} className={activeTrack === track.id ? "text-gold" : "text-gold/60"} />
+                                    </div>
+                                    <span className="text-[9px] font-black uppercase tracking-widest leading-tight">{track.shortTitle}</span>
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Mobile explainer — appears below button grid on track selection */}
+                        {activeTrack && (() => {
+                            const selected = tracks.find((t) => t.id === activeTrack);
+                            if (!selected) return null;
+                            return (
+                                <div className="glass-card rounded-2xl p-5 border border-gold/20 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="flex items-center gap-2">
+                                        <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${selected.color} flex items-center justify-center`}>
+                                            <SvgIcon name={selected.iconName} size={14} className="text-gold" />
+                                        </div>
+                                        <h4 className="text-sm font-black text-white">{selected.title}</h4>
+                                        <span className="ml-auto text-[9px] font-black uppercase tracking-widest text-gold bg-gold/10 px-2 py-0.5 rounded-full">Selected ✓</span>
+                                    </div>
+                                    <p className="text-white/50 text-xs font-medium leading-relaxed">{selected.mobileExplainer}</p>
+                                    <ul className="space-y-1.5">
+                                        {selected.requirements.map((req, i) => (
+                                            <li key={i} className="flex items-start gap-2 text-[10px] text-white/40 font-bold">
+                                                <SvgIcon name="check_circle" size={12} className="text-gold mt-0.5 shrink-0" />
+                                                {req}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            );
+                        })()}
+                    </div>
+
+                    {/* ── Tablet (md) + Desktop (lg): card grid ── */}
+                    <div className="hidden md:grid tracks-grid grid-cols-2 lg:grid-cols-4 gap-6">
                         {tracks.map((track) => (
                             <div
                                 key={track.id}
                                 id={`track-${track.id}`}
-                                className={`track-card glass-card-elevated p-10 space-y-6 group cursor-pointer rounded-lg transition-colors duration-500 border ${activeTrack === track.id ? "border-gold/50 bg-gold/5" : "border-white/5 hover:border-gold/20"}`}
+                                className={`track-card glass-card-elevated p-6 lg:p-10 space-y-4 group cursor-pointer rounded-lg transition-colors duration-500 border ${
+                                    activeTrack === track.id ? "border-gold/50 bg-gold/5" : "border-white/5 hover:border-gold/20"
+                                }`}
                                 onClick={() => {
                                     setActiveTrack(activeTrack === track.id ? null : track.id);
                                     setFormState((prev) => ({ ...prev, track: track.title }));
                                 }}
                             >
                                 <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${track.color} flex items-center justify-center text-gold group-hover:scale-110 transition-transform duration-500`}>
-                                    <SvgIcon name={track.iconName} size={28} className={track.id === 'partners' ? 'text-accent' : 'text-gold'} />
+                                    <SvgIcon name={track.iconName} size={28} className={track.id === "partners" || track.id === "dancing" || track.id === "security" ? "text-accent" : "text-gold"} />
                                 </div>
-                                <h3 className="text-2xl font-black tracking-tighter group-hover:text-gold transition-colors">{track.title}</h3>
-                                <p className="text-foreground/50 text-sm font-bold leading-relaxed">{track.desc}</p>
+                                {/* Tablet: shorter copy — full desc only when expanded */}
+                                <h3 className="text-xl lg:text-2xl font-black tracking-tighter group-hover:text-gold transition-colors">{track.title}</h3>
+                                <p className="text-foreground/50 text-xs lg:text-sm font-bold leading-relaxed line-clamp-3 lg:line-clamp-none">{track.desc}</p>
                                 {activeTrack === track.id && (
                                     <ul className="space-y-2 pt-2 border-t border-gold/20">
                                         {track.requirements.map((req, i) => (
@@ -217,7 +321,9 @@ export default function JoinPage() {
                                     </ul>
                                 )}
                                 <div className="pt-2 flex items-center justify-between w-full">
-                                    <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${activeTrack === track.id ? "text-gold" : "text-gold/50 group-hover:text-gold"}`}>
+                                    <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${
+                                        activeTrack === track.id ? "text-gold" : "text-gold/50 group-hover:text-gold"
+                                    }`}>
                                         {activeTrack === track.id ? "Selected ✓" : "Select to Apply"}
                                     </span>
                                     {activeTrack !== track.id && (

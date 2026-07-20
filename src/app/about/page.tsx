@@ -69,6 +69,7 @@ const leadership = [
         tenure: "2004 – Present",
         desc: "The organisational architect of the AFLEWO movement. Maura has chaired the national oversight board since inception, providing continuity through the movement's 22 seasons.",
         image: "/mission-1.jpg",
+        confirmed: true,
     },
     {
         name: "Timothy Kaberia",
@@ -76,6 +77,7 @@ const leadership = [
         tenure: "2004 – 2016",
         desc: "One of the two founding worship leaders from the Daystar Sing Africa alumni. Kaberia shaped the musical theology of AFLEWO's early years and trained the first generation of chapter worship leaders.",
         image: "/archival-1.jpg",
+        confirmed: true,
     },
     {
         name: "Ruguru",
@@ -83,6 +85,31 @@ const leadership = [
         tenure: "2004 – 2012",
         desc: "Co-leader of the founding worship team alongside Kaberia. The phrase 'Africa Let's Worship' was coined in partnership between these two voices that shaped the movement's prophetic identity.",
         image: "/archival-2.jpg",
+        confirmed: true,
+    },
+    {
+        name: "[Name Pending]",
+        role: "Founding Choir Director",
+        tenure: "2004 – [Year]",
+        desc: "Responsible for the choral direction of the inaugural AFLEWO gathering at CITAM Karen and the formative seasons that followed. Led the mass choir rehearsal pipeline and established the audition framework still used today.",
+        image: "/archival-1.jpg",
+        confirmed: false,
+    },
+    {
+        name: "[Name Pending]",
+        role: "Founding Production Director",
+        tenure: "2004 – [Year]",
+        desc: "Oversaw the technical production infrastructure for the first AFLEWO gatherings — sound, lighting, and live stream. Established the production excellence standard that defines every AFLEWO event.",
+        image: "/mission-1.jpg",
+        confirmed: false,
+    },
+    {
+        name: "[Name Pending]",
+        role: "Founding Chapter Coordinator",
+        tenure: "2004 – [Year]",
+        desc: "Provided the logistical and pastoral backbone for AFLEWO's early expansion. Coordinated between the founding chapter and the first satellite chapters as the movement grew beyond Nairobi.",
+        image: "/archival-2.jpg",
+        confirmed: false,
     },
 ];
 
@@ -245,14 +272,18 @@ export default function AboutPage() {
                             Since 2004, we have provided a platform where denominations fade, and the name of Jesus is exalted above every label and division.
                         </p>
                     </div>
-                    <div className="bg-primary text-primary-foreground p-12 rounded-[2rem] space-y-6">
-                        <h3 className="text-gold font-black uppercase tracking-widest text-xs">The Vision</h3>
-                        <h2 className="text-4xl font-black tracking-tight text-white">A PROPHETIC <span className="text-gold">HOUSE.</span></h2>
-                        <p className="text-white/60 font-medium leading-loose text-lg">
-                            To see all of Africa seeing itself through the eyes of its Maker. We achieve this through corporate worship,
-                            establishing local chapters that maintain the pulse of intercession in every major African city — a prophetic house
-                            that never closes its doors.
-                        </p>
+                    <div className="glass-card-elevated p-12 rounded-[2rem] space-y-6 border border-gold/20 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-gold/8 via-transparent to-accent/5 pointer-events-none" />
+                        <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gold/5 blur-[60px] pointer-events-none" />
+                        <div className="relative z-10 space-y-6">
+                            <h3 className="text-gold font-black uppercase tracking-widest text-xs">The Vision</h3>
+                            <h2 className="text-4xl font-black tracking-tight text-white">A PROPHETIC <span className="text-gold">HOUSE.</span></h2>
+                            <p className="text-white/60 font-medium leading-loose text-lg">
+                                To see all of Africa seeing itself through the eyes of its Maker. We achieve this through corporate worship,
+                                establishing local chapters that maintain the pulse of intercession in every major African city — a prophetic house
+                                that never closes its doors.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -317,9 +348,20 @@ export default function AboutPage() {
                     </div>
                     <div className="leadership-grid grid grid-cols-1 md:grid-cols-3 gap-8">
                         {leadership.map((leader, i) => (
-                            <div key={i} className="leader-card glass-card-elevated p-8 rounded-2xl border-white/5 group hover:border-gold/30 transition-all space-y-6">
-                                {/* Leader portrait — fills with image, falls back to initial if image missing */}
-                                <div className="w-20 h-20 rounded-full border-2 border-gold/30 group-hover:border-gold transition-colors overflow-hidden relative bg-gradient-to-br from-gold/20 to-gold/5 flex-shrink-0">
+                            <div key={i} className={`leader-card glass-card-elevated p-8 rounded-2xl group transition-all space-y-6 relative overflow-hidden ${
+                                leader.confirmed
+                                    ? "border border-white/5 hover:border-gold/30"
+                                    : "border border-dashed border-white/10 hover:border-gold/20"
+                            }`}>
+                                {!leader.confirmed && (
+                                    <div className="absolute top-4 right-4 px-2.5 py-1 rounded-full bg-gold/10 border border-gold/20">
+                                        <span className="text-[8px] font-black uppercase tracking-widest text-gold/60">Details Pending</span>
+                                    </div>
+                                )}
+                                {/* Leader portrait */}
+                                <div className={`w-20 h-20 rounded-full border-2 border-gold/30 group-hover:border-gold transition-colors overflow-hidden relative bg-gradient-to-br from-gold/20 to-gold/5 flex-shrink-0 ${
+                                    !leader.confirmed ? "opacity-40" : ""
+                                }`}>
                                     <Image
                                         src={leader.image}
                                         alt={leader.name}
@@ -327,13 +369,19 @@ export default function AboutPage() {
                                         sizes="80px"
                                         className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                                     />
-                                    {/* Initials overlay — only visible while image loads or on error */}
-                                    <span className="absolute inset-0 flex items-center justify-center text-gold font-black text-3xl select-none pointer-events-none" aria-hidden="true" style={{ mixBlendMode: "overlay", opacity: 0.4 }}>
-                                        {leader.name.charAt(0)}
-                                    </span>
+                                    {!leader.confirmed && (
+                                        <div className="absolute inset-0 flex items-center justify-center bg-background/60">
+                                            <SvgIcon name="user" size={32} className="text-gold/40" />
+                                        </div>
+                                    )}
+                                    {leader.confirmed && (
+                                        <span className="absolute inset-0 flex items-center justify-center text-gold font-black text-3xl select-none pointer-events-none" aria-hidden="true" style={{ mixBlendMode: "overlay", opacity: 0.4 }}>
+                                            {leader.name.charAt(0)}
+                                        </span>
+                                    )}
                                 </div>
                                 <div className="space-y-1">
-                                    <h4 className="text-xl font-black text-white">{leader.name}</h4>
+                                    <h4 className={`text-xl font-black ${leader.confirmed ? "text-white" : "text-white/40"}`}>{leader.name}</h4>
                                     <p className="text-gold text-[10px] font-black uppercase tracking-widest">{leader.role}</p>
                                     <p className="text-white/30 text-[10px] uppercase font-bold">{leader.tenure}</p>
                                 </div>
