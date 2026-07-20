@@ -26,7 +26,7 @@ const tracks = [
         title: "Production & Media",
         desc: "Run cameras, sound boards, and live stream desks. Capture the moment for thousands watching online across Africa.",
         iconName: "track_video",
-        color: "from-cyan-500/20 to-cyan-500/5",
+        color: "from-secondary/40 to-secondary/10",
         requirements: ["Experience in video/sound production", "Own or access equipment", "Attend 2 pre-event tech rehearsals"],
     },
     {
@@ -42,7 +42,7 @@ const tracks = [
         title: "Partners & Sponsors",
         desc: "For corporate and individual supporters powering the vision. M-Pesa, bank transfer, and in-kind partnerships available.",
         iconName: "track_donate",
-        color: "from-purple-500/20 to-purple-500/5",
+        color: "from-accent/20 to-accent/5",
         requirements: ["Minimum KES 10,000 corporate tier", "Brand placement on all event material", "Dedicated partnership receipt provided"],
     },
 ];
@@ -202,7 +202,7 @@ export default function JoinPage() {
                                 }}
                             >
                                 <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${track.color} flex items-center justify-center text-gold group-hover:scale-110 transition-transform duration-500`}>
-                                    <SvgIcon name={track.iconName} size={28} className={track.id === 'partners' ? 'text-purple-500' : 'text-gold'} />
+                                    <SvgIcon name={track.iconName} size={28} className={track.id === 'partners' ? 'text-accent' : 'text-gold'} />
                                 </div>
                                 <h3 className="text-2xl font-black tracking-tighter group-hover:text-gold transition-colors">{track.title}</h3>
                                 <p className="text-foreground/50 text-sm font-bold leading-relaxed">{track.desc}</p>
