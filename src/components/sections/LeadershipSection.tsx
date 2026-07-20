@@ -5,10 +5,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import SvgIcon from "@/components/ui/SvgIcon";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const leaders = [
+const initialLeaders = [
     { name: "Timothy Kaberia", role: "Visionary & Founder", image: "/leaders/timothy.jpg" },
     { name: "Ruguru", role: "Legacy Architect", image: "/leaders/ruguru.jpg" },
     { name: "Hubert Maura", role: "Board Chair", image: "/leaders/hubert.jpg" },
@@ -16,6 +18,21 @@ const leaders = [
 
 export default function LeadershipSection() {
     const sectionRef = useRef<HTMLDivElement>(null);
+    const [leaders, setLeaders] = useState(initialLeaders);
+
+    useEffect(() => {
+        const fetchLeaders = async () => {
+            const { data, error } = await supabase.from('stewards').select('*').order('sort_order', { ascending: true });
+            if (data && !error && data.length > 0) {
+                setLeaders(data.map(d => ({
+                    name: d.name,
+                    role: d.role,
+                    image: d.image || '/mission-1.jpg'
+                })));
+            }
+        };
+        fetchLeaders();
+    }, []);
 
     useEffect(() => {
         const ctx = gsap.context(() => {

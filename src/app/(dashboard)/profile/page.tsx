@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../AuthContext";
-import type { Audition, ChapterEvent, Resource, Attendance } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
+type Audition = Database["public"]["Tables"]["auditions"]["Row"];
+type ChapterEvent = Database["public"]["Tables"]["chapter_events"]["Row"];
+type Resource = Database["public"]["Tables"]["resources"]["Row"];
+type Attendance = Database["public"]["Tables"]["attendance"]["Row"];
 import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
 
@@ -299,7 +303,7 @@ export default function PortalHomePage() {
           </div>
           <div className="space-y-3">
             {data.upcomingEvents.map((event) => {
-              const eventDate = new Date(event.starts_at);
+              const eventDate = new Date(event.starts_at!);
               const day = eventDate.toLocaleDateString("en-KE", { day: "2-digit" });
               const month = eventDate.toLocaleDateString("en-KE", { month: "short" }).toUpperCase();
               return (

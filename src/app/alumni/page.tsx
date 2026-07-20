@@ -6,16 +6,35 @@ import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function AlumniPage() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [showForm, setShowForm] = useState(false);
 
-    const founders = [
-        { name: "Sing Africa", role: "Founding Alumni", org: "Daystar University", image: "/mission-1.jpg" },
-        { name: "Hubert de Rogue Maura", role: "Chairman", org: "National Oversight", image: "/archival-1.jpg" },
-        { name: "CITAM Karen", role: "Host Partner", org: "2004 Inauguration", image: "/archival-2.jpg" },
-    ];
+    const [founders, setFounders] = useState<{ name: string; role: string; org: string; image: string }[]>([]);
+
+    useEffect(() => {
+        const fetchFounders = async () => {
+            const { data, error } = await supabase.from('alumni').select('*').order('created_at', { ascending: true });
+            if (data && !error) {
+                setFounders(data.map(d => ({
+                    name: d.name,
+                    role: d.role,
+                    org: d.organization || '',
+                    image: d.image || '/mission-1.jpg'
+                })));
+            } else {
+                // Fallback to static if no connection
+                setFounders([
+                    { name: "Sing Africa", role: "Founding Alumni", org: "Daystar University", image: "/mission-1.jpg" },
+                    { name: "Hubert de Rogue Maura", role: "Chairman", org: "National Oversight", image: "/archival-1.jpg" },
+                    { name: "CITAM Karen", role: "Host Partner", org: "2004 Inauguration", image: "/archival-2.jpg" },
+                ]);
+            }
+        };
+        fetchFounders();
+    }, []);
 
     const [form, setForm] = useState({ name: "", email: "", chapter: "", years: "", role: "" });
     const [submitted, setSubmitted] = useState(false);

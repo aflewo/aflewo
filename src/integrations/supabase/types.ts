@@ -39,6 +39,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      alumni: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          id: string
+          image: string | null
+          name: string
+          organization: string | null
+          role: string
+          year_joined: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          id?: string
+          image?: string | null
+          name: string
+          organization?: string | null
+          role: string
+          year_joined?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          id?: string
+          image?: string | null
+          name?: string
+          organization?: string | null
+          role?: string
+          year_joined?: string | null
+        }
+        Relationships: []
+      }
       attendance: {
         Row: {
           event_id: string
@@ -173,7 +206,7 @@ export type Database = {
           is_public: boolean | null
           is_virtual: boolean | null
           location: string | null
-          starts_at: string
+          starts_at: string | null
           title: string
           updated_at: string | null
           venue_url: string | null
@@ -190,7 +223,7 @@ export type Database = {
           is_public?: boolean | null
           is_virtual?: boolean | null
           location?: string | null
-          starts_at: string
+          starts_at?: string | null
           title: string
           updated_at?: string | null
           venue_url?: string | null
@@ -207,7 +240,7 @@ export type Database = {
           is_public?: boolean | null
           is_virtual?: boolean | null
           location?: string | null
-          starts_at?: string
+          starts_at?: string | null
           title?: string
           updated_at?: string | null
           venue_url?: string | null
@@ -232,54 +265,84 @@ export type Database = {
       }
       chapters: {
         Row: {
+          color: string | null
           contact_email: string | null
           contact_phone: string | null
           country: string
           created_at: string | null
           description: string | null
           established: string | null
+          event_date: string | null
           flag: string | null
+          has_prayer_circle: boolean | null
+          has_qr: boolean | null
+          highlight: string | null
           id: string
           is_active: boolean | null
+          link: string | null
           name: string
+          registration_open: boolean | null
+          size: string | null
           slug: string
           status: string | null
+          upcoming_event: string | null
           updated_at: string | null
           venue: string | null
+          venue_image: string | null
           whatsapp_link: string | null
         }
         Insert: {
+          color?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           country?: string
           created_at?: string | null
           description?: string | null
           established?: string | null
+          event_date?: string | null
           flag?: string | null
+          has_prayer_circle?: boolean | null
+          has_qr?: boolean | null
+          highlight?: string | null
           id?: string
           is_active?: boolean | null
+          link?: string | null
           name: string
+          registration_open?: boolean | null
+          size?: string | null
           slug: string
           status?: string | null
+          upcoming_event?: string | null
           updated_at?: string | null
           venue?: string | null
+          venue_image?: string | null
           whatsapp_link?: string | null
         }
         Update: {
+          color?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           country?: string
           created_at?: string | null
           description?: string | null
           established?: string | null
+          event_date?: string | null
           flag?: string | null
+          has_prayer_circle?: boolean | null
+          has_qr?: boolean | null
+          highlight?: string | null
           id?: string
           is_active?: boolean | null
+          link?: string | null
           name?: string
+          registration_open?: boolean | null
+          size?: string | null
           slug?: string
           status?: string | null
+          upcoming_event?: string | null
           updated_at?: string | null
           venue?: string | null
+          venue_image?: string | null
           whatsapp_link?: string | null
         }
         Relationships: []
@@ -349,52 +412,52 @@ export type Database = {
       }
       gallery_images: {
         Row: {
-          id: string
-          created_at: string
-          title: string
-          chapter: string
-          year: number
           category: string
+          chapter: string
+          created_at: string
           description: string | null
-          image_url: string
-          public_id: string | null
-          width: number | null
           height: number | null
-          is_wide: boolean | null
-          uploaded_by: string | null
+          id: string
+          image_url: string
           is_active: boolean | null
+          is_wide: boolean | null
+          public_id: string | null
+          title: string
+          uploaded_by: string | null
+          width: number | null
+          year: number
         }
         Insert: {
-          id?: string
-          created_at?: string
-          title: string
-          chapter: string
-          year: number
           category: string
+          chapter: string
+          created_at?: string
           description?: string | null
-          image_url: string
-          public_id?: string | null
-          width?: number | null
           height?: number | null
-          is_wide?: boolean | null
-          uploaded_by?: string | null
+          id?: string
+          image_url: string
           is_active?: boolean | null
+          is_wide?: boolean | null
+          public_id?: string | null
+          title: string
+          uploaded_by?: string | null
+          width?: number | null
+          year: number
         }
         Update: {
-          id?: string
-          created_at?: string
-          title?: string
-          chapter?: string
-          year?: number
           category?: string
+          chapter?: string
+          created_at?: string
           description?: string | null
-          image_url?: string
-          public_id?: string | null
-          width?: number | null
           height?: number | null
-          is_wide?: boolean | null
-          uploaded_by?: string | null
+          id?: string
+          image_url?: string
           is_active?: boolean | null
+          is_wide?: boolean | null
+          public_id?: string | null
+          title?: string
+          uploaded_by?: string | null
+          width?: number | null
+          year?: number
         }
         Relationships: [
           {
@@ -405,6 +468,81 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      media_items: {
+        Row: {
+          category: string | null
+          chapter: string | null
+          created_at: string | null
+          id: string
+          image: string
+          size: string | null
+          source: string | null
+          title: string
+          type: string | null
+          updated_at: string | null
+          video_url: string | null
+          views: string | null
+          year: string | null
+        }
+        Insert: {
+          category?: string | null
+          chapter?: string | null
+          created_at?: string | null
+          id?: string
+          image: string
+          size?: string | null
+          source?: string | null
+          title: string
+          type?: string | null
+          updated_at?: string | null
+          video_url?: string | null
+          views?: string | null
+          year?: string | null
+        }
+        Update: {
+          category?: string | null
+          chapter?: string | null
+          created_at?: string | null
+          id?: string
+          image?: string
+          size?: string | null
+          source?: string | null
+          title?: string
+          type?: string | null
+          updated_at?: string | null
+          video_url?: string | null
+          views?: string | null
+          year?: string | null
+        }
+        Relationships: []
+      }
+      partners: {
+        Row: {
+          created_at: string | null
+          id: string
+          logo: string | null
+          name: string
+          role: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          logo?: string | null
+          name: string
+          role?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          logo?: string | null
+          name?: string
+          role?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -605,6 +743,75 @@ export type Database = {
           },
         ]
       }
+      stewards: {
+        Row: {
+          created_at: string | null
+          id: string
+          image: string | null
+          name: string
+          role: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          image?: string | null
+          name: string
+          role: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          image?: string | null
+          name?: string
+          role?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      stories: {
+        Row: {
+          author: string
+          chapter: string | null
+          created_at: string | null
+          desc_text: string
+          id: string
+          image: string | null
+          quote: string | null
+          subtitle: string | null
+          title: string
+          updated_at: string | null
+          year: string | null
+        }
+        Insert: {
+          author: string
+          chapter?: string | null
+          created_at?: string | null
+          desc_text: string
+          id?: string
+          image?: string | null
+          quote?: string | null
+          subtitle?: string | null
+          title: string
+          updated_at?: string | null
+          year?: string | null
+        }
+        Update: {
+          author?: string
+          chapter?: string | null
+          created_at?: string | null
+          desc_text?: string
+          id?: string
+          image?: string | null
+          quote?: string | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string | null
+          year?: string | null
+        }
+        Relationships: []
+      }
       system_audit_logs: {
         Row: {
           action: string
@@ -657,7 +864,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_my_chapter_id: { Args: never; Returns: string }
+      get_my_role: {
+        Args: never
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
     }
     Enums: {
       attendance_status: "present" | "absent" | "excused" | "late"
@@ -882,16 +1093,4 @@ export const Constants = {
       ],
     },
   },
-} as const;
-
-export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
-export type Audition = Database["public"]["Tables"]["auditions"]["Row"];
-export type Registration = Database["public"]["Tables"]["registrations"]["Row"];
-export type Chapter = Database["public"]["Tables"]["chapters"]["Row"];
-export type Attendance = Database["public"]["Tables"]["attendance"]["Row"];
-export type ChapterEvent = Database["public"]["Tables"]["chapter_events"]["Row"];
-export type Resource = Database["public"]["Tables"]["resources"]["Row"];
-export type UserRole = Database["public"]["Enums"]["user_role"];
-export type AuditionStatus = Database["public"]["Enums"]["audition_status"];
-export type AuditionCategory = Database["public"]["Enums"]["audition_category"];
-export type ResourceType = Database["public"]["Enums"]["resource_type"];
+} as const

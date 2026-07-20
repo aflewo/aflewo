@@ -4,10 +4,12 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const partners = [
+const initialPartners = [
     { name: "Daystar University", logo: "/brand/daystar.png", role: "Founding Partner" },
     { name: "CITAM", logo: "/brand/citam.png", role: "Spiritual Partner" },
     { name: "Winners Chapel", logo: "/brand/winners.png", role: "Host Partner" },
@@ -16,6 +18,21 @@ const partners = [
 
 export default function PartnersSection() {
     const sectionRef = useRef<HTMLDivElement>(null);
+    const [partners, setPartners] = useState(initialPartners);
+
+    useEffect(() => {
+        const fetchPartners = async () => {
+            const { data, error } = await supabase.from('partners').select('*').order('sort_order', { ascending: true });
+            if (data && !error && data.length > 0) {
+                setPartners(data.map(d => ({
+                    name: d.name,
+                    role: d.role || '',
+                    logo: d.logo || '/brand/citam.png'
+                })));
+            }
+        };
+        fetchPartners();
+    }, []);
 
     useEffect(() => {
         const ctx = gsap.context(() => {

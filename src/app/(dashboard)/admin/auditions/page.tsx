@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
-import type { Audition, AuditionStatus, Profile, Chapter } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
+type Audition = Database["public"]["Tables"]["auditions"]["Row"];
+type AuditionStatus = Database["public"]["Enums"]["audition_status"];
+interface Profile { full_name: string; email: string; phone_number: string; }
+interface Chapter { name: string; }
 import SvgIcon from "@/components/ui/SvgIcon";
 
 type AuditionWithProfile = Audition & {

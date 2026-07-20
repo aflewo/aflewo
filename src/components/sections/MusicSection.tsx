@@ -2,8 +2,10 @@
 
 import SvgIcon from "@/components/ui/SvgIcon";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect } from "react";
 
-const tracks = [
+const initialTracks = [
     { id: 1, title: "Worthy Is The Lamb", artist: "AFLEWO Live 2024", duration: "8:45", type: "Live" },
     { id: 2, title: "One Africa (Anthem)", artist: "AFLEWO Collective", duration: "5:20", type: "Original" },
     { id: 3, title: "Praise Him", artist: "AFLEWO Legacy 2008", duration: "6:12", type: "Classic" },
@@ -11,6 +13,24 @@ const tracks = [
 ];
 
 export default function MusicSection() {
+    const [tracks, setTracks] = useState(initialTracks);
+
+    useEffect(() => {
+        const fetchTracks = async () => {
+            const { data, error } = await supabase.from('media_items').select('*').limit(5);
+            if (data && !error && data.length > 0) {
+                setTracks(data.map((d, index) => ({
+                    id: index + 1,
+                    title: d.title,
+                    artist: d.source || 'AFLEWO',
+                    duration: d.size || '3:00',
+                    type: d.category || 'Music'
+                })));
+            }
+        };
+        fetchTracks();
+    }, []);
+
     return (
         <section className="py-24 px-6 bg-background" id="music">
             <div className="max-w-6xl mx-auto">

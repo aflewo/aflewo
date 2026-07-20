@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
-import type { Profile } from "@/integrations/supabase/types";
+import type { Profile } from "./AuthContext";
 import Link from "next/link";
 import SvgIcon from "@/components/ui/SvgIcon";
 

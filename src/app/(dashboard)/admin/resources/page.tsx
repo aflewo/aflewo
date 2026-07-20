@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
-import type { Resource, ResourceType } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
+type Resource = Database["public"]["Tables"]["resources"]["Row"];
+type ResourceType = Database["public"]["Enums"]["resource_type"];
 import SvgIcon from "@/components/ui/SvgIcon";
 
 const resourceTypes: { value: ResourceType; label: string }[] = [
@@ -153,7 +155,7 @@ export default function AdminResourcesPage() {
         file_public_id: uploaded.publicId,
         file_size_bytes: uploaded.bytes,
         mime_type: uploaded.mimeType,
-        allowed_role: form.allowedRole as Resource["allowed_role"],
+        allowed_role: form.allowedRole as Database["public"]["Enums"]["user_role"],
         chapter_id: form.allowedRole === "applicant" ? null : (profile.chapter_id || null),
         song_title: form.songTitle || null,
         uploaded_by: profile.id,

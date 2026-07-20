@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
-import type { ChapterEvent } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
+type ChapterEvent = Database["public"]["Tables"]["chapter_events"]["Row"];
 import SvgIcon from "@/components/ui/SvgIcon";
 
 const eventTypeColors: Record<string, string> = {
@@ -44,7 +45,7 @@ export default function PortalSchedulePage() {
 
   // Group events by month
   const grouped = events.reduce<Record<string, ChapterEvent[]>>((acc, event) => {
-    const month = new Date(event.starts_at).toLocaleDateString("en-KE", { month: "long", year: "numeric" });
+    const month = new Date(event.starts_at!).toLocaleDateString("en-KE", { month: "long", year: "numeric" });
     if (!acc[month]) acc[month] = [];
     acc[month].push(event);
     return acc;
@@ -89,7 +90,7 @@ export default function PortalSchedulePage() {
           </h2>
           {monthEvents.map((event) => {
             const colorClass = eventTypeColors[event.event_type] || eventTypeColors.other;
-            const start = new Date(event.starts_at);
+            const start = new Date(event.starts_at!);
             const end = event.ends_at ? new Date(event.ends_at) : null;
 
             return (

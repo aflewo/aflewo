@@ -22,12 +22,12 @@ export function useChaptersWithLiveData(): Chapter[] {
     useEffect(() => {
         supabase
             .from("chapters")
-            .select("slug, status, contact_email, contact_phone, whatsapp_link, is_active")
+            .select("slug, status, contact_email, contact_phone, whatsapp_link, is_active, highlight, color, upcoming_event, event_date, registration_open, venue_image, has_prayer_circle, has_qr, size, link")
             .then(({ data, error }) => {
                 if (error || !data) return;
                 setMerged(
                     chapters.map((c) => {
-                        const live = data.find((d: { slug: string }) => d.slug === c.slug);
+                        const live = data.find((d: any) => d.slug === c.slug);
                         if (!live) return c;
                         return {
                             ...c,
@@ -36,6 +36,16 @@ export function useChaptersWithLiveData(): Chapter[] {
                             contactEmail: live.contact_email || c.contactEmail,
                             contactPhone: live.contact_phone || c.contactPhone,
                             whatsappLink: live.whatsapp_link || c.whatsappLink,
+                            highlight: live.highlight || c.highlight,
+                            color: live.color || c.color,
+                            upcomingEvent: live.upcoming_event || c.upcomingEvent,
+                            eventDate: live.event_date || c.eventDate,
+                            registrationOpen: live.registration_open !== null ? live.registration_open : c.registrationOpen,
+                            venueImage: live.venue_image || c.venueImage,
+                            hasPrayerCircle: live.has_prayer_circle !== null ? live.has_prayer_circle : c.hasPrayerCircle,
+                            hasQr: live.has_qr !== null ? live.has_qr : c.hasQr,
+                            size: (live.size as "hero" | "featured" | "standard" | undefined) || c.size,
+                            link: live.link || c.link,
                         };
                     })
                 );

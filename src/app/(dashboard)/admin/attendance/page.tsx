@@ -3,7 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
-import type { Registration } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
+type Registration = Database["public"]["Tables"]["registrations"]["Row"];
 import SvgIcon from "@/components/ui/SvgIcon";
 
 interface CheckInResult {

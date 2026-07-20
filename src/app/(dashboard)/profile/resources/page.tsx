@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
-import type { Resource, ResourceType } from "@/integrations/supabase/types";
+type ResourceType = "lyrics_pdf" | "chord_chart_pdf" | "vocal_stem_audio" | "backing_track_audio" | "rehearsal_video" | "announcement" | "other";
+interface Resource { id: string; title: string; resource_type: ResourceType; file_url: string; file_public_id: string; file_size_bytes: number; mime_type: string; allowed_role: string; song_title: string | null; uploaded_by: string | null; created_at: string; chapter_id: string | null; description: string | null; is_active: boolean; }
 import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
 

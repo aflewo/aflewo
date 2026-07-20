@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
 import SvgIcon from "@/components/ui/SvgIcon";
+import { supabase } from "@/integrations/supabase/client";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -163,10 +164,31 @@ export default function TestifyPage() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [showModal, setShowModal] = useState(false);
     const [activeChapter, setActiveChapter] = useState("All");
+    const [stories, setStories] = useState(narrativeStories);
+
+    useEffect(() => {
+        const fetchStories = async () => {
+            const { data, error } = await supabase.from('stories').select('*').order('created_at', { ascending: true });
+            if (data && !error && data.length > 0) {
+                setStories(data.map(d => ({
+                    id: d.id,
+                    title: d.title,
+                    subtitle: d.subtitle || '',
+                    desc: d.desc_text,
+                    author: d.author,
+                    year: d.year || '',
+                    chapter: d.chapter || '',
+                    image: d.image || '/archival-1.jpg',
+                    quote: d.quote || ''
+                })));
+            }
+        };
+        fetchStories();
+    }, []);
 
     const filtered = activeChapter === "All"
-        ? narrativeStories
-        : narrativeStories.filter((s) => s.chapter === activeChapter);
+        ? stories
+        : stories.filter((s) => s.chapter === activeChapter);
 
     useEffect(() => {
         const ctx = gsap.context(() => {

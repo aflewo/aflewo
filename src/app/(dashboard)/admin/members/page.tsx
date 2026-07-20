@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
-import type { Profile, UserRole } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+type UserRole = Database["public"]["Enums"]["user_role"];
 import SvgIcon from "@/components/ui/SvgIcon";
 
 const roleColors: Record<UserRole, string> = {

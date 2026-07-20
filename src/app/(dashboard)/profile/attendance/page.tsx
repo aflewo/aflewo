@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
-import type { Attendance, ChapterEvent } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
+type Attendance = Database["public"]["Tables"]["attendance"]["Row"];
+type ChapterEvent = Database["public"]["Tables"]["chapter_events"]["Row"];
 import SvgIcon from "@/components/ui/SvgIcon";
 
 type AttendanceWithEvent = Attendance & {

@@ -3,7 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../../AuthContext";
-import type { Audition, AuditionCategory } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
+type Audition = Database["public"]["Tables"]["auditions"]["Row"];
+type AuditionStatus = Database["public"]["Enums"]["audition_status"];
+type AuditionCategory = Database["public"]["Enums"]["audition_category"];
 import SvgIcon from "@/components/ui/SvgIcon";
 
 // ─── Category display metadata ─────────────────────────────────

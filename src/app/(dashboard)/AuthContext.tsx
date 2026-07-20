@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { Profile } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 export interface AuthContextType {
   profile: Profile | null;
