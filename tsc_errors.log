@@ -1,0 +1,58 @@
+src/app/(dashboard)/profile/page.tsx(306,42): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number | Date'.
+      Type 'null' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number'.
+      Type 'null' is not assignable to type 'string | number'.
+src/app/(dashboard)/profile/schedule/page.tsx(48,28): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number | Date'.
+      Type 'null' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number'.
+      Type 'null' is not assignable to type 'string | number'.
+src/app/(dashboard)/profile/schedule/page.tsx(93,36): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number | Date'.
+      Type 'null' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number'.
+      Type 'null' is not assignable to type 'string | number'.
+src/components/sections/MusicSection.tsx(20,57): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(relation: "alumni" | "attendance" | "chapter_events" | "profiles" | "auditions" | "chapters" | "donation_ledger" | "gallery_images" | "media_items" | "partners" | "registrations" | "resources" | "stewards" | "stories" | "system_audit_logs"): PostgrestQueryBuilder<...>', gave the following error.
+    Argument of type '"audio_tracks"' is not assignable to parameter of type '"alumni" | "attendance" | "chapter_events" | "profiles" | "auditions" | "chapters" | "donation_ledger" | "gallery_images" | "media_items" | "partners" | "registrations" | "resources" | "stewards" | "stories" | "system_audit_logs"'.
+  Overload 2 of 2, '(relation: never): PostgrestQueryBuilder<{ PostgrestVersion: "14.5"; }, { Tables: { alumni: { Row: { bio: string | null; created_at: string | null; id: string; image: string | null; name: string; organization: string | null; role: string; year_joined: string | null; }; Insert: { ...; }; Update: { ...; }; Relationships: []; }; ... 13 more ...; system_audit_logs: { ...; }; }; Views: {}; Functions: { ...; }; Enums: { ...; }; CompositeTypes: {}; }, never, never, never>', gave the following error.
+    Argument of type '"audio_tracks"' is not assignable to parameter of type 'never'.
+src/components/sections/MusicSection.tsx(24,30): error TS2339: Property 'title' does not exist on type '{ bio: string | null; created_at: string | null; id: string; image: string | null; name: string; organization: string | null; role: string; year_joined: string | null; } | { category: string; ... 12 more ...; year: number; } | ... 12 more ... | { ...; }'.
+  Property 'title' does not exist on type '{ bio: string | null; created_at: string | null; id: string; image: string | null; name: string; organization: string | null; role: string; year_joined: string | null; }'.
+src/components/sections/MusicSection.tsx(25,31): error TS2339: Property 'artist' does not exist on type '{ bio: string | null; created_at: string | null; id: string; image: string | null; name: string; organization: string | null; role: string; year_joined: string | null; } | { category: string; ... 12 more ...; year: number; } | ... 12 more ... | { ...; }'.
+  Property 'artist' does not exist on type '{ bio: string | null; created_at: string | null; id: string; image: string | null; name: string; organization: string | null; role: string; year_joined: string | null; }'.
+src/components/sections/MusicSection.tsx(26,33): error TS2339: Property 'duration' does not exist on type '{ bio: string | null; created_at: string | null; id: string; image: string | null; name: string; organization: string | null; role: string; year_joined: string | null; } | { category: string; ... 12 more ...; year: number; } | ... 12 more ... | { ...; }'.
+  Property 'duration' does not exist on type '{ bio: string | null; created_at: string | null; id: string; image: string | null; name: string; organization: string | null; role: string; year_joined: string | null; }'.
+src/components/sections/MusicSection.tsx(27,29): error TS2339: Property 'category' does not exist on type '{ bio: string | null; created_at: string | null; id: string; image: string | null; name: string; organization: string | null; role: string; year_joined: string | null; } | { category: string; ... 12 more ...; year: number; } | ... 12 more ... | { ...; }'.
+  Property 'category' does not exist on type '{ bio: string | null; created_at: string | null; id: string; image: string | null; name: string; organization: string | null; role: string; year_joined: string | null; }'.
+src/components/sections/PartnersSection.tsx(27,29): error TS2345: Argument of type '{ name: string; role: string | null; logo: any; }[]' is not assignable to parameter of type 'SetStateAction<{ name: string; logo: string; role: string; }[]>'.
+  Type '{ name: string; role: string | null; logo: any; }[]' is not assignable to type '{ name: string; logo: string; role: string; }[]'.
+    Type '{ name: string; role: string | null; logo: any; }' is not assignable to type '{ name: string; logo: string; role: string; }'.
+      Types of property 'role' are incompatible.
+        Type 'string | null' is not assignable to type 'string'.
+          Type 'null' is not assignable to type 'string'.
+src/components/sections/PartnersSection.tsx(30,29): error TS2339: Property 'logo_url' does not exist on type '{ created_at: string | null; id: string; logo: string | null; name: string; role: string | null; updated_at: string | null; }'.
+src/lib/use-chapters.ts(35,42): error TS2339: Property 'status' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(36,48): error TS2339: Property 'contact_email' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(37,48): error TS2339: Property 'contact_phone' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(38,48): error TS2339: Property 'whatsapp_link' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(39,45): error TS2339: Property 'highlight' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(40,41): error TS2339: Property 'color' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(41,49): error TS2339: Property 'upcoming_event' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(42,45): error TS2339: Property 'event_date' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(43,52): error TS2339: Property 'registration_open' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(43,86): error TS2339: Property 'registration_open' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(44,46): error TS2339: Property 'venue_image' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(45,51): error TS2339: Property 'has_prayer_circle' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(45,85): error TS2339: Property 'has_prayer_circle' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(46,41): error TS2339: Property 'has_qr' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(46,64): error TS2339: Property 'has_qr' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(47,40): error TS2339: Property 'display_size' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
+src/lib/use-chapters.ts(48,40): error TS2339: Property 'external_link' does not exist on type 'SelectQueryError<"column 'display_size' does not exist on 'chapters'.">'.
