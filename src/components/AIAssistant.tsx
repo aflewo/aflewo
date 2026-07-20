@@ -104,7 +104,7 @@ const PAGE_DICTIONARY: Record<string, string> = {
 };
 const fuzzyRegex = new RegExp(`\\b(${Object.keys(PAGE_DICTIONARY).join("|")})\\b`, "gi");
 
-function applyFuzzyLinks(text: string, baseIndex: number, onNavigate?: () => void) {
+function applyFuzzyLinks(text: string, baseIndex: number, onNavigate?: (url?: string) => void) {
     const parts = text.split(fuzzyRegex);
     return parts.map((part, i) => {
         const lowerPart = part.toLowerCase();
