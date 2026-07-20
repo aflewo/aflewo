@@ -19,6 +19,8 @@ export interface AFLEWOEvent {
     venueName?: string;
     /** Human-readable start time shown in the card */
     startTime?: string;
+    /** Visibility scoping for role-based access */
+    visibility?: "public" | "member";
 }
 
 export const events: AFLEWOEvent[] = [
@@ -185,6 +187,142 @@ export const events: AFLEWOEvent[] = [
         startTime: "Jul 17 · 07:00 PM",
         lat: 0.5143,
         lng: 35.2698,
+    },
+    // --- NAIROBI 2026 PRACTICE SCHEDULE & INTERNAL EVENTS ---
+    {
+        id: "nbi-mission-1", title: "Mission", date: "Mar 22, 2026", start: "20260322T100000", end: "20260322T140000",
+        time: "10:00 AM", type: "Mission", chapter: "Nairobi", location: "LMC Karen", venueName: "LMC Karen",
+        startTime: "Mar 22 · 10:00 AM", visibility: "member"
+    },
+    {
+        id: "nbi-aud-1", title: "Auditions (Day 1)", date: "Apr 12, 2026", start: "20260412T140000", end: "20260412T180000",
+        time: "02:00 PM", type: "Audition", chapter: "Nairobi", location: "CITAM Valley Rd", venueName: "CITAM Valley Rd",
+        startTime: "Apr 12 · 02:00 PM", visibility: "public"
+    },
+    {
+        id: "nbi-aud-2", title: "Auditions (Day 2)", date: "Apr 19, 2026", start: "20260419T140000", end: "20260419T180000",
+        time: "02:00 PM", type: "Audition", chapter: "Nairobi", location: "CITAM Valley Rd", venueName: "CITAM Valley Rd",
+        startTime: "Apr 19 · 02:00 PM", visibility: "public"
+    },
+    {
+        id: "nbi-orient", title: "Orientation & Small Groups", date: "May 03, 2026", start: "20260503T140000", end: "20260503T170000",
+        time: "02:00 PM", type: "Meeting", chapter: "Nairobi", location: "Nairobi Baptist Church", venueName: "Nairobi Baptist Church",
+        startTime: "May 03 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-comm-1", title: "First Commissioning", date: "May 10, 2026", start: "20260510T140000", end: "20260510T170000",
+        time: "02:00 PM", type: "Commissioning", chapter: "Nairobi", location: "CITAM Valley Rd", venueName: "CITAM Valley Rd",
+        startTime: "May 10 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-sgl-train", title: "Small Group Leaders Training", date: "May 16, 2026", start: "20260516T090000", end: "20260516T130000",
+        time: "09:00 AM", type: "Training", chapter: "Nairobi", location: "TBD", venueName: "TBD",
+        startTime: "May 16 · 09:00 AM", visibility: "member"
+    },
+    {
+        id: "nbi-prac-1", title: "1st Practice", date: "May 24, 2026", start: "20260524T140000", end: "20260524T180000",
+        time: "02:00 PM", type: "Rehearsal", chapter: "Nairobi", location: "Nairobi Baptist Church", venueName: "Nairobi Baptist Church",
+        startTime: "May 24 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-mission-2", title: "Mission (Hallel Worship)", date: "May 27, 2026", start: "20260527T180000", end: "20260527T210000",
+        time: "06:00 PM", type: "Mission", chapter: "Nairobi", location: "Bride of Christ Chamber", venueName: "Bride of Christ Chamber",
+        startTime: "May 27 · 06:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-prac-2", title: "2nd Practice", date: "Jun 07, 2026", start: "20260607T140000", end: "20260607T180000",
+        time: "02:00 PM", type: "Rehearsal", chapter: "Nairobi", location: "Nairobi Baptist Church", venueName: "Nairobi Baptist Church",
+        startTime: "Jun 07 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-mission-3", title: "Mission", date: "Jun 21, 2026", start: "20260621T100000", end: "20260621T130000",
+        time: "10:00 AM", type: "Mission", chapter: "Nairobi", location: "LMC Karen", venueName: "LMC Karen",
+        startTime: "Jun 21 · 10:00 AM", visibility: "member"
+    },
+    {
+        id: "nbi-prac-3", title: "3rd Practice", date: "Jun 21, 2026", start: "20260621T140000", end: "20260621T180000",
+        time: "02:00 PM", type: "Rehearsal", chapter: "Nairobi", location: "Nairobi Baptist Church", venueName: "Nairobi Baptist Church",
+        startTime: "Jun 21 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-prac-4", title: "4th Practice", date: "Jul 05, 2026", start: "20260705T140000", end: "20260705T180000",
+        time: "02:00 PM", type: "Rehearsal", chapter: "Nairobi", location: "Nairobi Baptist Church", venueName: "Nairobi Baptist Church",
+        startTime: "Jul 05 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-prac-5", title: "5th Practice", date: "Jul 19, 2026", start: "20260719T140000", end: "20260719T180000",
+        time: "02:00 PM", type: "Rehearsal", chapter: "Nairobi", location: "CITAM Valley Rd", venueName: "CITAM Valley Rd",
+        startTime: "Jul 19 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-bgv", title: "BGV Auditions", date: "Aug 01, 2026", start: "20260801T090000", end: "20260801T150000",
+        time: "09:00 AM", type: "Audition", chapter: "Nairobi", location: "CITAM Valley Rd", venueName: "CITAM Valley Rd",
+        startTime: "Aug 01 · 09:00 AM", visibility: "member"
+    },
+    {
+        id: "nbi-alumni", title: "Alumni Connect", date: "Aug 07, 2026", start: "20260807T180000", end: "20260808T180000",
+        time: "06:00 PM", type: "Event", chapter: "Nairobi", location: "TBD", venueName: "TBD",
+        startTime: "Aug 07–08", visibility: "public"
+    },
+    {
+        id: "nbi-prac-6", title: "6th Practice", date: "Aug 09, 2026", start: "20260809T140000", end: "20260809T180000",
+        time: "02:00 PM", type: "Rehearsal", chapter: "Nairobi", location: "Nairobi Baptist Church", venueName: "Nairobi Baptist Church",
+        startTime: "Aug 09 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-prac-7", title: "7th Practice", date: "Aug 23, 2026", start: "20260823T140000", end: "20260823T180000",
+        time: "02:00 PM", type: "Rehearsal", chapter: "Nairobi", location: "Nairobi Baptist Church", venueName: "Nairobi Baptist Church",
+        startTime: "Aug 23 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-funday", title: "Fun Day", date: "Aug 29, 2026", start: "20260829T090000", end: "20260829T160000",
+        time: "09:00 AM", type: "Event", chapter: "Nairobi", location: "TBD", venueName: "TBD",
+        startTime: "Aug 29 · 09:00 AM", visibility: "member"
+    },
+    {
+        id: "nbi-prac-8", title: "8th Practice", date: "Sep 06, 2026", start: "20260906T140000", end: "20260906T180000",
+        time: "02:00 PM", type: "Rehearsal", chapter: "Nairobi", location: "Nairobi Baptist Church", venueName: "Nairobi Baptist Church",
+        startTime: "Sep 06 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-prac-9", title: "9th Practice", date: "Sep 13, 2026", start: "20260913T140000", end: "20260913T180000",
+        time: "02:00 PM", type: "Rehearsal", chapter: "Nairobi", location: "Nairobi Baptist Church", venueName: "Nairobi Baptist Church",
+        startTime: "Sep 13 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-mission-4", title: "Mission", date: "Sep 20, 2026", start: "20260920T100000", end: "20260920T140000",
+        time: "10:00 AM", type: "Mission", chapter: "Nairobi", location: "LMC Karen", venueName: "LMC Karen",
+        startTime: "Sep 20 · 10:00 AM", visibility: "member"
+    },
+    {
+        id: "nbi-dress", title: "Dress Rehearsal", date: "Sep 25, 2026", start: "20260925T180000", end: "20260925T210000",
+        time: "06:00 PM", type: "Rehearsal", chapter: "Nairobi", location: "TBD", venueName: "TBD",
+        startTime: "Sep 25 · 06:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-comm-2", title: "Commissioning", date: "Sep 27, 2026", start: "20260927T140000", end: "20260927T170000",
+        time: "02:00 PM", type: "Commissioning", chapter: "Nairobi", location: "Nairobi Baptist Church", venueName: "Nairobi Baptist Church",
+        startTime: "Sep 27 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-setdown", title: "Set down", date: "Oct 18, 2026", start: "20261018T140000", end: "20261018T170000",
+        time: "02:00 PM", type: "Meeting", chapter: "Nairobi", location: "CITAM Valley Rd", venueName: "CITAM Valley Rd",
+        startTime: "Oct 18 · 02:00 PM", visibility: "member"
+    },
+    {
+        id: "nbi-mission-5", title: "Mission", date: "Nov 29, 2026", start: "20261129T100000", end: "20261129T140000",
+        time: "10:00 AM", type: "Mission", chapter: "Nairobi", location: "LMC Karen", venueName: "LMC Karen",
+        startTime: "Nov 29 · 10:00 AM", visibility: "member"
+    },
+    // Undated missions mapping to TBD
+    {
+        id: "nbi-mission-tbd-1", title: "Mission", date: "TBD", start: "", end: "", time: "TBD", type: "Mission", chapter: "Nairobi", location: "TBD", venueName: "TBD", startTime: "TBD", visibility: "member"
+    },
+    {
+        id: "nbi-mission-tbd-2", title: "Mission", date: "TBD", start: "", end: "", time: "TBD", type: "Mission", chapter: "Nairobi", location: "TBD", venueName: "TBD", startTime: "TBD", visibility: "member"
+    },
+    {
+        id: "nbi-mission-tbd-3", title: "Mission", date: "TBD", start: "", end: "", time: "TBD", type: "Mission", chapter: "Nairobi", location: "TBD", venueName: "TBD", startTime: "TBD", visibility: "member"
     }
 ];
 
@@ -195,7 +333,7 @@ export const promos = [
 ];
 
 export function parseEventDate(dateStr: string): Date | null {
-    if (dateStr === "Every Night") return null;
+    if (dateStr === "Every Night" || dateStr === "TBD") return null;
     const parts = dateStr.replace(",", "").split(" ");
     const monthIndex = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(parts[0]);
     const day = parseInt(parts[1]);

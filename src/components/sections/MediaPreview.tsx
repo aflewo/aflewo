@@ -161,7 +161,7 @@ export default function MediaPreview() {
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[200px] md:auto-rows-[180px] gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[200px] md:auto-rows-[180px] gap-4">
                     {mediaItems.map((item, i) => (
                         <Link
                             href="/media"
@@ -169,21 +169,31 @@ export default function MediaPreview() {
                             ref={(el) => { itemsRef.current[i] = el; }}
                             onMouseMove={(e) => handleMouseMove(e, i)}
                             onMouseLeave={() => handleMouseLeave(i)}
-                            className={`bento-item relative rounded-lg overflow-hidden glass-card border-white/5 group cursor-pointer
-                                ${item.size === "large" ? "md:col-span-2 md:row-span-2" : ""}
-                                ${item.size === "medium" ? "md:col-span-2 md:row-span-1" : ""}
-                                ${item.size === "small" ? "md:col-span-1 md:row-span-1" : ""}
+                            className={`bento-item relative rounded-2xl overflow-hidden glass-card border-white/5 group cursor-pointer no-download-wrapper select-none
+                                ${item.size === "large" ? "col-span-2 row-span-2" : ""}
+                                ${item.size === "medium" ? "col-span-2 row-span-1" : ""}
+                                ${item.size === "small" ? "col-span-1 row-span-1" : ""}
                             `}
+                            onContextMenu={(e) => e.preventDefault()}
                         >
                             <Image
                                 src={item.image}
                                 alt={item.title}
                                 fill
-                                className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                                className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 select-none"
+                                draggable={false}
+                                style={{ pointerEvents: "none", WebkitUserDrag: "none" } as React.CSSProperties}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
+                            {/* Watermark Overlay (Hidden until hover) */}
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" aria-hidden="true">
+                                <div className="flex flex-col items-center gap-0.5 opacity-[0.25] select-none" style={{ transform: "rotate(-20deg)" }}>
+                                    <span className={`text-white font-black tracking-[0.4em] uppercase ${item.size === 'small' ? 'text-lg' : 'text-3xl'}`}>AFLEWO</span>
+                                </div>
+                            </div>
 
-                            <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-between">
+                            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-500 z-10" />
+
+                            <div className="absolute inset-0 p-5 md:p-8 flex flex-col justify-between z-20">
                                 <div className="flex justify-between items-start">
                                     <div className="flex flex-wrap gap-2">
                                         <span className="px-3 py-1 rounded-full bg-gold/20 backdrop-blur-sm text-gold text-[9px] font-black uppercase tracking-widest">

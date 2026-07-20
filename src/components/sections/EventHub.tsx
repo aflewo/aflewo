@@ -5,6 +5,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SvgIcon from "@/components/ui/SvgIcon";
 import Link from "next/link";
+import { supabase } from "@/integrations/supabase/client";
+import { type Session } from "@supabase/supabase-js";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,22 +26,6 @@ const chapterColors: Record<string, { bg: string; text: string; border: string }
 const chapters = Object.keys(chapterColors);
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-function getNextAFLEWOEvent(): AFLEWOEvent | null {
-    const now = new Date();
-    const futureEvents = events
-        .filter(e => {
-            const date = parseEventDate(e.date);
-            return date && date > now;
-        })
-        .sort((a, b) => {
-            const dateA = parseEventDate(a.date);
-            const dateB = parseEventDate(b.date);
-            if (!dateA || !dateB) return 0;
-            return dateA.getTime() - dateB.getTime();
-        });
-    return futureEvents[0] || null;
-}
 
 interface FlipDigitProps {
     value: number;
@@ -118,7 +104,30 @@ export default function EventHub() {
     const [activeFilters, setActiveFilters] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
-    const nextEvent = useMemo(() => getNextAFLEWOEvent(), []);
+    const [session, setSession] = useState<Session | null>(null);
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data }) => setSession(data.session));
+        const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => setSession(session));
+        return () => authListener.subscription.unsubscribe();
+    }, []);
+
+    const nextEvent = useMemo(() => {
+        const now = new Date();
+        const futureEvents = events
+            .filter(e => e.visibility !== "member" || session)
+            .filter(e => {
+                const date = parseEventDate(e.date);
+                return date && date > now;
+            })
+            .sort((a, b) => {
+                const dateA = parseEventDate(a.date);
+                const dateB = parseEventDate(b.date);
+                if (!dateA || !dateB) return 0;
+                return dateA.getTime() - dateB.getTime();
+            });
+        return futureEvents[0] || null;
+    }, [session]);
 
     useEffect(() => {
         const calculateTimeLeft = () => {
@@ -163,19 +172,20 @@ export default function EventHub() {
     const getDaysInMonth = useCallback((date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(), []);
     const getFirstDayOfMonth = useCallback((date: Date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay(), []);
     const getEventsForDate = useCallback((date: Date) => events.filter(e => {
+        if (e.visibility === "member" && !session) return false;
         const d = parseEventDate(e.date);
         return d && d.toDateString() === date.toDateString();
-    }), []);
+    }), [session]);
 
     const filteredEvents = useMemo(() => {
-        let filtered = events;
+        let filtered = events.filter(e => e.visibility !== "member" || session);
         if (activeFilters.length > 0) filtered = filtered.filter(e => activeFilters.includes(e.chapter));
         if (selectedDate) filtered = filtered.filter(e => {
             const d = parseEventDate(e.date);
             return d && d.toDateString() === selectedDate.toDateString();
         });
         return filtered;
-    }, [activeFilters, selectedDate]);
+    }, [activeFilters, selectedDate, session]);
 
     const toggleFilter = (chapter: string) => {
         setActiveFilters(prev => prev.includes(chapter) ? prev.filter(c => c !== chapter) : [...prev, chapter]);
@@ -184,7 +194,8 @@ export default function EventHub() {
     const navigateMonth = (direction: number) => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1));
 
     const downloadAllICS = () => {
-        const content = `BEGIN:VCALENDAR\nVERSION:2.0\nX-WR-CALNAME:AFLEWO 2026\n${events.map(e => `BEGIN:VEVENT\nSUMMARY:${e.title}\nDTSTART:${e.start}\nDTEND:${e.end}\nLOCATION:${e.location}\nEND:VEVENT`).join('\n')}\nEND:VCALENDAR`;
+        const visibleEvents = events.filter(e => e.visibility !== "member" || session);
+        const content = `BEGIN:VCALENDAR\nVERSION:2.0\nX-WR-CALNAME:AFLEWO 2026\n${visibleEvents.map(e => `BEGIN:VEVENT\nSUMMARY:${e.title}\nDTSTART:${e.start}\nDTEND:${e.end}\nLOCATION:${e.location}\nEND:VEVENT`).join('\n')}\nEND:VCALENDAR`;
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(new Blob([content], { type: 'text/calendar' }));
         link.download = 'AFLEWO_2026.ics';
