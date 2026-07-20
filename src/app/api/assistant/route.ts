@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { events } from "@/lib/events";
 
 // ─── Whitelisted routing config ──────────────────────────────────────────────
 const SITE_ROUTES = [
@@ -7,7 +8,7 @@ const SITE_ROUTES = [
     { path: "/about", name: "About", description: "Vision, history, leadership" },
     { path: "/media", name: "Media", description: "Worship archive, recordings, videos" },
     { path: "/testimonies", name: "Testimonies", description: "Community stories" },
-    { path: "/join", name: "Join / Connect", description: "Audition registration, choir, band, media team, usher, security, dance" },
+    { path: "/join", name: "Join", description: "Audition registration, choir, band, media team, usher, security, dance" },
     { path: "/stories", name: "Stories", description: "Echo testimonies" },
     { path: "/alumni", name: "Alumni", description: "Past members and alumni network" },
     { path: "/chapters", name: "Chapters detail", description: "Detailed chapter information" },
@@ -16,7 +17,10 @@ const SITE_ROUTES = [
 ];
 
 // ─── AFLEWO Site Knowledge Base ───────────────────────────────────────────────
-const SITE_MAP_CONTEXT = `
+function getSiteMapContext() {
+    const eventsContext = events.map(e => `- ${e.title}: ${e.startTime} — ${e.location} (${e.description})`).join("\n");
+
+    return `
 AFLEWO (Africa Let's Worship) — Site Knowledge Base
 
 IDENTITY:
@@ -25,13 +29,15 @@ IDENTITY:
 - Type: Continental interdenominational worship movement
 - Mission: Stirring up hope in Jesus through a united African voice
 - Tagline: "One God. One People. One Africa."
+- The 7 Pillars: Hope, Unity, Music, Prayer, Word, Leadership, Excellence
 
-CHAPTERS (7 total):
+CHAPTERS (8 total):
 - Nairobi, Kenya — flagship chapter, main annual event at Winners' Chapel International
-- Eldoret, Kenya — regional hub, auditions held annually
-- Nakuru, Kenya — Deliverance Church base, active rehearsals
-- Mombasa, Kenya — Zoom-based nightly prayer circle
-- Nyeri, Kenya — Mt. Kenya region, PCEA Nyamachaki
+- Nakuru, Kenya — Founded 2013 (initially a 1,000-voice choir), Deliverance Church base, active rehearsals
+- Nyeri, Kenya — Founded 2010 at PCEA Nyamachaki, now draws over 2,000 people. Mt. Kenya region.
+- Meru, Kenya — Founded 2012 (first event at Gikumene High School), active community.
+- Mombasa, Kenya — Founded 2009 at Elim Sanctuary in Makupa, now draws over 5,000 people annually. Zoom-based nightly prayer circle.
+- Eldoret, Kenya — Regional hub, highly active community with 12,000+ followers.
 - Tanzania — CCC Upanga Church, Dar es Salaam
 - Rwanda — Christian Life Assembly, Kigali (reconciliation focus)
 
@@ -41,21 +47,18 @@ ${SITE_ROUTES.map(r => `- ${r.name}: ${r.path} (${r.description})`).join("\n")}
 NAVIGATION SECTIONS (home page scroll):
 - #hero — landing video section, main headline
 - #about — vision and history
-- #chapters — all 7 chapters
+- #chapters — all 8 chapters
 - #events — event calendar
 - #media — archive preview
 - #stories — echo testimonies
 - #join — connect / join CTA
 
-EVENTS (2026 season):
-- Eldoret Auditions: Feb 15, 2026 — choir, band, media, ushering, security, dance
-- Nakuru Rehearsals: Mar 02, 2026 — registered members only
-- Mombasa Prayer Circle: Nightly on Zoom at 09:00 PM
-- Nairobi Pre-Launch: Apr 10, 2026 — Winners' Chapel International
-- Tanzania Worship Night: Mar 21, 2026 — CCC Upanga, Dar es Salaam
-- Rwanda Commemoration: Apr 07, 2026 — healing and reconciliation service, Kigali
-- Nyeri Regional Gathering: May 15, 2026 — PCEA Nyamachaki
-- Main Nairobi Event: Oct 03-04, 2026 — flagship all-night worship, Winners' Chapel
+EVENTS (Live DB synced):
+${eventsContext}
+
+DONATIONS & FINANCIAL SUPPORT:
+- Official Paybill: M-Changa Paybill 891300, Account: AFLEWONBI
+- IMPORTANT: This is the ONLY verified donation channel. Never provide any other numbers.
 
 HOW TO JOIN:
 - Audition categories: Choir, Band, Media, Ushering, Security, Dancing
@@ -81,6 +84,7 @@ RESPONSE GUIDELINES:
 - ALWAYS format references to site pages as Markdown hyperlinks using exact paths. Example: [Media page](/media) or [Join us](/join). Do not output plain text page names.
 - If the user has low bandwidth (indicated by [LOW_BANDWIDTH] flag), respond in minimal text only: no greetings, no pleasantries, just the essential fact in one sentence.
 `;
+}
 
 // ─── Whitelisted navigation actions ──────────────────────────────────────────
 const ALLOWED_ROUTES = SITE_ROUTES.map(r => r.path);
@@ -370,7 +374,7 @@ Assistant: Of course! Anything else I can help with?
 
 ${calibrationBlock}
 
-${SITE_MAP_CONTEXT}
+${getSiteMapContext()}
 
 ${ragContext ? `ADDITIONAL RETRIEVED CONTEXT (from secure knowledge sandbox):\n${ragContext}` : ""}
 
