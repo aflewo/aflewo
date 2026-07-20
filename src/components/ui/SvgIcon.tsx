@@ -5,6 +5,9 @@ import React from "react";
 // All paths sourced from D:\AFLEWO\af v001\context\icons ALL
 // currentColor is used so className text-* colors apply correctly
 const paths: Record<string, React.ReactNode> = {
+    menu: (
+        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" fill="currentColor" />
+    ),
     search: (
         <path fillRule="evenodd" clipRule="evenodd" d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C11.8487 18 13.551 17.3729 14.9056 16.3199L20.2929 21.7071C20.6834 22.0976 21.3166 22.0976 21.7071 21.7071C22.0976 21.3166 22.0976 20.6834 21.7071 20.2929L16.3199 14.9056C17.3729 13.551 18 11.8487 18 10C18 5.58172 14.4183 2 10 2Z" fill="currentColor" />
     ),
