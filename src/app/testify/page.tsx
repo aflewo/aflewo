@@ -159,7 +159,7 @@ function StorySubmitModal({ onClose }: { onClose: () => void }) {
     );
 }
 
-export default function TestimoniesPage() {
+export default function TestifyPage() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [showModal, setShowModal] = useState(false);
     const [activeChapter, setActiveChapter] = useState("All");
@@ -199,7 +199,7 @@ export default function TestimoniesPage() {
     }, []);
 
     return (
-        <main ref={containerRef} className="bg-background min-h-screen" id="testimonies-page">
+        <main ref={containerRef} className="bg-background min-h-screen" id="testify-page">
             {showModal && <StorySubmitModal onClose={() => setShowModal(false)} />}
 
             {/* Hero */}
@@ -207,7 +207,7 @@ export default function TestimoniesPage() {
                 <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[150px] -z-10 pointer-events-none" />
                 <div className="max-container">
                     <div className="max-w-5xl space-y-6">
-                        <span className="hero-text-line text-gold font-black uppercase tracking-[0.4em] text-xs">Testimonies</span>
+                        <span className="hero-text-line text-gold font-black uppercase tracking-[0.4em] text-xs">Testify</span>
                         <h1 className="hero-text-line text-7xl md:text-[clamp(4rem,12vw,9rem)] font-black tracking-tighter leading-[0.85]">
                             ECHOES OF <br /><span className="text-gold">GRACE.</span>
                         </h1>

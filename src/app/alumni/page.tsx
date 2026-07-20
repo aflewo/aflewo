@@ -208,8 +208,8 @@ export default function AlumniPage() {
                                 <Link href="/join" className="press-scale inline-flex items-center gap-2 px-8 py-4 glass-card rounded-lg font-black text-[10px] uppercase tracking-widest text-gold hover:border-gold/30 transition-all">
                                     <SvgIcon name="group_add" size={16} /> Join 2026 Team
                                 </Link>
-                                <Link href="/testimonies" className="press-scale inline-flex items-center gap-2 px-8 py-4 glass-card rounded-lg font-black text-[10px] uppercase tracking-widest hover:text-gold hover:border-gold/30 transition-all">
-                                    <SvgIcon name="format_quote" size={16} /> Share Your Testimony
+                                <Link href="/testify" className="press-scale inline-flex items-center gap-2 px-8 py-4 glass-card rounded-lg font-black text-[10px] uppercase tracking-widest hover:text-gold hover:border-gold/30 transition-all">
+                                    <SvgIcon name="format_quote" size={16} /> Testify
                                 </Link>
                             </div>
                         </div>

@@ -400,21 +400,21 @@ export default function AboutPage() {
             <section className="section-padding border-t border-white/5">
                 <div className="max-container grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Link
-                        href="/testimonies"
+                        href="/testify"
                         className="group glass-card-elevated rounded-2xl p-10 border-white/5 hover:border-gold/20 transition-all space-y-4"
                     >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center">
                                 <SvgIcon name="format_quote" size={18} className="text-gold" />
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-gold">Testimonies</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-gold">Testify</span>
                         </div>
                         <h3 className="text-2xl font-black tracking-tighter group-hover:text-gold transition-colors">Echoes of Grace</h3>
                         <p className="text-white/40 text-sm font-medium leading-relaxed">
                             7,000+ alumni. Thousands of testimonies. Read the stories of how worship has moved across Africa.
                         </p>
                         <div className="flex items-center gap-2 text-gold/60 group-hover:text-gold transition-colors text-xs font-black uppercase tracking-widest">
-                            <span>Read Testimonies</span>
+                            <span>Testify</span>
                             <SvgIcon name="arrow_right" size={16} />
                         </div>
                     </Link>

@@ -70,7 +70,7 @@ export default function Footer() {
                                 <li><Link href="/about" className="hover:text-gold transition-all">Our Story</Link></li>
                                 <li><Link href="/about#timeline" className="hover:text-gold transition-all">Timeline</Link></li>
                                 <li><Link href="/media" className="hover:text-gold transition-all">Media</Link></li>
-                                <li><Link href="/testimonies" className="hover:text-gold transition-all">Testimonies</Link></li>
+                                <li><Link href="/testify" className="hover:text-gold transition-all">Testify</Link></li>
                                 <li><Link href="/join" className="hover:text-gold transition-all">Join Us</Link></li>
                                 <li><Link href="/alumni" className="hover:text-gold transition-all">Alumni</Link></li>
                             </ul>

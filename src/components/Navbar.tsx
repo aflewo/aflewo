@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 const links = [
     { name: "About", href: "/about" },
     { name: "Media", href: "/media" },
-    { name: "Testimonies", href: "/testimonies" },
+    { name: "Testify", href: "/testify" },
     { name: "Join", href: "/join" },
 ];
 

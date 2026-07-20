@@ -93,7 +93,8 @@ function MicIcon({ active }: { active: boolean }) {
 const PAGE_DICTIONARY: Record<string, string> = {
     "media page": "/media",
     "about page": "/about",
-    "testimonies page": "/testimonies",
+    "testimonies page": "/testify",
+    "testify page": "/testify",
     "join page": "/join",
     "stories page": "/stories",
     "alumni page": "/alumni",
@@ -1365,7 +1366,7 @@ function getContextualSuggestions(text: string) {
     if (lower.includes("media") || lower.includes("video") || lower.includes("worship") || lower.includes("song") || lower.includes("music")) {
         return [
             { id: "media_archive", label: "Worship Archive", prompt: "Where can I watch past AFLEWO worship videos?", icon: "music" },
-            { id: "stories", label: "Testimonies", prompt: "Show me AFLEWO community stories and testimonies", icon: "speech" },
+            { id: "stories", label: "Testify", prompt: "Show me AFLEWO community stories and testimonies", icon: "speech" },
             ...liveEldoretSuggestions.slice(0, 1),
         ];
     }

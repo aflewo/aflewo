@@ -210,10 +210,10 @@ export default function StoriesTeaser() {
                             </div>
 
                             <Link
-                                href="/testimonies"
-                                className="press-scale inline-flex items-center gap-4 bg-gold text-brown w-max px-10 py-5 rounded-lg font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
+                                href="/testify"
+                                className="group inline-flex items-center gap-2 bg-gold text-brown px-8 py-4 rounded-full font-black uppercase tracking-widest hover:bg-white transition-all shadow-glow"
                             >
-                                Read Testimonies <SvgIcon name="arrow_forward" size={20} />
+                                Testify <SvgIcon name="arrow_forward" size={20} />
                             </Link>
                         </div>
                     </div>
@@ -301,12 +301,11 @@ export default function StoriesTeaser() {
                                     <SvgIcon name="arrow_forward" size={20} />
                                 </button>
                             </div>
-
                             <Link
-                                href="/testimonies"
+                                href="/testify"
                                 className="press-scale inline-flex items-center gap-4 bg-gold text-brown w-full justify-center sm:w-max px-10 py-5 rounded-lg font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
                             >
-                                Read Testimonies <SvgIcon name="arrow_forward" size={20} />
+                                Testify <SvgIcon name="arrow_forward" size={20} />
                             </Link>
                         </div>
                     </div>

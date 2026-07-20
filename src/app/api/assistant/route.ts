@@ -7,7 +7,7 @@ const SITE_ROUTES = [
     { path: "/", name: "Home", description: "Main landing page" },
     { path: "/about", name: "About", description: "Vision, history, leadership" },
     { path: "/media", name: "Media", description: "Worship archive, recordings, videos" },
-    { path: "/testimonies", name: "Testimonies", description: "Community stories" },
+    { path: "/testify", name: "Testify", description: "Community stories" },
     { path: "/join", name: "Join", description: "Audition registration, choir, band, media team, usher, security, dance" },
     { path: "/stories", name: "Stories", description: "Echo testimonies" },
     { path: "/alumni", name: "Alumni", description: "Past members and alumni network" },
@@ -525,7 +525,7 @@ function fallbackResponse(messages: Message[]): string {
         return "You can watch our worship archive and past event recordings in the Media section. [navigate_to: /media]";
     }
     if (lastMsg.includes("story") || lastMsg.includes("testimon")) {
-        return "Hear powerful testimonies and stories from AFLEWO members across Africa. [navigate_to: /testimonies]";
+        return "Hear powerful testimonies and stories from AFLEWO members across Africa. [navigate_to: /testify]";
     }
     if (lastMsg.includes("donate") || lastMsg.includes("support") || lastMsg.includes("partner")) {
         return "Thank you for your heart to support! You can partner with AFLEWO through our Join page. [navigate_to: /join]";

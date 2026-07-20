@@ -380,7 +380,7 @@ export default function JoinPage() {
                             <p className="text-white/30 text-xs font-medium">22 seasons of worship and prayer across Africa.</p>
                         </Link>
                         <Link
-                            href="/testimonies"
+                            href="/testify"
                             className="group glass-card rounded-xl p-6 border-white/5 hover:border-gold/20 transition-all space-y-3"
                         >
                             <p className="text-[10px] font-black uppercase tracking-widest text-gold">Inspired By</p>
