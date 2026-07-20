@@ -348,7 +348,7 @@ function LiquidGlassIsland({
                 {island.mode === "MAP_VIEW" && island.payload?.lat != null && island.payload?.lng != null && (
                     <motion.div key="map-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }} className="px-3 pb-3">
                         <div
-                            className="w-full rounded-xl overflow-hidden transition-all duration-500"
+                            className="w-full rounded-xl overflow-hidden transition-all duration-500 relative"
                             style={{ height: isFullscreen ? "55vh" : 148, background: "rgba(0,0,0,0.3)" }}
                         >
                             <iframe
@@ -360,6 +360,19 @@ function LiquidGlassIsland({
                                 loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"
                             />
+                            
+                            {/* Start Navigation Overlay Button */}
+                            <div className="absolute bottom-3 left-0 right-0 flex justify-center z-20 pointer-events-none">
+                                <a
+                                    href={`https://www.google.com/maps/dir/?api=1&destination=${island.payload.lat},${island.payload.lng}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="pointer-events-auto shadow-[0_4px_16px_rgba(212,175,55,0.25)] border border-gold/30 hover:border-gold hover:scale-105 active:scale-95 transition-all bg-black/60 backdrop-blur-md text-gold px-4 py-2 rounded-full font-black uppercase text-[10px] tracking-wider flex items-center gap-1.5"
+                                >
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor" /></svg>
+                                    Start Navigation
+                                </a>
+                            </div>
                         </div>
                         <p className="text-[8px] text-white/25 text-center mt-1 font-medium tracking-wide">
                             {island.payload.lat.toFixed(4)}, {island.payload.lng.toFixed(4)}
@@ -885,16 +898,9 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                                     aria-label={isMuted ? "Unmute voice" : "Mute voice"}
                                 >
                                     {isMuted ? (
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12 1C13.6452 1 15.0585 1.99333 15.6728 3.41298L7.99997 11.0858V5C7.99997 2.79086 9.79083 1 12 1Z" fill="currentColor"/>
-                                            <path d="M6.24997 12C6.24997 12.2632 6.26801 12.5245 6.30342 12.7823L4.25194 14.8338C3.92295 13.9344 3.74997 12.9761 3.74997 12V11.8438C3.74997 11.2915 4.19769 10.8438 4.74997 10.8438H5.24997C5.80226 10.8438 6.24997 11.2915 6.24997 11.8438V12Z" fill="currentColor"/>
-                                            <path d="M7.3242 18.7971L3.76773 22.3535C3.3772 22.7441 2.74404 22.7441 2.35352 22.3535L1.64641 21.6464C1.25588 21.2559 1.25588 20.6227 1.64641 20.2322L20.2322 1.64644C20.6227 1.25591 21.2559 1.25591 21.6464 1.64644L22.3535 2.35354C22.744 2.74407 22.744 3.37723 22.3535 3.76776L16 10.1213V12C16 14.2091 14.2091 16 12 16C11.4457 16 10.9177 15.8873 10.4378 15.6835L9.13553 16.9857C9.99969 17.4822 10.986 17.75 12 17.75C13.525 17.75 14.9875 17.1442 16.0658 16.0659C17.1442 14.9875 17.75 13.525 17.75 12V11.8438C17.75 11.2915 18.1977 10.8438 18.75 10.8438H19.25C19.8023 10.8438 20.25 11.2915 20.25 11.8437V12C20.25 14.188 19.3808 16.2865 17.8336 17.8336C16.5842 19.0831 14.9753 19.8903 13.25 20.1548V23H10.75V20.1548C9.51944 19.9662 8.34812 19.5014 7.3242 18.7971Z" fill="currentColor"/>
-                                        </svg>
+                                        <SvgIcon name="mic_off" size={16} />
                                     ) : (
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M8 5C8 2.79086 9.79086 1 12 1C14.2091 1 16 2.79086 16 5V12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12V5Z" fill="currentColor"/>
-                                            <path d="M6.25 11.8438V12C6.25 13.525 6.8558 14.9875 7.93414 16.0659C9.01247 17.1442 10.475 17.75 12 17.75C13.525 17.75 14.9875 17.1442 16.0659 16.0659C17.1442 14.9875 17.75 13.525 17.75 12V11.8438C17.75 11.2915 18.1977 10.8438 18.75 10.8438H19.25C19.8023 10.8438 20.25 11.2915 20.25 11.8437V12C20.25 14.188 19.3808 16.2865 17.8336 17.8336C16.5842 19.0831 14.9753 19.8903 13.25 20.1548V22C13.25 22.5523 12.8023 23 12.25 23H11.75C11.1977 23 10.75 22.5523 10.75 22V20.1548C9.02471 19.8903 7.41579 19.0831 6.16637 17.8336C4.61919 16.2865 3.75 14.188 3.75 12V11.8438C3.75 11.2915 4.19772 10.8438 4.75 10.8438H5.25C5.80228 10.8438 6.25 11.2915 6.25 11.8438Z" fill="currentColor"/>
-                                        </svg>
+                                        <SvgIcon name="mic" size={16} />
                                     )}
                                 </button>
                                 {/* Personalize / Wallpaper */}
@@ -905,10 +911,7 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: () => void })
                                     title="Personalize chat"
                                     aria-label="Personalize chat"
                                 >
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M15.7209 7.34884C15.7209 8.37634 14.888 9.2093 13.8605 9.2093C12.833 9.2093 12 8.37634 12 7.34884C12 6.32133 12.833 5.48837 13.8605 5.48837C14.888 5.48837 15.7209 6.32133 15.7209 7.34884Z" fill="currentColor" />
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M16.0853 2.10839C15.2789 1.99997 14.2535 1.99998 12.9813 2H11.0187C9.74655 1.99998 8.72114 1.99997 7.91466 2.10839C7.07735 2.22097 6.37235 2.4618 5.81243 3.02172C5.25251 3.58164 5.01168 4.28664 4.89911 5.12395C4.79068 5.93043 4.79069 6.95585 4.79071 8.22802V15.772C4.79069 17.0442 4.79068 18.0696 4.89911 18.876C5.01168 19.7134 5.25251 20.4184 5.81243 20.9783C6.37235 21.5382 7.07735 21.779 7.91466 21.8916C8.72114 22 9.74655 22 11.0187 22H12.9813C14.2534 22 15.2789 22 16.0853 21.8916C16.9226 21.779 17.6276 21.5382 18.1876 20.9783C18.7475 20.4184 18.9883 19.7134 19.1009 18.876C19.2093 18.0696 19.2093 17.0441 19.2093 15.772V8.22803C19.2093 6.95585 19.2093 5.93044 19.1009 5.12395C18.9883 4.28664 18.7475 3.58164 18.1876 3.02172C17.6276 2.4618 16.9226 2.22097 16.0853 2.10839ZM16.8085 16.6302L17.7946 17.6708C17.8134 17.134 17.8139 16.4954 17.8139 15.7209V8.27907C17.8139 6.9438 17.8125 6.01253 17.718 5.30988C17.6262 4.6273 17.4584 4.26584 17.2009 4.00838C16.9435 3.75093 16.582 3.58307 15.8994 3.4913C15.1968 3.39683 14.2655 3.39535 12.9302 3.39535H11.0698C9.7345 3.39535 8.80324 3.39683 8.10059 3.4913C7.41801 3.58307 7.05654 3.75093 6.79909 4.00838C6.54164 4.26584 6.37378 4.6273 6.28201 5.30988C6.18754 6.01253 6.18606 6.9438 6.18606 8.27907V12.904L6.18936 12.9007C7.10618 11.96 8.52458 12.0245 9.37271 13.019L12.313 16.4668C12.5485 16.7429 12.8584 16.7555 13.0961 16.5596L13.3005 16.3912C14.3764 15.5045 15.8517 15.6204 16.8085 16.6302Z" fill="currentColor" opacity="0.4" />
-                                    </svg>
+                                    <SvgIcon name="image" size={16} />
                                 </button>
                                 <button
                                     onClick={handleNewChat}
