@@ -281,6 +281,12 @@ const paths: Record<string, React.ReactNode> = {
             <path d="M13 6.5C13 4.37868 13 3.31802 13.659 2.65901C14.318 2 15.3787 2 17.5 2C19.6213 2 20.682 2 21.341 2.65901C22 3.31802 22 4.37868 22 6.5C22 8.62132 22 9.68198 21.341 10.341C20.682 11 19.6213 11 17.5 11C15.3787 11 14.318 11 13.659 10.341C13 9.68198 13 8.62132 13 6.5Z" fill="currentColor"/>
         </>
     ),
+    chevron_idle: (
+        <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    ),
+    chevron_hover: (
+        <path d="M15 6L9 12L15 18M15 12H15.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    ),
 };
 
 // ─── Bot icon uses its own viewBox (164×164) so it needs a dedicated component ─

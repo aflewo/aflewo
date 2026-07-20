@@ -137,9 +137,13 @@ function ChapterModal({ chapter, isOpen, onClose }: ChapterModalProps) {
                                     <Link
                                         href={chapter.link || `/chapters/${chapter.slug}`}
                                         target={chapter.link ? "_blank" : undefined}
-                                        className="px-6 py-3 rounded-full bg-gold text-brown text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2"
+                                        className="group px-6 py-3 rounded-full bg-gold text-brown text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2"
                                     >
-                                        Register <SvgIcon name="arrow_forward" size={14} />
+                                        Register
+                                        <div className="relative w-4 h-4 flex items-center justify-center -translate-x-1 group-hover:translate-x-0 transition-transform duration-300">
+                                            <SvgIcon name="chevron_idle" size={14} className="absolute rotate-180 opacity-100 group-hover:opacity-0 transition-opacity duration-300" />
+                                            <SvgIcon name="chevron_hover" size={14} className="absolute rotate-180 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        </div>
                                     </Link>
                                 )}
                             </div>
@@ -150,9 +154,13 @@ function ChapterModal({ chapter, isOpen, onClose }: ChapterModalProps) {
                         <Link
                             href={`/chapters/${chapter.slug}`}
                             onClick={onClose}
-                            className="flex-1 min-w-[200px] inline-flex items-center justify-center gap-3 px-8 py-4 bg-gold text-brown hover:brightness-110 transition-all rounded-full font-black text-[10px] uppercase tracking-widest"
+                            className="group flex-1 min-w-[200px] inline-flex items-center justify-center gap-3 px-8 py-4 bg-gold text-brown hover:brightness-110 transition-all rounded-full font-black text-[10px] uppercase tracking-widest"
                         >
-                            <SvgIcon name="arrow_forward" size={16} /> Open Full Page
+                            Open Full Page
+                            <div className="relative w-4 h-4 flex items-center justify-center -translate-x-1 group-hover:translate-x-0 transition-transform duration-300">
+                                <SvgIcon name="chevron_idle" size={16} className="absolute rotate-180 opacity-100 group-hover:opacity-0 transition-opacity duration-300" />
+                                <SvgIcon name="chevron_hover" size={16} className="absolute rotate-180 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            </div>
                         </Link>
                         {chapter.contactPhone && (
                             <Link
@@ -453,9 +461,13 @@ export default function ChaptersSection() {
                                     <Link
                                         href={`/chapters/${chapter.slug}`}
                                         onClick={(e) => e.stopPropagation()}
-                                        className="press-scale flex-1 inline-flex items-center justify-between px-5 py-3 glass-card group-hover:bg-gold group-hover:text-brown transition-all duration-500 rounded-full font-black text-[9px] uppercase tracking-widest"
+                                        className="press-scale group flex-1 inline-flex items-center justify-between px-5 py-3 glass-card group-hover:bg-gold group-hover:text-brown transition-all duration-500 rounded-full font-black text-[9px] uppercase tracking-widest"
                                     >
-                                        Explore Chapter <SvgIcon name="arrow_forward" size={12} />
+                                        Explore Chapter
+                                        <div className="relative w-4 h-4 flex items-center justify-center -translate-x-1 group-hover:translate-x-0 transition-transform duration-300">
+                                            <SvgIcon name="chevron_idle" size={12} className="absolute rotate-180 opacity-100 group-hover:opacity-0 transition-opacity duration-300" />
+                                            <SvgIcon name="chevron_hover" size={12} className="absolute rotate-180 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        </div>
                                     </Link>
                                     {chapter.registrationOpen && (
                                         <span className="px-3 py-1 rounded-full bg-gold/20 text-gold text-[8px] font-black uppercase tracking-widest">

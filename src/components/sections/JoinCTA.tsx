@@ -142,9 +142,12 @@ export default function JoinCTA() {
                                     </p>
 
                                     <div className="mt-8 pt-6 border-t border-white/5">
-                                        <span className="text-gold font-black uppercase tracking-widest text-[10px] flex items-center gap-3">
+                                        <span className="text-gold font-black uppercase tracking-widest text-[10px] flex items-center justify-between w-full">
                                             Get Involved
-                                            <SvgIcon name="arrow_forward" size={16} className="card-arrow" />
+                                            <div className="card-arrow relative w-4 h-4 flex items-center justify-center">
+                                                <SvgIcon name="chevron_idle" size={16} className="absolute rotate-180 opacity-100 group-hover:opacity-0 transition-opacity duration-300" />
+                                                <SvgIcon name="chevron_hover" size={16} className="absolute rotate-180 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                            </div>
                                         </span>
                                     </div>
                                 </div>
@@ -156,9 +159,13 @@ export default function JoinCTA() {
                 <div className="mt-16 text-center">
                     <Link
                         href="/join"
-                        className="press-scale inline-flex items-center gap-4 bg-gold text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
+                        className="press-scale group inline-flex items-center gap-4 bg-gold text-brown px-12 py-5 rounded-full font-black uppercase tracking-tighter hover:brightness-110 transition-all shadow-glow"
                     >
-                        See All Ways to Join <SvgIcon name="arrow_forward" size={20} />
+                        See All Ways to Join
+                        <div className="relative w-5 h-5 flex items-center justify-center -translate-x-1 group-hover:translate-x-1 transition-transform duration-300">
+                            <SvgIcon name="chevron_idle" size={20} className="absolute rotate-180 opacity-100 group-hover:opacity-0 transition-opacity duration-300" />
+                            <SvgIcon name="chevron_hover" size={20} className="absolute rotate-180 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
                     </Link>
                 </div>
             </div>

@@ -216,10 +216,16 @@ export default function JoinPage() {
                                         ))}
                                     </ul>
                                 )}
-                                <div className="pt-2">
+                                <div className="pt-2 flex items-center justify-between w-full">
                                     <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${activeTrack === track.id ? "text-gold" : "text-gold/50 group-hover:text-gold"}`}>
-                                        {activeTrack === track.id ? "Selected ✓" : "Select to Apply →"}
+                                        {activeTrack === track.id ? "Selected ✓" : "Select to Apply"}
                                     </span>
+                                    {activeTrack !== track.id && (
+                                        <div className="relative w-4 h-4 flex items-center justify-center -translate-x-2 group-hover:translate-x-0 transition-transform duration-300">
+                                            <SvgIcon name="chevron_idle" size={16} className="text-gold/50 absolute rotate-180 opacity-100 group-hover:opacity-0 transition-opacity duration-300" />
+                                            <SvgIcon name="chevron_hover" size={16} className="text-gold absolute rotate-180 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -353,7 +359,13 @@ export default function JoinPage() {
                             className="group glass-card rounded-xl p-6 border-white/5 hover:border-gold/20 transition-all space-y-3"
                         >
                             <p className="text-[10px] font-black uppercase tracking-widest text-gold">Read First</p>
-                            <p className="text-sm font-black group-hover:text-gold transition-colors">Our History &rarr;</p>
+                            <div className="flex items-center justify-between">
+                                <p className="text-sm font-black group-hover:text-gold transition-colors">Our History</p>
+                                <div className="relative w-4 h-4 flex items-center justify-center -translate-x-2 group-hover:translate-x-0 transition-transform duration-300">
+                                    <SvgIcon name="chevron_idle" size={16} className="text-white/30 absolute rotate-180 opacity-100 group-hover:opacity-0 transition-opacity duration-300" />
+                                    <SvgIcon name="chevron_hover" size={16} className="text-gold absolute rotate-180 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                </div>
+                            </div>
                             <p className="text-white/30 text-xs font-medium">22 seasons of worship and prayer across Africa.</p>
                         </Link>
                         <Link
@@ -361,7 +373,13 @@ export default function JoinPage() {
                             className="group glass-card rounded-xl p-6 border-white/5 hover:border-gold/20 transition-all space-y-3"
                         >
                             <p className="text-[10px] font-black uppercase tracking-widest text-gold">Inspired By</p>
-                            <p className="text-sm font-black group-hover:text-gold transition-colors">Echoes of Grace &rarr;</p>
+                            <div className="flex items-center justify-between">
+                                <p className="text-sm font-black group-hover:text-gold transition-colors">Echoes of Grace</p>
+                                <div className="relative w-4 h-4 flex items-center justify-center -translate-x-2 group-hover:translate-x-0 transition-transform duration-300">
+                                    <SvgIcon name="chevron_idle" size={16} className="text-white/30 absolute rotate-180 opacity-100 group-hover:opacity-0 transition-opacity duration-300" />
+                                    <SvgIcon name="chevron_hover" size={16} className="text-gold absolute rotate-180 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                </div>
+                            </div>
                             <p className="text-white/30 text-xs font-medium">Read why thousands choose to serve year after year.</p>
                         </Link>
                     </div>
