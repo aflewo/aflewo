@@ -10,6 +10,7 @@ import fireMicData from "@/../context/lottie/Fire Mic Animation - LIstening_AI.j
 import aiChatData from "@/../context/inspo/AI Chat.json";
 import { useAuth } from "@/app/(dashboard)/AuthContext";
 import { useBandwidth, useOfflineManifest } from "@/hooks/useNetworkStatus";
+import { events } from "@/lib/events";
 
 // ─── Wallpaper Presets ────────────────────────────────────────────────────────
 const WALLPAPER_PRESETS = [
@@ -124,7 +125,7 @@ function CopyableToken({ value, label }: { value: string; label: string }) {
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="opacity-60 shrink-0">
                 {copied
                     ? <><polyline points="20 6 9 17 4 12" /></>
-                    : <><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></>}
+                    : <><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></>}
             </svg>
         </button>
     );
@@ -1456,8 +1457,12 @@ function getContextualSuggestions(text: string) {
     const hour = now.getHours();
     const isEvening = hour >= 17 || hour < 6; // 5 PM – 4 AM = likely event hours
 
-    const liveEldoretSuggestions = [
-        { id: "live_eldoret", label: "🔴 Eldoret LIVE", prompt: "Take me to the Media page to watch the AFLEWO Eldoret livestream.", icon: "videocam" },
+    const liveEvent = events.find((e) => e.isLive);
+    const liveChapterName = liveEvent?.chapter || "Eldoret";
+    const liveTopicKey = liveChapterName.toLowerCase();
+
+    const liveSuggestions = [
+        { id: `live_${liveTopicKey}`, label: `🔴 ${liveChapterName} LIVE`, prompt: `Take me to the Media page to watch the AFLEWO ${liveChapterName} livestream.`, icon: "videocam" },
         { id: "live_youtube", label: "Watch on YouTube", prompt: "Take me to the Media page to watch the YouTube live stream.", icon: "youtube" },
         { id: "live_facebook", label: "Watch on Facebook", prompt: "Take me to the Media page to watch the Facebook live stream.", icon: "share" },
     ];
@@ -1481,14 +1486,14 @@ function getContextualSuggestions(text: string) {
                 { id: "main_event", label: "Oct 2 Nairobi", prompt: "Tell me about the main AFLEWO Night on October 2nd, 2026 in Nairobi", icon: "calendar" },
                 { id: "calendar_2026", label: "Full 2026 Schedule", prompt: "What is the full AFLEWO 2026 event calendar?", icon: "calendar" },
                 { id: "nairobi_launch", label: "Pre-Launch", prompt: "Tell me about the Nairobi Pre-Launch event on April 10th", icon: "calendar" },
-                liveEldoretSuggestions[0],
+                liveSuggestions[0],
             ],
         },
-        eldoret: {
-            keywords: ["eldoret", "eldoret chapter", "eldoret live", "eldoret stream"],
+        [liveTopicKey]: {
+            keywords: [liveTopicKey, `${liveTopicKey} chapter`, `${liveTopicKey} live`, `${liveTopicKey} stream`],
             suggestions: [
-                ...liveEldoretSuggestions,
-                { id: "eldoret_chapter", label: "Eldoret Chapter", prompt: "Tell me about the AFLEWO Eldoret chapter", icon: "location" },
+                ...liveSuggestions,
+                { id: `${liveTopicKey}_chapter`, label: `${liveChapterName} Chapter`, prompt: `Tell me about the AFLEWO ${liveChapterName} chapter`, icon: "location" },
             ],
         },
         chapters: {
@@ -1496,20 +1501,26 @@ function getContextualSuggestions(text: string) {
             suggestions: [
                 { id: "chapters_list", label: "All Chapters", prompt: "Show me all 8 active AFLEWO chapters", icon: "location" },
                 { id: "nairobi_chapter", label: "Nairobi", prompt: "Where is the Nairobi chapter based and when do they rehearse?", icon: "church" },
-                { id: "mombasa_chapter", label: "Mombasa", prompt: "Tell me about the Mombasa chapter prayer circle", icon: "location" },
-                { id: "rwanda_chapter", label: "Rwanda", prompt: "Tell me about the Rwanda reconciliation chapter", icon: "location" },
+                { id: "mombasa_chapter", label: "Mombasa", prompt: "Tell me about the Mombasa AFLEWO Chapter then", icon: "location" },
+                { id: "rwanda_chapter", label: "Rwanda", prompt: "Tell me about AFLEWO Rwanda Chapter", icon: "location" },
+                { id: "meru_chapter", label: "Meru", prompt: "Tell me about AFLEWO Meru Chapter", icon: "location" },
+                { id: "nakuru_chapter", label: "Nakuru", prompt: "Tell me about AFLEWO Nakuru Chapter", icon: "location" },
+                { id: "nyeri_chapter", label: "Nyeri", prompt: "Tell me about AFLEWO Nyeri Chapter", icon: "location" },
+                { id: "tanzania_chapter", label: "Tanzania", prompt: "Tell me about AFLEWO Tanzania Chapter", icon: "location" },
+                { id: "kigali_chapter", label: "Kigali", prompt: "Tell me about AFLEWO Kigali Chapter in Rwanda", icon: "location" },
+                { id: "dar_es_salaam_chapter", label: "Dar es Salaam", prompt: "Tell me about AFLEWO Dar es Salaam Chapter in Tanzania", icon: "location" },
             ],
         },
         live: {
             keywords: ["live", "stream", "watch", "streaming", "broadcast", "online", "youtube", "facebook"],
-            suggestions: liveEldoretSuggestions,
+            suggestions: liveSuggestions,
         },
         media: {
             keywords: ["media", "video", "worship", "song", "music", "archive", "recording", "past"],
             suggestions: [
                 { id: "media_archive", label: "Worship Archive", prompt: "Where can I watch past AFLEWO worship videos?", icon: "music" },
                 { id: "stories", label: "Testify", prompt: "Show me AFLEWO community stories and testimonies", icon: "speech" },
-                liveEldoretSuggestions[0],
+                liveSuggestions[0],
             ],
         },
         donate: {
@@ -1541,7 +1552,7 @@ function getContextualSuggestions(text: string) {
     // Default: evening surfaces live event first
     if (isEvening) {
         return [
-            liveEldoretSuggestions[0],
+            liveSuggestions[0],
             { id: "join", label: "Join Movement", prompt: "How do I register to join the AFLEWO choir?", icon: "church" },
             { id: "events", label: "Events", prompt: "What events are planned for AFLEWO 2026?", icon: "calendar" },
             { id: "chapters", label: "Chapters", prompt: "Show me all 8 active AFLEWO chapters", icon: "location" },

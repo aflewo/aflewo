@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { events } from "@/lib/events";
+import { chapters } from "@/lib/chapters";
 
 // ─── Whitelisted routing config ──────────────────────────────────────────────
+const CHAPTER_ROUTES = chapters.map(c => ({
+    path: `/chapters/${c.slug}`,
+    name: `${c.name} Chapter`,
+    description: `Details, contact, and registration for the AFLEWO ${c.name} chapter`
+}));
+
 const SITE_ROUTES = [
     { path: "/", name: "Home", description: "Main landing page" },
     { path: "/about", name: "About", description: "Vision, history, leadership" },
@@ -14,7 +21,8 @@ const SITE_ROUTES = [
     { path: "/chapters", name: "Chapters", description: "All AFLEWO chapters directory" },
     { path: "/events", name: "Events", description: "Full 2026 season event calendar" },
     { path: "/auth", name: "Sign In / Register", description: "Authentication portal" },
-    { path: "/profile", name: "Profile", description: "User dashboard and settings" }
+    { path: "/profile", name: "Profile", description: "User dashboard and settings" },
+    ...CHAPTER_ROUTES
 ];
 
 // ─── AFLEWO Site Knowledge Base ───────────────────────────────────────────────
