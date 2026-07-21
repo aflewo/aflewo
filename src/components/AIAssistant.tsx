@@ -105,7 +105,7 @@ const PAGE_DICTIONARY: Record<string, string> = {
 };
 const fuzzyRegex = new RegExp(`\\b(${Object.keys(PAGE_DICTIONARY).join("|")})\\b`, "gi");
 
-function applyFuzzyLinks(text: string, baseIndex: number, onNavigate?: (url?: string) => void) {
+function applyFuzzyLinks(text: string, baseIndex: number, onNavigate?: (url?: string) => void, isUser?: boolean) {
     const parts = text.split(fuzzyRegex);
     return parts.map((part, i) => {
         const lowerPart = part.toLowerCase();
@@ -118,7 +118,7 @@ function applyFuzzyLinks(text: string, baseIndex: number, onNavigate?: (url?: st
                     onClick={() => {
                         if (onNavigate) onNavigate(url);
                     }}
-                    className="text-gold underline hover:text-gold/80 font-medium transition-all"
+                    className={`underline hover:opacity-80 font-bold transition-all ${!isUser && "text-gold"}`}
                 >
                     {part}
                 </Link>
@@ -128,7 +128,7 @@ function applyFuzzyLinks(text: string, baseIndex: number, onNavigate?: (url?: st
     });
 }
 
-function parseMessageContent(content: string, profile: any, onNavigate?: (url?: string) => void) {
+function parseMessageContent(content: string, profile: any, onNavigate?: (url?: string) => void, isUser?: boolean) {
     let replacedText = content;
     if (profile) {
         replacedText = replacedText
@@ -155,7 +155,7 @@ function parseMessageContent(content: string, profile: any, onNavigate?: (url?: 
     while ((match = regex.exec(replacedText)) !== null) {
         const textBefore = replacedText.substring(lastIndex, match.index);
         if (textBefore) {
-            parts.push(...applyFuzzyLinks(textBefore, matchCount++, onNavigate));
+            parts.push(...applyFuzzyLinks(textBefore, matchCount++, onNavigate, isUser));
         }
 
         const linkText = match[1];
@@ -170,7 +170,7 @@ function parseMessageContent(content: string, profile: any, onNavigate?: (url?: 
                     onClick={() => {
                         if (onNavigate) onNavigate(linkUrl);
                     }}
-                    className="text-gold underline hover:text-gold/80 font-medium transition-all"
+                    className={`underline hover:opacity-80 font-bold transition-all ${!isUser && "text-gold"}`}
                 >
                     {linkText}
                 </Link>
@@ -182,7 +182,7 @@ function parseMessageContent(content: string, profile: any, onNavigate?: (url?: 
                     href={linkUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gold underline hover:text-gold/80 font-medium transition-all"
+                    className={`underline hover:opacity-80 font-bold transition-all ${!isUser && "text-gold"}`}
                 >
                     {linkText}
                 </a>
@@ -194,10 +194,10 @@ function parseMessageContent(content: string, profile: any, onNavigate?: (url?: 
 
     const textAfter = replacedText.substring(lastIndex);
     if (textAfter) {
-        parts.push(...applyFuzzyLinks(textAfter, matchCount++, onNavigate));
+        parts.push(...applyFuzzyLinks(textAfter, matchCount++, onNavigate, isUser));
     }
 
-    return parts.length > 0 ? parts : applyFuzzyLinks(replacedText, matchCount, onNavigate);
+    return parts.length > 0 ? parts : applyFuzzyLinks(replacedText, matchCount, onNavigate, isUser);
 }
 
 // ─── Chat bubble ─────────────────────────────────────────────────────────────
@@ -218,7 +218,7 @@ function ChatBubble({ msg, onNavigate }: { msg: Message; onNavigate?: (url?: str
                     }`}
                 style={{ backdropFilter: isUser ? undefined : "blur(8px)" }}
             >
-                {parseMessageContent(msg.content, profile, onNavigate)}
+                {parseMessageContent(msg.content, profile, onNavigate, isUser)}
             </div>
         </motion.div>
     );
@@ -382,7 +382,7 @@ function LiquidGlassIsland({
                                         : `https://www.google.com/maps/dir/?api=1&destination=${island.payload.lat},${island.payload.lng}&travelmode=driving`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="pointer-events-auto glass-surface hover:scale-105 active:scale-95 transition-all text-gold px-4 py-2 rounded-full font-black uppercase text-[10px] tracking-wider flex items-center gap-1.5"
+                                    className="pointer-events-auto bg-black/70 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.5)] border border-white/10 hover:bg-black/90 hover:border-gold/50 active:scale-95 transition-all text-gold px-4 py-2 rounded-full font-black uppercase text-[10px] tracking-wider flex items-center gap-1.5"
                                 >
                                     <svg width="14" height="14" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path fill="currentColor" d="M62.364,0.773c-0.694-0.509-1.526-0.772-2.366-0.772c-0.403,0-0.809,0.061-1.202,0.185l-9.276,2.93 c0.102,0.175,0.183,0.386,0.234,0.649c0.286,1.477-0.732,2.198-1.188,3.606c0.456,1.195,0.159,2.094,0.785,3.078 c0.584,0.893,1.581,0.5,1.995,1.545c0.637,1.586-0.393,3.215-1.592,4.108c-0.388,0.284-0.748,0.38-1.108,0.38 c-0.641,0-1.279-0.301-2.07-0.38c-2.212-0.213-3.385-0.97-5.555-1.546c-2.187-0.563-3.505-1.598-5.509-1.598 c-0.268,0-0.547,0.019-0.843,0.059c-1.607,0.233-3.03-0.151-3.975,1.539c-0.901,1.635-0.949,3.558,0,5.152 c0.817,1.345,1.889,1.174,3.179,1.532c0.56,0.154,1.05,0.206,1.517,0.206c0.947,0,1.794-0.213,2.901-0.213 c0.113,0,0.229,0.002,0.347,0.007c0.22,0.009,0.43,0.013,0.634,0.013c0.752,0,1.409-0.048,2.053-0.048 c0.907,0,1.787,0.095,2.869,0.55c1.321,0.55,1.836,1.601,3.178,2.061c0.495,0.169,0.945,0.233,1.372,0.233 c1.383,0,2.528-0.682,4.194-0.756c1.013-0.036,1.851-0.505,2.675-0.504c0.428,0,0.852,0.126,1.294,0.504 c1.146,1.004,0.541,2.926,1.581,4.114c0.881,1.024,1.613,1.312,2.78,1.546c0.528,0.101,1.002,0.196,1.451,0.196 c0.442,0,0.86-0.095,1.281-0.367V4C64,2.726,63.393,1.527,62.364,0.773z"/>
@@ -515,6 +515,18 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: (url?: string
     const [isHeroVisible, setIsHeroVisible] = useState(true);
     const [chatWallpaper, setChatWallpaper] = useState<string | null>(null);
     const [showPersonalize, setShowPersonalize] = useState(false);
+    
+    // Slash commands
+    const [slashSearch, setSlashSearch] = useState<string | null>(null);
+    const [slashIndex, setSlashIndex] = useState(0);
+
+    const PAGE_SUGGESTIONS = useMemo(() => Object.entries(PAGE_DICTIONARY).map(([name, path]) => ({ name, path })), []);
+    const activeSlashSuggestions = useMemo(() => {
+        return slashSearch !== null 
+            ? PAGE_SUGGESTIONS.filter(s => s.name.includes(slashSearch)) 
+            : [];
+    }, [slashSearch, PAGE_SUGGESTIONS]);
+
     const aiChatLottieRef = useRef<LottieRefCurrentProps>(null);
 
     // Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Network awareness Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
@@ -842,9 +854,54 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: (url?: string
 
     // ------------------------------------ Input key handler ---------------------------------------------
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (slashSearch !== null && activeSlashSuggestions.length > 0) {
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                setSlashIndex(prev => (prev + 1) % activeSlashSuggestions.length);
+                return;
+            }
+            if (e.key === "ArrowUp") {
+                e.preventDefault();
+                setSlashIndex(prev => (prev - 1 + activeSlashSuggestions.length) % activeSlashSuggestions.length);
+                return;
+            }
+            if (e.key === "Enter" || e.key === "Tab") {
+                e.preventDefault();
+                insertSlashSuggestion(activeSlashSuggestions[slashIndex]);
+                return;
+            }
+            if (e.key === "Escape") {
+                e.preventDefault();
+                setSlashSearch(null);
+                return;
+            }
+        }
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             sendMessage(inputText);
+        }
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const val = e.target.value;
+        setInputText(val);
+        const match = val.match(/(?:^|\s)\/([a-z0-9_-]*)$/i);
+        if (match) {
+            setSlashSearch(match[1].toLowerCase());
+            setSlashIndex(0);
+        } else {
+            setSlashSearch(null);
+        }
+    };
+
+    const insertSlashSuggestion = (suggestion: { name: string, path: string }) => {
+        const match = inputText.match(/(?:^|\s)\/([a-z0-9_-]*)$/i);
+        if (match) {
+            const before = inputText.substring(0, match.index! + (inputText[match.index!] === ' ' ? 1 : 0));
+            const newText = before + `[${suggestion.name}](${suggestion.path}) `;
+            setInputText(newText);
+            setSlashSearch(null);
+            setTimeout(() => inputRef.current?.focus(), 10);
         }
     };
 
@@ -1259,12 +1316,35 @@ export default function AIAssistant({ onNavigate }: { onNavigate?: (url?: string
 
                         {/* Ã¢â€â‚¬Ã¢â€â‚¬ Input Area Ã¢â€â‚¬Ã¢â€â‚¬ */}
                         <div className="px-4 py-3 border-t border-white/8 flex-shrink-0">
-                            <div className="flex items-end gap-2">
+                            <div className="flex items-end gap-2 relative">
+                                {/* Slash Suggestions */}
+                                <AnimatePresence>
+                                    {slashSearch !== null && activeSlashSuggestions.length > 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 10 }}
+                                            className="absolute bottom-full left-0 mb-2 bg-black/90 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden shadow-2xl z-50 flex flex-col max-h-48 overflow-y-auto min-w-[200px]"
+                                        >
+                                            {activeSlashSuggestions.map((s, idx) => (
+                                                <button
+                                                    key={s.path + idx}
+                                                    onClick={() => insertSlashSuggestion(s)}
+                                                    className={`px-3 py-2 text-left text-sm transition-colors ${idx === slashIndex ? "bg-gold/20 text-gold" : "text-white/70 hover:bg-white/10 hover:text-white"}`}
+                                                >
+                                                    <div className="font-medium capitalize">{s.name}</div>
+                                                    <div className="text-[10px] opacity-50 font-mono">{s.path}</div>
+                                                </button>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
                                 {/* Text input */}
                                 <textarea
                                     ref={inputRef}
                                     value={inputText}
-                                    onChange={e => setInputText(e.target.value)}
+                                    onChange={handleInputChange}
                                     onKeyDown={handleKeyDown}
                                     placeholder="Ask about AFLEWO..."
                                     rows={1}
