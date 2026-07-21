@@ -11,7 +11,8 @@ const SITE_ROUTES = [
     { path: "/join", name: "Join", description: "Audition registration, choir, band, media team, usher, security, dance" },
     { path: "/stories", name: "Stories", description: "Echo testimonies" },
     { path: "/alumni", name: "Alumni", description: "Past members and alumni network" },
-    { path: "/chapters", name: "Chapters detail", description: "Detailed chapter information" },
+    { path: "/chapters", name: "Chapters", description: "All AFLEWO chapters directory" },
+    { path: "/events", name: "Events", description: "Full 2026 season event calendar" },
     { path: "/auth", name: "Sign In / Register", description: "Authentication portal" },
     { path: "/profile", name: "Profile", description: "User dashboard and settings" }
 ];
@@ -61,7 +62,7 @@ EVENTS (2026 season):
 - Main Nairobi Event: Oct 02, 2026 — flagship all-night worship, Winners' Chapel International, Nairobi. Expected attendance: 15,000+.
 
 DONATIONS & FINANCIAL SUPPORT:
-- Official Paybill: M-Changa Paybill 891300, Account: AFLEWONBI
+- Official Paybill: M-Changa Paybill [891300 (tap to copy)](#copy:891300), Account: [AFLEWONBI (tap to copy)](#copy:AFLEWONBI)
 - IMPORTANT: This is the most recently confirmed donation channel.
 
 MAP VENUE COORDINATES (use these for SHOW_MAP tags):
@@ -139,7 +140,7 @@ EVENTS (Live DB synced):
 ${eventsContext}
 
 DONATIONS & FINANCIAL SUPPORT:
-- Official Paybill: M-Changa Paybill 891300, Account: AFLEWONBI
+- Official Paybill: M-Changa Paybill [891300 (tap to copy)](#copy:891300), Account: [AFLEWONBI (tap to copy)](#copy:AFLEWONBI)
 - IMPORTANT: This is the most recently confirmed donation channel.
 
 MAP VENUE COORDINATES (use these for SHOW_MAP tags):
@@ -487,6 +488,7 @@ FORMATTING RULES:
 - When you want to scroll to a section, append [scroll_to: sectionId] at the very end.
 - When the user asks for directions, "where is", "how do I get to", "show me on a map", or "location of" any AFLEWO venue or chapter, you MUST append [SHOW_MAP: lat, lng, "Venue Name"] at the very end using coordinates from MAP VENUE COORDINATES. Example: [SHOW_MAP: -1.2840, 36.8231, "Winners' Chapel International, Nairobi"]
 - NEVER speak or write raw GPS coordinates in the text of your response. Instead, simply say "See the map above to get directions and navigate there easily."
+- When mentioning the M-Changa Paybill number (891300) or account name (AFLEWONBI), ALWAYS format them as tappable copy links: [891300 (tap to copy)](#copy:891300) and [AFLEWONBI (tap to copy)](#copy:AFLEWONBI). Never write these as plain text.
 - When the user asks for their schedule or itinerary, append [SYNC_ITINERARY] at the very end.
 - These tags are stripped from the displayed text — they are never shown to the user.
 - Never answer outside the scope of AFLEWO unless it's a general Christian faith question.

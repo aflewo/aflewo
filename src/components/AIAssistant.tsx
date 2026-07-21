@@ -105,6 +105,31 @@ const PAGE_DICTIONARY: Record<string, string> = {
 };
 const fuzzyRegex = new RegExp(`\\b(${Object.keys(PAGE_DICTIONARY).join("|")})\\b`, "gi");
 
+// ─── CopyableToken ────────────────────────────────────────────────────────────
+function CopyableToken({ value, label }: { value: string; label: string }) {
+    const [copied, setCopied] = useState(false);
+    const handleCopy = () => {
+        navigator.clipboard.writeText(value).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        });
+    };
+    return (
+        <button
+            onClick={handleCopy}
+            title={`Tap to copy: ${value}`}
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gold/15 border border-gold/30 text-gold font-black text-[11px] cursor-pointer hover:bg-gold/25 active:scale-95 transition-all select-all mx-0.5"
+        >
+            <span>{label}</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="opacity-60 shrink-0">
+                {copied
+                    ? <><polyline points="20 6 9 17 4 12" /></>
+                    : <><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></>}
+            </svg>
+        </button>
+    );
+}
+
 function applyFuzzyLinks(text: string, baseIndex: number, onNavigate?: (url?: string) => void, isUser?: boolean) {
     const parts = text.split(fuzzyRegex);
     return parts.map((part, i) => {
@@ -161,8 +186,14 @@ function parseMessageContent(content: string, profile: any, onNavigate?: (url?: 
         const linkText = match[1];
         const linkUrl = match[2];
         const isInternal = !linkUrl.startsWith("http") && !linkUrl.startsWith("//");
+        const isCopyAction = linkUrl.startsWith("#copy:");
 
-        if (isInternal) {
+        if (isCopyAction) {
+            const textToCopy = linkUrl.replace("#copy:", "");
+            parts.push(
+                <CopyableToken key={match.index} value={textToCopy} label={linkText} />
+            );
+        } else if (isInternal) {
             parts.push(
                 <Link
                     key={match.index}
@@ -1423,7 +1454,7 @@ function getContextualSuggestions(text: string) {
     const lower = text.toLowerCase();
     const now = new Date();
     const hour = now.getHours();
-    const isEvening = hour >= 17 || hour < 4; // 5 PM – 4 AM = likely event hours
+    const isEvening = hour >= 17 || hour < 6; // 5 PM – 4 AM = likely event hours
 
     const liveEldoretSuggestions = [
         { id: "live_eldoret", label: "🔴 Eldoret LIVE", prompt: "Take me to the Media page to watch the AFLEWO Eldoret livestream.", icon: "videocam" },
