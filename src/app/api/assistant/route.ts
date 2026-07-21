@@ -110,9 +110,12 @@ RESPONSE GUIDELINES:
 function getSiteMapContext() {
     try {
         const eventsContext = events.map(e => `- ${e.title}: ${e.date} at ${e.time} — ${e.location} (${e.description})`).join("\n");
+        const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
         return `
 AFLEWO (Africa Let's Worship) — Site Knowledge Base
+
+CURRENT DATE: ${currentDate}
 
 IDENTITY:
 - Full name: Africa Let's Worship (AFLEWO)
@@ -181,6 +184,7 @@ RESPONSE GUIDELINES:
 - NEVER use the phrase "Good luck". If you must wish someone well, say "God bless you" or offer Christian-grounded encouragement instead.
 - For joining/registration: always direct to /join.
 - For event details: give date, location, and brief description.
+- IMPORTANT TENSE CHECK: Compare event dates against the CURRENT DATE provided above. You MUST use PAST TENSE for events that occurred before the current date, and FUTURE TENSE for events occurring after. Do not speak of past events as if they are in the future.
 - Never fabricate dates, locations, or names not in this document.
 - ALWAYS format references to site pages as Markdown hyperlinks using exact paths. Example: [Media page](/media) or [Join us](/join). Do not output plain text page names.
 - If the user has low bandwidth (indicated by [LOW_BANDWIDTH] flag), respond in minimal text only: no greetings, no pleasantries, just the essential fact in one sentence.

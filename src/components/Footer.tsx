@@ -10,7 +10,14 @@ export default function Footer() {
     const currentYear = new Date().getFullYear();
     const [email, setEmail] = useState("");
     const [subState, setSubState] = useState<"idle" | "sending" | "done">("idle");
+    const [copiedText, setCopiedText] = useState<string | null>(null);
     const router = useRouter();
+
+    const handleCopy = (text: string) => {
+        navigator.clipboard.writeText(text);
+        setCopiedText(text);
+        setTimeout(() => setCopiedText(null), 2000);
+    };
 
     const handleSubscribe = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -123,8 +130,18 @@ export default function Footer() {
                                 )}
                                 <div className="space-y-2 pt-2">
                                     <p className="text-[9px] text-white/20 font-black uppercase tracking-widest">M-Pesa Support</p>
-                                    <p className="text-white/50 text-[10px] font-black">Paybill: <span className="text-gold">819867</span></p>
-                                    <p className="text-white/30 text-[9px]">Account: Your Name</p>
+                                    <p className="text-white/50 text-[10px] font-black cursor-pointer hover:text-white transition-colors" onClick={() => handleCopy('891300')}>
+                                        Paybill: <span className="text-gold">891300</span>
+                                        <span className="text-[8px] text-white/30 ml-2 font-normal">
+                                            {copiedText === '891300' ? '(Copied!)' : '(tap to copy)'}
+                                        </span>
+                                    </p>
+                                    <p className="text-white/30 text-[9px] font-black cursor-pointer hover:text-white transition-colors" onClick={() => handleCopy('AFLEWONBI')}>
+                                        Account: <span className="text-gold">AFLEWONBI</span>
+                                        <span className="text-[8px] text-white/30 ml-2 font-normal">
+                                            {copiedText === 'AFLEWONBI' ? '(Copied!)' : '(tap to copy)'}
+                                        </span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +153,7 @@ export default function Footer() {
                     <div>© {currentYear} Africa Let's Worship</div>
                     <div className="flex gap-8">
                         <Link href="/privacy" className="hover:text-gold transition-colors">Privacy Policy</Link>
-                        <a href="tel:*456*819867#" className="hover:text-gold transition-colors">M-Pesa: *456*819867#</a>
+                        <a href="tel:*456*891300#" className="hover:text-gold transition-colors">M-Pesa: *456*891300#</a>
                         <Link href="/join" className="hover:text-gold transition-colors">Partner With Us</Link>
                     </div>
                 </div>

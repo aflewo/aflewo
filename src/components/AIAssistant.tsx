@@ -93,16 +93,36 @@ function MicIcon({ active }: { active: boolean }) {
 // ─── Hyperlink & Context Parser ──────────────────────────────────────────────
 const PAGE_DICTIONARY: Record<string, string> = {
     "media page": "/media",
+    "media": "/media",
     "about page": "/about",
+    "about": "/about",
     "testimonies page": "/testify",
     "testify page": "/testify",
+    "testify": "/testify",
     "join page": "/join",
+    "join": "/join",
     "stories page": "/stories",
+    "stories": "/stories",
     "alumni page": "/alumni",
+    "alumni": "/alumni",
     "chapters page": "/chapters",
+    "chapters": "/chapters",
+    "nairobi chapter": "/chapters/nairobi",
+    "mombasa chapter": "/chapters/mombasa",
+    "nakuru chapter": "/chapters/nakuru",
+    "rwanda chapter": "/chapters/rwanda",
+    "tanzania chapter": "/chapters/tanzania",
+    "nyeri chapter": "/chapters/nyeri",
+    "meru chapter": "/chapters/meru",
+    "eldoret chapter": "/chapters/eldoret",
+    "kigali chapter": "/chapters/rwanda",
+    "dar es salaam chapter": "/chapters/tanzania",
+    "events page": "/events",
+    "events": "/events",
     "sign in page": "/auth",
     "profile page": "/profile",
-    "home page": "/"
+    "home page": "/",
+    "home": "/"
 };
 const fuzzyRegex = new RegExp(`\\b(${Object.keys(PAGE_DICTIONARY).join("|")})\\b`, "gi");
 

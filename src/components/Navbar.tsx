@@ -13,6 +13,8 @@ import { motion } from "framer-motion";
 
 const links = [
     { name: "About", href: "/about" },
+    { name: "Chapters", href: "/chapters" },
+    { name: "Events", href: "/events" },
     { name: "Media", href: "/media" },
     { name: "Testify", href: "/testify" },
     { name: "Join", href: "/join" },
