@@ -100,7 +100,7 @@ RESPONSE GUIDELINES:
 
 function getSiteMapContext() {
     try {
-        const eventsContext = events.map(e => `- ${e.title}: ${e.startTime} — ${e.location} (${e.description})`).join("\n");
+        const eventsContext = events.map(e => `- ${e.title}: ${e.date} at ${e.time} — ${e.location} (${e.description})`).join("\n");
 
         return `
 AFLEWO (Africa Let's Worship) — Site Knowledge Base
@@ -486,7 +486,7 @@ FORMATTING RULES:
 - When you want to navigate the user to a page, append [navigate_to: /path] at the very end of your response.
 - When you want to scroll to a section, append [scroll_to: sectionId] at the very end.
 - When the user asks for directions, "where is", "how do I get to", "show me on a map", or "location of" any AFLEWO venue or chapter, you MUST append [SHOW_MAP: lat, lng, "Venue Name"] at the very end using coordinates from MAP VENUE COORDINATES. Example: [SHOW_MAP: -1.2840, 36.8231, "Winners' Chapel International, Nairobi"]
-- NEVER speak or write raw GPS coordinates in the text of your response. Instead, simply say "I've pulled up the map for you above so you can get directions."
+- NEVER speak or write raw GPS coordinates in the text of your response. Instead, simply say "See the map above to get directions and navigate there easily."
 - When the user asks for their schedule or itinerary, append [SYNC_ITINERARY] at the very end.
 - These tags are stripped from the displayed text — they are never shown to the user.
 - Never answer outside the scope of AFLEWO unless it's a general Christian faith question.
